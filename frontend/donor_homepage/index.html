@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBites - Donor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" />
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed flex flex-col justify-between">
+            <div class="p-6">
+                <div class="flex items-center gap-4 text-[#1c140d] mb-8">
+                    <div class="size-4">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">ShareBites</h2>
+                </div>
+                <nav class="space-y-4">
+                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Dashboard</a>
+                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Post Food</a>
+                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">My Donations</a>
+                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Requests</a>
+                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Profile</a>
+                </nav>
+            </div>
+            
+            <!-- Profile Section -->
+            <div class="p-6 border-t border-[#e8dbce]">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Sarah&background=f2800d&color=fff" 
+                         alt="Sarah's profile" 
+                         class="w-10 h-10 rounded-full border-2 border-[#f2800d]"/>
+                    <div>
+                        <p class="text-[#1c140d] font-bold">Sarah</p>
+                        <p class="text-[#9c7349] text-sm">Food Donor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1 p-8">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back, Sarah! ✨</h1>
+                    <span class="bg-[#f2800d] text-white px-3 py-1 rounded-full text-sm font-bold">🥇 Top Sharer</span>
+                </div>
+                <p class="text-[#9c7349] text-lg font-normal leading-normal mt-2">You've shared 156 meals—keep changing lives!</p>
+            </div>
+
+            <!-- Impact Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">🍎</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">Total Shared</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black mb-2">156 meals</p>
+                    <div class="w-full bg-[#fcfaf8] rounded-full h-2">
+                        <div class="bg-[#f2800d] h-2 rounded-full" style="width: 78%"></div>
+                    </div>
+                    <p class="text-[#9c7349] text-sm mt-2">22 more to reach 200! 🎉</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">📦</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">Active Listings</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black">3</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">❤️</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">People Helped</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black">427</p>
+                </div>
+            </div>
+
+            <!-- Thank You Note -->
+            <div class="mb-8 bg-[#fff8f3] border border-[#f2800d] p-6 rounded-xl">
+                <div class="flex items-start gap-4">
+                    <span class="text-4xl">💌</span>
+                    <div>
+                        <h3 class="text-[#1c140d] font-bold mb-2">Latest Community Impact</h3>
+                        <p class="text-[#9c7349]">"Sarah, your vegetable donation helped us serve 20 healthy meals at the local shelter yesterday. Thank you for making a difference!"</p>
+                        <p class="text-[#9c7349] font-bold mt-2">- Food Bank Organization</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex gap-4 mb-8">
+                <button class="bg-[#f2800d] text-white px-6 py-3 rounded-full font-bold hover:bg-[#e67600] transition-colors flex items-center gap-2">
+                    <span>➕</span> Post New Food
+                </button>
+                <button class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
+                    <span>📦</span> View Active Listings
+                </button>
+                <button class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
+                    <span>📊</span> See Impact Report
+                </button>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-8">
+                <h2 class="text-[#1c140d] text-xl font-bold mb-4">Recent Food Shared</h2>
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-[#e8dbce]">
+                            <th class="text-left py-3 text-[#9c7349] font-medium">Food Item</th>
+                            <th class="text-left py-3 text-[#9c7349] font-medium">Quantity</th>
+                            <th class="text-left py-3 text-[#9c7349] font-medium">Status</th>
+                            <th class="text-left py-3 text-[#9c7349] font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-[#e8dbce]">
+                            <td class="py-3">Fresh Vegetables</td>
+                            <td class="py-3">5 kg</td>
+                            <td class="py-3"><span class="flex items-center gap-1"><span>✅</span> Completed</span></td>
+                            <td class="py-3"></td>
+                        </tr>
+                        <tr class="border-b border-[#e8dbce]">
+                            <td class="py-3">Bread Loaves</td>
+                            <td class="py-3">10 units</td>
+                            <td class="py-3"><span class="flex items-center gap-1"><span>⏳</span> Pending</span></td>
+                            <td class="py-3">
+                                <button class="text-red-500 hover:text-red-700 transition-colors flex items-center gap-1">
+                                    <span>🗑️</span> Cancel
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Incoming Requests -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <h2 class="text-[#1c140d] text-xl font-bold mb-4">Incoming Requests</h2>
+                <div class="space-y-4">
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Food Bank Organization</h3>
+                                <p class="text-[#9c7349]">Requesting: Fresh Vegetables</p>
+                            </div>
+                            <button class="px-4 py-2 bg-[#f2800d] text-[#1c140d] rounded-full font-bold hover:bg-[#e67600] transition-colors">
+                                Review
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Local Shelter</h3>
+                                <p class="text-[#9c7349]">Requesting: Bread Loaves</p>
+                            </div>
+                            <button class="px-4 py-2 bg-[#f2800d] text-[#1c140d] rounded-full font-bold hover:bg-[#e67600] transition-colors">
+                                Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Post Food Modal -->
+<div id="postFoodModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-[#1c140d] text-2xl font-bold">Post New Food</h2>
+            <button onclick="closeModal()" class="text-[#9c7349] hover:text-[#1c140d]">✕</button>
+        </div>
+        
+        <form class="space-y-6">
+            <div>
+                <label class="block text-[#1c140d] font-medium mb-2">Food Item Name</label>
+                <input type="text" class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none" 
+                       placeholder="e.g., Fresh Vegetables"/>
+            </div>
+            
+            <div>
+                <label class="block text-[#1c140d] font-medium mb-2">Quantity</label>
+                <div class="flex gap-4">
+                    <input type="number" class="w-2/3 px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none" 
+                           placeholder="Amount"/>
+                    <select class="w-1/3 px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
+                        <option>kg</option>
+                        <option>units</option>
+                        <option>boxes</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-[#1c140d] font-medium mb-2">Best Before Date</label>
+                <input type="date" class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none"/>
+            </div>
+            
+            <div>
+                <label class="block text-[#1c140d] font-medium mb-2">Description</label>
+                <textarea class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none" 
+                          rows="3" placeholder="Add any details about the food..."></textarea>
+            </div>
+            
+            <div class="flex justify-end gap-4">
+                <button type="button" onclick="closeModal()" 
+                        class="px-6 py-3 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d]">
+                    Cancel
+                </button>
+                <button type="submit" 
+                        class="px-6 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600]">
+                    Post Food
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    // Get modal and button elements
+    const modal = document.getElementById('postFoodModal');
+    const postNewFoodBtn = document.querySelector('button:has(span)');
+
+    // Open modal function
+    function openModal() {
+        modal.classList.remove('hidden');
+    }
+    
+    // Close modal function
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+    
+    // Add click event to Post New Food button
+    postNewFoodBtn.addEventListener('click', () => {
+        openModal();
+    });
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal when pressing Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+</script>
+</body>
+</html>
