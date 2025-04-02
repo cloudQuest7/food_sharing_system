@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Epilogue%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>ShareBites Login</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-[#fcfaf8] group/design-root overflow-x-hidden"
+      style="font-family: Epilogue, 'Noto Sans', sans-serif;"
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f4ede7] px-10 py-3">
+          <div class="flex items-center gap-4 text-[#1c140d]">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_6_319)">
+                  <path
+                    d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"
+                    fill="currentColor"
+                  ></path>
+                </g>
+                <defs>
+                  <clipPath id="clip0_6_319"><rect width="48" height="48" fill="white"></rect></clipPath>
+                </defs>
+              </svg>
+            </div>
+            <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">ShareBites</h2>
+          </div>
+        </header>
+        <div class="px-4 md:px-40 flex flex-1 justify-center items-center py-5">
+          <div class="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 flex-1">
+            <div class="flex flex-wrap justify-center gap-3 p-4">
+              <div class="flex flex-col gap-3 text-center">
+                <p class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back</p>
+                <p class="text-[#9c7349] text-base font-normal leading-normal">Log in to continue sharing food with your community.</p>
+              </div>
+            </div>
+            <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3 mx-auto w-full">
+              <label class="flex flex-col min-w-40 flex-1">
+                <p class="text-[#1c140d] text-base font-medium leading-normal pb-2">Email</p>
+                <input
+                  placeholder="Enter your email"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#1c140d] focus:outline-0 focus:ring-0 border border-[#e8dbce] bg-[#fcfaf8] focus:border-[#e8dbce] h-14 placeholder:text-[#9c7349] p-[15px] text-base font-normal leading-normal"
+                  value=""
+                />
+              </label>
+            </div>
+            <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3 mx-auto w-full">
+              <label class="flex flex-col min-w-40 flex-1">
+                <p class="text-[#1c140d] text-base font-medium leading-normal pb-2">Password</p>
+                <input
+                  type="password"
+                  placeholder="•••••••••••••••••••••••••"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#1c140d] focus:outline-0 focus:ring-0 border border-[#e8dbce] bg-[#fcfaf8] focus:border-[#e8dbce] h-14 placeholder:text-[#9c7349] p-[15px] text-base font-normal leading-normal"
+                  value=""
+                />
+              </label>
+            </div>
+            <div class="flex flex-col gap-3 p-4 max-w-[480px] mx-auto w-full">
+              <div class="flex justify-end">
+                <a href="#" class="text-[#f2800d] text-sm hover:underline">Forgot password?</a>
+              </div>
+              <div class="flex px-4 py-3">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 flex-1 bg-[#f2800d] text-[#1c140d] text-base font-bold leading-normal tracking-[0.015em]"
+                >
+                  <span class="truncate">Log in</span>
+                </button>
+              </div>
+              <div class="text-center text-[#9c7349]">
+                Don't have an account? <a href="../signup/index.html" class="text-[#f2800d] hover:underline">Sign up</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

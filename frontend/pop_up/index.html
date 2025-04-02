@@ -1,0 +1,50 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>ShareBites - Choose Role</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link
+    rel="stylesheet"
+    as="style"
+    onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&amp;family=Epilogue%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+  />
+  <style>
+    body {
+      font-family: Epilogue, "Noto Sans", sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-[#fcfaf8] flex items-center justify-center min-h-screen">
+  <div class="bg-white shadow-lg rounded-xl p-8 max-w-2xl w-full border border-[#e8dbce]">
+   <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em] text-center mb-2">
+    Are you donating or receiving food?</h1>
+   <p class="text-center text-[#9c7349] text-base font-normal leading-normal mb-6">
+    We'll tailor your experience to fit your needs.
+   </p>
+   <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+    <div class="border border-[#e8dbce] rounded-xl p-4 flex flex-col items-center w-full md:w-1/2 cursor-pointer hover:border-[#f2800d] transition-colors">
+     <img alt="Client illustration" class="mb-4" height="100" src="https://storage.googleapis.com/a1aa/image/cU_M4AjcHcWiroqLBk4Qct0JQbCwieANNDwjziVH5rI.jpg" width="100"/>
+     <p class="text-[#1c140d] text-lg font-bold leading-tight mb-2">
+      I'm a food sharer
+     </p>
+     <input class="form-radio h-5 w-5 text-[#f2800d]" type="radio" name="user-type" value="donor"/>
+    </div>
+    <div class="border border-[#e8dbce] rounded-xl p-4 flex flex-col items-center w-full md:w-1/2 cursor-pointer hover:border-[#f2800d] transition-colors">
+     <img alt="Freelancer illustration" class="mb-4" height="100" src="https://storage.googleapis.com/a1aa/image/qtkgURQoP48LU1MtewzSdUFDK0msB2TdPpaC-2eS37o.jpg" width="100"/>
+     <p class="text-[#1c140d] text-lg font-bold leading-tight mb-2">
+      I'm a food reciever
+     </p>
+     <input class="form-radio h-5 w-5 text-[#f2800d]" type="radio" name="user-type" value="recipient"/>
+    </div>
+   </div>
+   <div class="flex justify-end mt-6">
+    <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 bg-[#f2800d] text-[#1c140d] text-base font-bold leading-normal tracking-[0.015em]">
+     <span class="truncate">Next</span>
+    </button>
+   </div>
+  </div>
+ </body>
+</html>
