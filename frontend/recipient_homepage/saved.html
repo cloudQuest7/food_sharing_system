@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBites - Saved Items</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" />
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed flex flex-col justify-between">
+            <div class="p-6">
+                <div class="flex items-center gap-4 text-[#1c140d] mb-8">
+                    <div class="size-4">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">ShareBites</h2>
+                </div>
+                <nav class="space-y-4">
+                    <a href="index.html" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Dashboard</a>
+                    <a href="browse.html" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Browse Food</a>
+                    <a href="requests.html" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">My Requests</a>
+                    <a href="saved.html" class="block px-4 py-2 text-[#1c140d] bg-[#fcfaf8] rounded-lg font-medium">Saved Items</a>
+                    <a href="profile.html" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Profile</a>
+                </nav>
+            </div>
+            
+            <!-- Profile Section -->
+            <div class="p-6 border-t border-[#e8dbce]">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=John&background=f2800d&color=fff" 
+                         alt="John's profile" 
+                         class="w-10 h-10 rounded-full border-2 border-[#f2800d]"/>
+                    <div>
+                        <p class="text-[#1c140d] font-bold">John</p>
+                        <p class="text-[#9c7349] text-sm">Food Recipient</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1 p-8">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em] mb-4">Saved Items</h1>
+                <p class="text-[#9c7349] text-lg">Your saved food items for later</p>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">❤️</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">Total Saved</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black">5 items</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">⏰</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">Expiring Soon</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black">2 items</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">📍</span>
+                        <h2 class="text-[#1c140d] text-lg font-bold">Nearby</h2>
+                    </div>
+                    <p class="text-[#f2800d] text-3xl font-black">3 items</p>
+                </div>
+            </div>
+
+            <!-- Saved Items Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Saved Item 1 -->
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="font-bold text-[#1c140d] text-xl">Fresh Vegetables</h3>
+                            <p class="text-[#9c7349]">Local Market</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
+                    </div>
+                    <p class="text-[#9c7349] mb-4">5 kg of fresh vegetables including carrots, broccoli, and lettuce</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#f2800d]">⏰ 2 hours left</span>
+                        <span class="text-[#9c7349]">• 2.5 km away</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d]">
+                            Remove
+                        </button>
+                        <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600]">
+                            Request Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Item 2 -->
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="font-bold text-[#1c140d] text-xl">Bread Loaves</h3>
+                            <p class="text-[#9c7349]">Local Bakery</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">Limited</span>
+                    </div>
+                    <p class="text-[#9c7349] mb-4">10 fresh bread loaves from local bakery</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#f2800d]">⏰ 4 hours left</span>
+                        <span class="text-[#9c7349]">• 1.8 km away</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d]">
+                            Remove
+                        </button>
+                        <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600]">
+                            Request Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Item 3 -->
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="font-bold text-[#1c140d] text-xl">Fresh Fruits</h3>
+                            <p class="text-[#9c7349]">Grocery Store</p>
+                        </div>
+                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">Urgent</span>
+                    </div>
+                    <p class="text-[#9c7349] mb-4">Assorted fresh fruits including apples, oranges, and bananas</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#f2800d]">⏰ 1 hour left</span>
+                        <span class="text-[#9c7349]">• 3.2 km away</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d]">
+                            Remove
+                        </button>
+                        <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600]">
+                            Request Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex justify-center">
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">Previous</button>
+                    <button class="px-4 py-2 bg-[#f2800d] text-white rounded-lg">1</button>
+                    <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">2</button>
+                    <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">3</button>
+                    <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
