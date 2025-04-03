@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBites - Profile Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+    </style>
+</head>
+<body class="flex bg-[#fcfaf8]">
+    <!-- Add this button right after the body tag -->
+    <button id="menuToggle" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl border border-[#e8dbce] text-[#9c7349] hover:text-[#f2800d]">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed left-0 top-0 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
+        <div class="flex items-center gap-4 p-6 border-b border-[#e8dbce]">
+            <div class="size-6">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="#f2800d"></path>
+                </svg>
+            </div>
+            <h2 class="text-[#1c140d] text-xl font-bold">ShareBites</h2>
+        </div>
+        
+        <nav class="p-4 flex-1">
+            <ul class="space-y-2">
+                <li>
+                    <a href="/donor/dashboard" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-home w-6"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/donor/donate" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-plus-circle w-6"></i>
+                        <span class="ml-3">Post Food</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/donor/donations" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-box-open w-6"></i>
+                        <span class="ml-3">Manage Donations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/donor/requests" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-bell w-6"></i>
+                        <span class="ml-3">View Requests</span>
+                        <span class="sidebar-pending-count ml-auto bg-[#f2800d] text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/donor/profile" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
+                        <i class="fas fa-user w-6"></i>
+                        <span class="ml-3">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Profile Section at Bottom -->
+        <div class="p-4 border-t border-[#e8dbce]">
+            <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
+                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <div>
+                    <p class="text-sm font-bold text-[#1c140d]">dummy</p>
+                    <p class="text-xs text-[#9c7349]">Food Donor</p>
+                </div>
+                <i class="fas fa-chevron-right ml-auto text-xs"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="w-full lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-8">
+            <h1 class="text-2xl lg:text-3xl font-semibold text-[#1c140d] tracking-wide leading-tight mb-1">
+                Profile Settings
+            </h1>
+            <p class="text-sm lg:text-base text-[#9c7349] font-normal">
+                Manage your account settings and profile information
+            </p>
+        </div>
+
+        <div class="max-w-3xl">
+            <!-- Profile Information -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-[#1c140d]">Profile Information</h2>
+                    <button onclick="toggleEditMode()" id="editBtn" class="px-4 py-2 text-[#f2800d] font-bold hover:bg-[#fff8f3] rounded-xl transition-colors">
+                        Edit Profile
+                    </button>
+                </div>
+
+                <form id="profileForm" class="space-y-4">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <img id="profileImage" src="https://placehold.co/96x96" alt="Profile Picture" 
+                             class="w-24 h-24 rounded-full border-4 border-[#f2800d] object-cover">
+                        <div>
+                            <input type="file" id="photoInput" accept="image/*" class="hidden" 
+                                   onchange="handlePhotoChange(event)">
+                            <button type="button" 
+                                    onclick="document.getElementById('photoInput').click()" 
+                                    class="px-4 py-2 border border-[#e8dbce] text-[#9c7349] rounded-xl hover:border-[#f2800d] transition-colors">
+                                Change Photo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-[#9c7349] mb-2">Full Name</label>
+                            <input type="text" value="Dummy" disabled
+                                   class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-[#9c7349] mb-2">Email Address</label>
+                            <input type="email" value="dummy.doe@example.com" disabled
+                                   class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-[#9c7349] mb-2">Phone Number</label>
+                            <input type="tel" value="+91 1234567890" disabled
+                                   class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-[#9c7349] mb-2">Location</label>
+                            <input type="text" value="Mumbai, India" disabled
+                                   class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Change Password -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <h2 class="text-xl font-bold text-[#1c140d] mb-6">Change Password</h2>
+                <form id="passwordForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-[#9c7349] mb-2">Current Password</label>
+                        <input type="password" placeholder="Enter your current password"
+                               class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#9c7349] mb-2">New Password</label>
+                        <input type="password" placeholder="Enter new password"
+                               class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#9c7349] mb-2">Confirm New Password</label>
+                        <input type="password" placeholder="Confirm new password"
+                               class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors">
+                    </div>
+                    <button type="submit" class="w-full p-3 bg-[#f2800d] text-white rounded-xl font-bold hover:bg-[#e67600] transition-colors">
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let isEditMode = false;
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="tel"]');
+            const editBtn = document.getElementById('editBtn');
+            
+            inputs.forEach(input => {
+                input.disabled = !isEditMode;
+            });
+
+            if (isEditMode) {
+                editBtn.textContent = 'Save Changes';
+                editBtn.className = 'px-4 py-2 bg-[#f2800d] text-white font-bold rounded-xl hover:bg-[#e67600] transition-colors';
+            } else {
+                editBtn.textContent = 'Edit Profile';
+                editBtn.className = 'px-4 py-2 text-[#f2800d] font-bold hover:bg-[#fff8f3] rounded-xl transition-colors';
+                // Here you would typically save the changes to the backend
+                showSavedMessage();
+            }
+        }
+
+        function showSavedMessage() {
+            const message = document.createElement('div');
+            message.className = 'fixed bottom-4 right-4 bg-green-100 text-green-600 px-4 py-2 rounded-xl font-bold';
+            message.textContent = 'Changes saved successfully!';
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        // Password validation
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputs = this.querySelectorAll('input[type="password"]');
+            const [currentPassword, newPassword, confirmPassword] = Array.from(inputs).map(input => input.value);
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                alert('Password must be at least 8 characters long!');
+                return;
+            }
+
+            // Here you would typically update the password in the backend
+            alert('Password updated successfully!');
+            this.reset();
+        });
+
+        function handlePhotoChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image size should be less than 5MB');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Update profile image preview
+                    document.getElementById('profileImage').src = e.target.result;
+                    
+                    // Also update sidebar profile picture if it exists
+                    const sidebarImage = document.querySelector('.profile-section img');
+                    if (sidebarImage) {
+                        sidebarImage.src = e.target.result;
+                    }
+
+                    // Show success message
+                    const message = document.createElement('div');
+                    message.className = 'fixed bottom-4 right-4 bg-green-100 text-green-600 px-4 py-2 rounded-xl font-bold transition-opacity duration-300';
+                    message.textContent = 'Profile photo updated successfully!';
+                    document.body.appendChild(message);
+                    
+                    setTimeout(() => {
+                        message.style.opacity = '0';
+                        setTimeout(() => message.remove(), 300);
+                    }, 3000);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

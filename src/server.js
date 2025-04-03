@@ -7,6 +7,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const User = require('./models/User');
 
 const app = express();
 
@@ -16,6 +17,9 @@ connectDB();
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Debug log
+console.log('Views directory:', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(helmet({
@@ -36,6 +40,11 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Import routes
 const authController = require('./controllers/authController');
+const userController = require('./controllers/userController');
+const donorRoutes = require('./routes/donorRoutes');
+
+// Mount donor routes
+app.use('/donor', donorRoutes);
 
 // Auth routes
 app.get('/register', (req, res) => {
@@ -83,6 +92,34 @@ app.get('/section', (req, res) => {
     }
 });
 
+// Role update route
+app.post('/update-role', userController.updateRole);
+
+// Donor dashboard route
+app.get('/donor/dashboard', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'donor') {
+            return res.redirect('/section');
+        }
+
+        res.render('donor/dashboard', {
+            title: 'Donor Dashboard - ShareBites',
+            user
+        });
+    } catch (error) {
+        console.error('Dashboard error:', error);
+        res.redirect('/login');
+    }
+});
+
 // Landing page route
 app.get('/', (req, res) => {
     try {
@@ -107,8 +144,14 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     console.error('Error:', err);
     res.status(err.status || 500).render('error', {
-        title: 'Error',
         message: err.message || 'Something went wrong!'
+    });
+});
+
+// 404 handler - must be last
+app.use((req, res) => {
+    res.status(404).render('error', {
+        message: 'Page not found'
     });
 });
 
