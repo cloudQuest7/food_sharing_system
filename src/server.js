@@ -33,8 +33,17 @@ app.use(cookieParser());
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve static files from the frontend directory
-app.use(express.static(path.join(__dirname, '../frontend')));
+
+
+// Serve views/error.css directly as /css/error.css
+app.get('/css/error.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views/error.css'));
+});
+
+// Mapping for recipient-dashboard to use EJS template
+app.get('/recipient-dashboard', (req, res) => {
+    res.redirect('/recipient/dashboard');
+});
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
