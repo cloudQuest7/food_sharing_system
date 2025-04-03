@@ -1,0 +1,326 @@
+donation\index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBites - Manage Donations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+    </style>
+</head>
+<body class="flex bg-[#fcfaf8]">
+    <!-- Mobile Menu Toggle -->
+    <button id="menuToggle" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl border border-[#e8dbce] text-[#9c7349] hover:text-[#f2800d]">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed left-0 top-0 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
+        <!-- Logo Section -->
+        <div class="flex items-center gap-4 p-6 border-b border-[#e8dbce]">
+            <div class="size-6">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="#f2800d"></path>
+                </svg>
+            </div>
+            <h2 class="text-[#1c140d] text-xl font-bold">ShareBites</h2>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="p-4 flex-1">
+            <ul class="space-y-2">
+                <li>
+                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-home w-6"></i>
+                        <span class="ml-3">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-plus-circle w-6"></i>
+                        <span class="ml-3">Post Food</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
+                        <i class="fas fa-box-open w-6"></i>
+                        <span class="ml-3">Manage Donations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-bell w-6"></i>
+                        <span class="ml-3">View Requests</span>
+                        <span id="sidebarRequestCount" class="hidden ml-auto bg-[#f2800d] text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-user w-6"></i>
+                        <span class="ml-3">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Profile Section -->
+        <div class="p-4 border-t border-[#e8dbce]">
+            <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
+                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <div>
+                    <p class="text-sm font-bold text-[#1c140d]">John Doe</p>
+                    <p class="text-xs text-[#9c7349]">Food Donor</p>
+                </div>
+                <i class="fas fa-chevron-right ml-auto text-xs"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="w-full lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-8">
+            <h1 class="text-2xl lg:text-3xl font-semibold text-[#1c140d] tracking-wide leading-tight mb-1">
+                Manage Donations
+            </h1>
+            <p class="text-sm lg:text-base text-[#9c7349] font-normal">
+                Track and manage your food donations
+            </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div class="stat-card bg-white p-4 rounded-xl border border-[#e8dbce] animate-pulse">
+                <p class="text-sm text-[#9c7349] mb-1">Total Donations</p>
+                <p id="totalCount" class="text-2xl font-bold text-[#1c140d]">0</p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded-xl border border-[#e8dbce] animate-pulse">
+                <p class="text-sm text-[#9c7349] mb-1">Pending Pickup</p>
+                <p id="pendingCount" class="text-2xl font-bold text-[#f2800d]">0</p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded-xl border border-[#e8dbce] animate-pulse">
+                <p class="text-sm text-[#9c7349] mb-1">Completed</p>
+                <p id="completedCount" class="text-2xl font-bold text-[#22c55e]">0</p>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="bg-white p-4 rounded-xl border border-[#e8dbce] mb-6">
+            <div class="flex flex-wrap gap-2 sm:flex-nowrap sm:space-x-4">
+                <button onclick="filterDonations('all')" class="tab-button flex-1 p-3 bg-[#f2800d] text-white rounded-xl font-bold transition-all duration-300">
+                    All Donations
+                </button>
+                <button onclick="filterDonations('pending')" class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300">
+                    Pending
+                </button>
+                <button onclick="filterDonations('picked')" class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300">
+                    Picked Up
+                </button>
+                <button onclick="filterDonations('completed')" class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300">
+                    Completed
+                </button>
+            </div>
+        </div>
+
+        <!-- Donations List -->
+        <div class="space-y-4" id="donationsList">
+            <!-- Donation Card Template -->
+            <div class="donation-card bg-white p-4 lg:p-6 rounded-xl border border-[#e8dbce] transition-all duration-300">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <h3 class="text-lg font-bold text-[#1c140d]">Fresh Vegetables</h3>
+                            <span class="text-xs bg-[#fff8f3] text-[#f2800d] px-2 py-1 rounded-full">Pending</span>
+                        </div>
+                        <p class="text-sm text-[#9c7349] mb-1"><i class="fas fa-weight mr-2"></i>5 kg</p>
+                        <p class="text-sm text-[#9c7349] mb-1"><i class="fas fa-map-marker-alt mr-2"></i>123 Food Street</p>
+                        <p class="text-sm text-[#9c7349]"><i class="fas fa-clock mr-2"></i>Posted 2 hours ago</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button class="px-4 py-2 text-[#f2800d] border border-[#e8dbce] rounded-xl hover:border-[#f2800d] transition-colors">
+                            Edit
+                        </button>
+                        <button class="px-4 py-2 text-white bg-red-500 rounded-xl hover:bg-red-600 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add more donation cards here -->
+        </div>
+    </main>
+
+    <script>
+        // Add this at the top of your script section
+        let donationStats = {
+            total: 0,
+            pending: 0,
+            completed: 0
+        };
+
+        let isLoading = true;
+
+        // Function to update stats display
+        function updateStatsDisplay() {
+            document.getElementById('totalCount').textContent = donationStats.total;
+            document.getElementById('pendingCount').textContent = donationStats.pending;
+            document.getElementById('completedCount').textContent = donationStats.completed;
+        }
+
+        // Function to fetch donation data
+        async function fetchDonationStats() {
+            try {
+                // Simulate API call (replace with actual API endpoint)
+                const response = await fetch('/api/donations/stats');
+                const data = await response.json();
+                
+                // Update stats with animation
+                const oldStats = {...donationStats};
+                donationStats = data;
+                
+                // Animate number changes
+                animateNumberChanges(oldStats, donationStats);
+                
+                isLoading = false;
+                toggleLoadingState(false);
+            } catch (error) {
+                console.error('Error fetching donation stats:', error);
+                isLoading = false;
+                toggleLoadingState(false);
+            }
+        }
+
+        // Function to animate number changes
+        function animateNumberChanges(oldStats, newStats) {
+            const duration = 1000; // 1 second animation
+            const start = performance.now();
+            
+            const animate = (currentTime) => {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Animate each stat
+                ['total', 'pending', 'completed'].forEach(stat => {
+                    const value = Math.round(oldStats[stat] + (newStats[stat] - oldStats[stat]) * progress);
+                    document.getElementById(`${stat}Count`).textContent = value;
+                });
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Function to toggle loading state
+        function toggleLoadingState(isLoading) {
+            const statCards = document.querySelectorAll('.stat-card');
+            
+            statCards.forEach(card => {
+                if (isLoading) {
+                    card.classList.add('animate-pulse');
+                } else {
+                    card.classList.remove('animate-pulse');
+                }
+            });
+        }
+
+        // Function to update request count visibility
+        function updateRequestCountVisibility(count) {
+            const countElement = document.getElementById('sidebarRequestCount');
+            if (countElement) {
+                if (count === 0) {
+                    countElement.classList.add('hidden');
+                } else {
+                    countElement.classList.remove('hidden');
+                    countElement.textContent = count;
+                }
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            menuToggle.innerHTML = sidebar.classList.contains('-translate-x-full') 
+                ? '<i class="fas fa-bars"></i>' 
+                : '<i class="fas fa-times"></i>';
+        }
+
+        // Filter donations
+        function filterDonations(status) {
+            const buttons = document.querySelectorAll('.tab-button');
+            const cards = document.querySelectorAll('.donation-card');
+
+            // Update button styles
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(status) || 
+                   (status === 'all' && btn.textContent.includes('All'))) {
+                    btn.className = 'tab-button flex-1 p-3 bg-[#f2800d] text-white rounded-xl font-bold transition-all duration-300';
+                } else {
+                    btn.className = 'tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300';
+                }
+            });
+
+            // Filter cards with animation
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(-10px)';
+                
+                setTimeout(() => {
+                    if (status === 'all' || card.dataset.status === status) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }, 300);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('menuToggle').addEventListener('click', toggleMenu);
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const sidebar = document.getElementById('sidebar');
+                const menuToggle = document.getElementById('menuToggle');
+                
+                if (!sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) && 
+                    window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const sidebar = document.getElementById('sidebar');
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.remove('-translate-x-full');
+                }
+            });
+
+            // Fetch donation stats on page load
+            fetchDonationStats();
+        });
+    </script>
+</body>
+</html>
+````
