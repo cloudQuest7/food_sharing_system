@@ -5,25 +5,30 @@ exports.updateRole = async (req, res) => {
     try {
         const { userType } = req.body;
         const token = req.cookies.jwt;
-
+        
         if (!token) {
             return res.redirect('/login');
         }
-
-        // Verify token and get user ID
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        // Update user role
-        await User.findByIdAndUpdate(decoded.userId, { userType });
-
-        // Redirect based on role
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+        
+        if (!user) {
+            return res.redirect('/login');
+        }
+        
+        user.userType = userType;
+        await user.save();
+        
         if (userType === 'donor') {
-            res.redirect('/donor/dashboard');
+            return res.redirect('/donor/dashboard');
+        } else if (userType === 'recipient') {
+            return res.redirect('/recipient/dashboard');
         } else {
-            res.redirect('/recipient/dashboard');
+            return res.redirect('/');
         }
     } catch (error) {
-        console.error('Role update error:', error);
-        res.redirect('/section');
+        console.error('Update role error:', error);
+        res.redirect('/login');
     }
 };

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBites - Saved Items</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" />
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed flex flex-col justify-between">
+            <div class="p-6">
+                <div class="flex items-center gap-4 text-[#1c140d] mb-8">
+                    <div class="size-4">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">ShareBites</h2>
+                </div>
+                <nav class="space-y-4">
+                    <a href="/recipient/dashboard" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Dashboard</a>
+                    <a href="/recipient/browse" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Browse Food</a>
+                    <a href="/recipient/my-requests" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">My Requests</a>
+                    <a href="/recipient/saved" class="block px-4 py-2 bg-[#f2800d] text-white rounded-lg font-medium">Saved Items</a>
+                    <a href="/recipient/profile" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Profile</a>
+                </nav>
+            </div>
+            
+            <!-- Profile Section -->
+            <div class="p-6 border-t border-[#e8dbce]">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" 
+                         alt="<%= user.name %>'s profile" 
+                         class="w-10 h-10 rounded-full border-2 border-[#f2800d]"/>
+                    <div>
+                        <p class="text-[#1c140d] font-bold"><%= user.name %></p>
+                        <p class="text-[#9c7349] text-sm">Food Recipient</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1 p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Saved Items</h1>
+                    <a href="/recipient/dashboard" class="text-[#f2800d] hover:underline flex items-center gap-1">
+                        <span>←</span> Back to Dashboard
+                    </a>
+                </div>
+                <p class="text-[#9c7349] text-lg">Items you've saved for later</p>
+            </div>
+
+            <!-- Saved Items Container -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Saved Item 1 -->
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Fresh Fruits</h3>
+                                <p class="text-[#9c7349]">3.2 km away</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#9c7349] mb-4">Assorted fresh fruits including apples, oranges, and bananas</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#f2800d]">⏰ Available for 3 more days</span>
+                            </div>
+                            <a href="/recipient/request" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                                Request
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Saved Item 2 -->
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Canned Goods</h3>
+                                <p class="text-[#9c7349]">1.5 km away</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#9c7349] mb-4">Various canned goods including beans, soup, and vegetables</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#f2800d]">⏰ Available for 7 more days</span>
+                            </div>
+                            <a href="/recipient/request?id=4" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                                Request
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Saved Item 3 -->
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Dairy Products</h3>
+                                <p class="text-[#9c7349]">2.1 km away</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#9c7349] mb-4">Milk, yogurt, and cheese with good expiration dates</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#f2800d]">⏰ Available for 2 more days</span>
+                            </div>
+                            <a href="/recipient/request?id=5" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                                Request
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Saved Item 4 -->
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Bakery Items</h3>
+                                <p class="text-[#9c7349]">0.9 km away</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#9c7349] mb-4">Fresh bread, pastries, and cakes from local bakery</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#f2800d]">⏰ Available today only</span>
+                            </div>
+                            <a href="/recipient/request?id=6" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                                Request
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Saved Item 5 -->
+                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-[#1c140d]">Prepared Meals</h3>
+                                <p class="text-[#9c7349]">1.7 km away</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#9c7349] mb-4">Packaged meals ready to heat and eat, variety of options</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#f2800d]">⏰ Available for 3 more days</span>
+                            </div>
+                            <a href="/recipient/request?id=7" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                                Request
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

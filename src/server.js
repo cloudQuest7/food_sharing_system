@@ -33,6 +33,9 @@ app.use(cookieParser());
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
@@ -116,6 +119,256 @@ app.get('/donor/dashboard', async (req, res) => {
         });
     } catch (error) {
         console.error('Dashboard error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Recipient dashboard route
+app.get('/recipient/dashboard', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        res.render('recipient/recipient_dashboard', {
+            title: 'Recipient Dashboard - ShareBites',
+            user
+        });
+    } catch (error) {
+        console.error('Recipient dashboard error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Recipient browse food route
+app.get('/recipient/browse', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        res.render('recipient/browse', {
+            title: 'Browse Food - ShareBites',
+            user
+        });
+    } catch (error) {
+        console.error('Browse food error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Recipient saved items route
+app.get('/recipient/saved', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        res.render('recipient/saved', {
+            title: 'Saved Items - ShareBites',
+            user
+        });
+    } catch (error) {
+        console.error('Saved items error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Recipient profile route
+app.get('/recipient/profile', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        res.render('recipient/profile', {
+            title: 'Profile - ShareBites',
+            user
+        });
+    } catch (error) {
+        console.error('Profile error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Handle profile update
+app.post('/recipient/update-profile', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        // Update user profile
+        const { name, email, phone, location, bio } = req.body;
+        
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        user.location = location;
+        user.bio = bio;
+        
+        await user.save();
+
+        res.redirect('/recipient/profile?updated=true');
+    } catch (error) {
+        console.error('Profile update error:', error);
+        res.redirect('/recipient/profile?error=true');
+    }
+});
+
+// Handle notification preferences update
+app.post('/recipient/update-notifications', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        // Update notification preferences
+        const { email_notifications, request_updates, community_updates } = req.body;
+        
+        user.notificationPreferences = {
+            emailNotifications: !!email_notifications,
+            requestUpdates: !!request_updates,
+            communityUpdates: !!community_updates
+        };
+        
+        await user.save();
+
+        res.redirect('/recipient/profile?updated=true');
+    } catch (error) {
+        console.error('Notification update error:', error);
+        res.redirect('/recipient/profile?error=true');
+    }
+});
+
+// Recipient request route
+app.get('/recipient/request', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        // Get food item ID from query parameter
+        const foodId = req.query.id || '';
+
+        res.render('recipient/request', {
+            title: 'Request Food - ShareBites',
+            user,
+            foodId
+        });
+    } catch (error) {
+        console.error('Request page error:', error);
+        res.redirect('/login');
+    }
+});
+
+// Handle request submission
+app.post('/recipient/submit-request', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        // In a real app, you would save the request to the database here
+        console.log('Food request submitted:', req.body);
+
+        // Redirect to dashboard with success message
+        res.redirect('/recipient/my-requests?requestSubmitted=true');
+    } catch (error) {
+        console.error('Request submission error:', error);
+        res.redirect('/recipient/dashboard?requestError=true');
+    }
+});
+
+// Recipient my requests route
+app.get('/recipient/my-requests', async (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        // Check if a request was just submitted
+        const requestSubmitted = req.query.requestSubmitted === 'true';
+
+        res.render('recipient/my-requests', {
+            title: 'My Requests - ShareBites',
+            user,
+            requestSubmitted
+        });
+    } catch (error) {
+        console.error('My requests error:', error);
         res.redirect('/login');
     }
 });
