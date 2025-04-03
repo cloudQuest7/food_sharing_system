@@ -38,15 +38,127 @@
             // Initialize user storage
             initializeUserStorage();
             
+            // Load requests from allFoodRequests
+            loadRecipientRequests();
+            
+            // Set up tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    switchTab(button.dataset.tab);
+                });
+            });
+        }
+
+        function loadRecipientRequests() {
+            // Get all food requests from localStorage
+            const allRequests = JSON.parse(localStorage.getItem('allFoodRequests') || '[]');
+            
+            // Get donor's posted food items
+            const donorDonations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            
+            // Filter requests that are for this donor's posted food
+            const donorRequests = allRequests.filter(request => {
+                // Check if this request is for one of the donor's donations
+                return donorDonations.some(donation => donation.id === request.foodId);
+            });
+            
             // Count pending requests
-            const pendingCount = document.querySelectorAll('[id^="status-"]').length;
+            const pendingCount = donorRequests.filter(request => request.status === 'pending').length;
             updatePendingCount(pendingCount);
             
-            // Store all request cards for filtering
-            document.querySelectorAll('.request-card').forEach(card => {
-                const status = card.querySelector('[id^="status-"]').textContent.toLowerCase();
-                requestCards.set(card.id, { element: card, status: status });
+            // Hide loading placeholder
+            const loadingPlaceholder = document.getElementById('loading-placeholder');
+            if (loadingPlaceholder) {
+                loadingPlaceholder.style.display = 'none';
+            }
+            
+            if (donorRequests.length === 0) {
+                // No requests found, show empty state
+                const requestContainer = document.getElementById('food-requests-container');
+                requestContainer.innerHTML = `
+                    <div class="bg-white p-8 rounded-xl border border-[#e8dbce] text-center">
+                        <div class="w-20 h-20 bg-[#fcfaf8] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-3xl">📋</span>
+                        </div>
+                        <h3 class="font-bold text-[#1c140d] text-xl mb-2">No Food Requests Yet</h3>
+                        <p class="text-[#9c7349] mb-6 max-w-md mx-auto">You don't have any food requests from recipients yet. When someone requests your posted food, they will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create request cards
+            const requestContainer = document.getElementById('food-requests-container');
+            requestContainer.innerHTML = '';
+            
+            donorRequests.forEach(request => {
+                // Get the food details
+                const donation = donorDonations.find(donation => donation.id === request.foodId);
+                
+                if (!donation) return; // Skip if donation not found
+                
+                // Create card
+                const card = createRequestCard(request, donation);
+                requestContainer.appendChild(card);
+                
+                // Store for filtering
+                requestCards.set(card.id, { 
+                    element: card,
+                    status: request.status
+                });
             });
+        }
+
+        function createRequestCard(request, foodItem) {
+            const card = document.createElement('div');
+            card.className = "request-card bg-[#fcfaf8] p-6 rounded-xl border border-[#e8dbce] flex items-center justify-between transition-all duration-300";
+            card.id = `request-${request.id}`;
+            
+            // Format date
+            const requestDate = new Date(request.timestamp);
+            const formattedDate = requestDate.toLocaleDateString(undefined, { 
+                weekday: 'short',
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Determine status class
+            let statusClass = 'bg-[#fff8f3] text-[#f2800d]';
+            if (request.status === 'accepted') {
+                statusClass = 'bg-green-100 text-green-600';
+            } else if (request.status === 'rejected') {
+                statusClass = 'bg-red-100 text-red-600';
+            }
+            
+            card.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <img src="https://ui-avatars.com/api/?name=${request.recipientName}&background=f2800d&color=fff" alt="Profile image of ${request.recipientName}" class="w-12 h-12 rounded-full border-2 border-[#f2800d]">
+                    <div>
+                        <h2 class="text-[#1c140d] text-lg font-bold leading-tight">${request.recipientName} <span class="text-xs bg-[#f4ede7] text-[#9c7349] rounded-full px-3 py-1">Recipient</span></h2>
+                        <p class="text-[#9c7349]"><i class="fas fa-box"></i> ${foodItem.foodName} (${foodItem.quantity})</p>
+                        <p class="text-[#9c7349]"><i class="fas fa-map-marker-alt"></i> ${foodItem.location}</p>
+                        <p class="text-[#9c7349]"><i class="fas fa-clock"></i> Pickup: ${request.pickupTime}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <p class="text-[#9c7349]"><i class="fas fa-clock"></i> ${formattedDate}</p>
+                    <span id="status-${request.id}" class="text-xs ${statusClass} rounded-full px-3 py-1">${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</span>
+                    <button id="reject-${request.id}" onclick="updateStatus('${request.id}', 'rejected')" 
+                            class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors"
+                            ${request.status !== 'pending' ? 'disabled' : ''}>
+                        Reject
+                    </button>
+                    <button id="accept-${request.id}" onclick="updateStatus('${request.id}', 'accepted')" 
+                            class="px-4 py-2 bg-[#f2800d] text-[#1c140d] rounded-full font-bold hover:bg-[#e67600] transition-colors"
+                            ${request.status !== 'pending' ? 'disabled' : ''}>
+                        Accept
+                    </button>
+                </div>
+            `;
+            
+            return card;
         }
 
         // Update the updatePendingCount function
@@ -87,7 +199,13 @@
             // Filter and animate request cards with improved animation
             requestCards.forEach((data, id) => {
                 const card = data.element;
-                if (tab === 'all' || data.status === tab) {
+                
+                // Get the status from the card
+                const requestId = id.replace('request-', '');
+                const statusElement = document.getElementById(`status-${requestId}`);
+                const status = statusElement ? statusElement.textContent.toLowerCase() : '';
+                
+                if (tab === 'all' || status === tab.toLowerCase()) {
                     card.style.display = 'flex';
                     setTimeout(() => {
                         card.style.transform = 'translateX(0)';
@@ -105,58 +223,68 @@
             activeTab = tab;
         }
 
-        function updateStatus(id, status) {
-            const statusElement = document.getElementById(`status-${id}`);
-            const acceptButton = document.getElementById(`accept-${id}`);
-            const rejectButton = document.getElementById(`reject-${id}`);
-            const card = document.getElementById(`request-${id}`);
+        function updateStatus(requestId, status) {
+            // Get all food requests
+            const allRequests = JSON.parse(localStorage.getItem('allFoodRequests') || '[]');
+            
+            // Find the request
+            const requestIndex = allRequests.findIndex(req => req.id === requestId);
+            
+            if (requestIndex !== -1) {
+                // Update status in allRequests
+                allRequests[requestIndex].status = status;
+                localStorage.setItem('allFoodRequests', JSON.stringify(allRequests));
+                
+                // Also update in recipient's storage
+                const recipientId = allRequests[requestIndex].recipientId;
+                const recipientKey = `userRequests_${recipientId}`;
+                
+                try {
+                    const recipientRequests = JSON.parse(localStorage.getItem(recipientKey) || '[]');
+                    const recipientRequestIndex = recipientRequests.findIndex(req => req.id === requestId);
+                    
+                    if (recipientRequestIndex !== -1) {
+                        recipientRequests[recipientRequestIndex].status = status;
+                        localStorage.setItem(recipientKey, JSON.stringify(recipientRequests));
+                    }
+                } catch (error) {
+                    console.error('Error updating recipient request:', error);
+                }
+                
+                // Update UI
+                const statusElement = document.getElementById(`status-${requestId}`);
+                const acceptButton = document.getElementById(`accept-${requestId}`);
+                const rejectButton = document.getElementById(`reject-${requestId}`);
+                const card = document.getElementById(`request-${requestId}`);
 
-            if (status === 'accepted') {
-                statusElement.textContent = 'Accepted';
-                statusElement.className = 'text-xs bg-green-100 text-green-600 rounded-full px-3 py-1';
-                acceptButton.disabled = true;
-                rejectButton.disabled = false;
-                
-                // Get request details to add to donations
-                const recipientName = card.querySelector('h2').textContent.split('<')[0].trim();
-                const foodDetails = card.querySelector('p:nth-of-type(1)').textContent.replace('󰄫', '').trim();
-                const location = card.querySelector('p:nth-of-type(2)').textContent.replace('󰄧', '').trim();
-                const timeInfo = card.querySelector('p:nth-of-type(3)').textContent.replace('󰅐', '').trim();
-                
-                // Add to donations list in localStorage
-                saveAcceptedRequestToDonations({
-                    id: `donation_${Date.now()}`,
-                    foodName: foodDetails.split('(')[0].trim(),
-                    quantity: foodDetails.includes('(') ? foodDetails.split('(')[1].replace(')', '') : '1 portion',
-                    location: location,
-                    timestamp: new Date().toISOString(),
-                    expiryDate: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Next day as fallback
-                    status: 'accepted',
-                    recipient: recipientName,
-                    pickupTime: timeInfo
+                if (status === 'accepted') {
+                    statusElement.textContent = 'Accepted';
+                    statusElement.className = 'text-xs bg-green-100 text-green-600 rounded-full px-3 py-1';
+                    acceptButton.disabled = true;
+                    rejectButton.disabled = false;
+                    
+                    // Show success message
+                    showMessage(`Request accepted! The recipient will be notified.`);
+                } else if (status === 'rejected') {
+                    statusElement.textContent = 'Rejected';
+                    statusElement.className = 'text-xs bg-red-100 text-red-600 rounded-full px-3 py-1';
+                    acceptButton.disabled = false;
+                    rejectButton.disabled = true;
+                }
+
+                // Update request card data
+                requestCards.set(`request-${requestId}`, { 
+                    element: card, 
+                    status: status 
                 });
-                
-                // Show success message
-                showMessage(`Request accepted and added to your donations!`);
-            } else if (status === 'rejected') {
-                statusElement.textContent = 'Rejected';
-                statusElement.className = 'text-xs bg-red-100 text-red-600 rounded-full px-3 py-1';
-                acceptButton.disabled = false;
-                rejectButton.disabled = true;
+
+                // Update pending count
+                const pendingCount = document.querySelectorAll('[id^="status-"][class*="bg-[#fff8f3]"]').length;
+                updatePendingCount(pendingCount);
+
+                // Refresh current tab view
+                switchTab(activeTab);
             }
-
-            // Update request card data
-            requestCards.set(`request-${id}`, { 
-                element: card, 
-                status: status 
-            });
-
-            // Update pending count
-            const pendingCount = document.querySelectorAll('[id^="status-"][class*="bg-[#fff8f3]"]').length;
-            updatePendingCount(pendingCount);
-
-            // Refresh current tab view
-            switchTab(activeTab);
         }
 
         // Function to save accepted request to donations
@@ -192,7 +320,7 @@
         }
 
         // Initialize on page load
-        window.addEventListener('load', initializeRequests);
+        document.addEventListener('DOMContentLoaded', initializeRequests);
     </script>
 </head>
 <body class="flex bg-[#fcfaf8]">
@@ -312,35 +440,54 @@
                 </button>
             </div>
 
-            <div class="space-y-4">
-                <!-- Request Cards -->
-                <div id="request-1" class="request-card bg-[#fcfaf8] p-6 rounded-xl border border-[#e8dbce] flex items-center justify-between transition-all duration-300">
-                    <div class="flex items-center space-x-4">
-                        <img src="https://placehold.co/50x50" alt="Profile image of Family Support Center" class="w-12 h-12 rounded-full border-2 border-[#f2800d]">
-                        <div>
-                            <h2 class="text-[#1c140d] text-lg font-bold leading-tight">Family Support Center <span class="text-xs bg-[#f4ede7] text-[#9c7349] rounded-full px-3 py-1">NGO</span></h2>
-                            <p class="text-[#9c7349]"><i class="fas fa-box"></i> Canned Goods and Rice (8kg)</p>
-                            <p class="text-[#9c7349]"><i class="fas fa-map-marker-alt"></i> 78 Community Lane</p>
+            <div class="space-y-4" id="food-requests-container">
+                <!-- Request cards will be loaded dynamically -->
+                
+                <!-- Loading state -->
+                <div id="loading-placeholder" class="animate-pulse space-y-4">
+                    <div class="bg-[#fcfaf8] p-6 rounded-xl border border-[#e8dbce]">
+                        <div class="flex justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+                                <div class="space-y-2">
+                                    <div class="h-4 bg-gray-200 rounded w-32"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-48"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-40"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-3 bg-gray-200 rounded w-24"></div>
+                                <div class="h-8 bg-gray-200 rounded w-20"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <p class="text-[#9c7349]"><i class="fas fa-clock"></i> Today, 4:00 PM</p>
-                        <span id="status-1" class="text-xs bg-[#fff8f3] text-[#f2800d] rounded-full px-3 py-1">Pending</span>
-                        <button id="reject-1" onclick="updateStatus(1, 'rejected')" 
-                                class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
-                            Reject
-                        </button>
-                        <button id="accept-1" onclick="updateStatus(1, 'accepted')" 
-                                class="px-4 py-2 bg-[#f2800d] text-[#1c140d] rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                            Accept
-                        </button>
+                    <div class="bg-[#fcfaf8] p-6 rounded-xl border border-[#e8dbce]">
+                        <div class="flex justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+                                <div class="space-y-2">
+                                    <div class="h-4 bg-gray-200 rounded w-36"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-44"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-52"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-3 bg-gray-200 rounded w-20"></div>
+                                <div class="h-8 bg-gray-200 rounded w-24"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Repeat similar styling for other request cards -->
-                <!-- Similar updates for other request cards... -->
             </div>
         </div>
     </main>
+    
+    <script>
+        // Toggle menu functionality for mobile
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
 </body>
 </html>

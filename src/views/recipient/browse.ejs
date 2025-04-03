@@ -93,120 +93,40 @@
             </div>
 
             <!-- Food Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Food Card 1 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Fresh Vegetables</h3>
-                            <p class="text-[#9c7349]">Local Market</p>
-                        </div>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">5 kg of fresh vegetables including carrots, broccoli, and lettuce</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 2 hours left</span>
-                        <span class="text-[#9c7349]">• 2.5 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
+            <div id="food-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Food cards will be loaded dynamically here -->
+                
+                <!-- Loading placeholder -->
+                <div class="animate-pulse bg-white p-6 rounded-xl border border-[#e8dbce]">
+                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                    <div class="h-10 bg-gray-200 rounded w-full"></div>
                 </div>
-
-                <!-- Food Card 2 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Bread Loaves</h3>
-                            <p class="text-[#9c7349]">Local Bakery</p>
-                        </div>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">10 fresh bread loaves from local bakery</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 4 hours left</span>
-                        <span class="text-[#9c7349]">• 1.8 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
+                <div class="animate-pulse bg-white p-6 rounded-xl border border-[#e8dbce]">
+                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                    <div class="h-10 bg-gray-200 rounded w-full"></div>
                 </div>
-
-                <!-- Food Card 3 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Fresh Fruits</h3>
-                            <p class="text-[#9c7349]">Grocery Store</p>
-                        </div>
-                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">Limited</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">Assorted fresh fruits including apples, oranges, and bananas</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 1 hour left</span>
-                        <span class="text-[#9c7349]">• 3.2 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
+                <div class="animate-pulse bg-white p-6 rounded-xl border border-[#e8dbce]">
+                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                    <div class="h-10 bg-gray-200 rounded w-full"></div>
                 </div>
-
-                <!-- Food Card 4 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Canned Goods</h3>
-                            <p class="text-[#9c7349]">Supermarket</p>
-                        </div>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">Various canned goods including beans, soup, and vegetables</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 6 hours left</span>
-                        <span class="text-[#9c7349]">• 4.1 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
+            </div>
+            
+            <!-- Empty state message -->
+            <div id="no-food-message" class="hidden bg-white p-8 rounded-xl border border-[#e8dbce] text-center">
+                <div class="w-20 h-20 bg-[#fcfaf8] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl">🍽️</span>
                 </div>
-
-                <!-- Food Card 5 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Dairy Products</h3>
-                            <p class="text-[#9c7349]">Local Dairy</p>
-                        </div>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">Fresh milk, yogurt, and cheese products</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 3 hours left</span>
-                        <span class="text-[#9c7349]">• 2.8 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
-                </div>
-
-                <!-- Food Card 6 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-[#1c140d] text-xl">Prepared Meals</h3>
-                            <p class="text-[#9c7349]">Restaurant</p>
-                        </div>
-                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">Urgent</span>
-                    </div>
-                    <p class="text-[#9c7349] mb-4">10 prepared meals from local restaurant</p>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[#f2800d]">⏰ 30 mins left</span>
-                        <span class="text-[#9c7349]">• 1.5 km away</span>
-                    </div>
-                    <button class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                        Request Food
-                    </button>
-                </div>
+                <h3 class="font-bold text-[#1c140d] text-xl mb-2">No Food Available</h3>
+                <p class="text-[#9c7349] mb-6 max-w-md mx-auto">There are no food donations available right now. Please check back later or adjust your search filters.</p>
             </div>
 
             <!-- Pagination -->
@@ -221,5 +141,130 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Get all donor food posts from localStorage to display them
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAvailableDonations();
+            
+            // Add event listeners for menu toggle if on mobile
+            const menuToggle = document.getElementById('menuToggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', toggleMenu);
+            }
+        });
+        
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+        
+        function loadAvailableDonations() {
+            const donationsContainer = document.getElementById('food-listings');
+            const noFoodMessage = document.getElementById('no-food-message');
+            
+            // Get all localStorage keys to find donation storage
+            const keys = Object.keys(localStorage);
+            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+            
+            let allDonations = [];
+            
+            // Extract donations from all donors
+            donationKeys.forEach(key => {
+                try {
+                    const donations = JSON.parse(localStorage.getItem(key) || '[]');
+                    // Only include pending donations that aren't expired
+                    const validDonations = donations.filter(donation => {
+                        const isValid = donation.status === 'pending';
+                        const expiryDate = new Date(donation.expiryDate);
+                        const isNotExpired = expiryDate >= new Date();
+                        return isValid && isNotExpired;
+                    });
+                    allDonations = [...allDonations, ...validDonations];
+                } catch (error) {
+                    console.error('Error parsing donations from storage:', error);
+                }
+            });
+            
+            // Display message if no donations available
+            if (allDonations.length === 0) {
+                if (noFoodMessage) {
+                    noFoodMessage.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            // Hide no food message if donations exist
+            if (noFoodMessage) {
+                noFoodMessage.classList.add('hidden');
+            }
+            
+            // Clear existing food cards
+            donationsContainer.innerHTML = '';
+            
+            // Create and append food cards
+            allDonations.forEach(donation => {
+                const card = createFoodCard(donation);
+                donationsContainer.appendChild(card);
+            });
+        }
+        
+        function createFoodCard(donation) {
+            // Calculate time remaining until expiry
+            const expiryDate = new Date(donation.expiryDate);
+            const now = new Date();
+            const hoursLeft = Math.round((expiryDate - now) / (1000 * 60 * 60));
+            
+            // Create a food card element
+            const card = document.createElement('div');
+            card.className = 'bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors';
+            
+            // Determine urgency status based on hours left
+            let statusClass = 'bg-green-100 text-green-800';
+            let statusText = 'Available';
+            
+            if (hoursLeft <= 3) {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = 'Urgent';
+            } else if (hoursLeft <= 12) {
+                statusClass = 'bg-yellow-100 text-yellow-800';
+                statusText = 'Limited';
+            }
+            
+            // Format the time remaining text
+            let timeText = '';
+            if (hoursLeft < 1) {
+                timeText = 'Less than 1 hour left';
+            } else if (hoursLeft === 1) {
+                timeText = '1 hour left';
+            } else if (hoursLeft < 24) {
+                timeText = `${hoursLeft} hours left`;
+            } else {
+                const daysLeft = Math.floor(hoursLeft / 24);
+                timeText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
+            }
+            
+            // Create the card content
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="font-bold text-[#1c140d] text-xl">${donation.foodName}</h3>
+                        <p class="text-[#9c7349]">${donation.userName || 'Anonymous Donor'}</p>
+                    </div>
+                    <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${statusText}</span>
+                </div>
+                <p class="text-[#9c7349] mb-4">${donation.quantity}</p>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-[#f2800d]">⏰ ${timeText}</span>
+                    <span class="text-[#9c7349]">• ${donation.location}</span>
+                </div>
+                <a href="/recipient/request/${donation.id}" class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors block text-center">
+                    Request Food
+                </a>
+            `;
+            
+            return card;
+        }
+    </script>
 </body>
 </html> 

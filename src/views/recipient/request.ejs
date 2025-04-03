@@ -64,89 +64,21 @@
             </div>
 
             <!-- Food Item Details -->
-            <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-8">
-                <div class="flex items-start gap-6">
-                    <div class="w-1/3">
-                        <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Food item" class="w-full h-auto rounded-lg object-cover">
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-6">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="w-full md:w-1/3 bg-[#fcfaf8] aspect-square rounded-lg flex items-center justify-center">
+                        <span class="text-6xl">🍲</span>
                     </div>
-                    <div class="flex-1">
-                        <% 
-                        // Sample food data based on ID - in a real app, this would be fetched from the database
-                        let foodItem = {
-                            name: "Food Item",
-                            location: "Location",
-                            description: "Description",
-                            expires: "Expiration date",
-                            distance: "Distance"
-                        };
-
-                        if (foodId === "1") {
-                            foodItem = {
-                                name: "Fresh Vegetables",
-                                location: "Local Farm",
-                                description: "5 kg of fresh vegetables including carrots, broccoli, and lettuce",
-                                expires: "Available for 2 more hours",
-                                distance: "2.5 km away"
-                            };
-                        } else if (foodId === "2") {
-                            foodItem = {
-                                name: "Bread Loaves",
-                                location: "Local Bakery",
-                                description: "10 fresh bread loaves from local bakery",
-                                expires: "Available for 4 more hours",
-                                distance: "1.8 km away"
-                            };
-                        } else if (foodId === "3") {
-                            foodItem = {
-                                name: "Fresh Fruits",
-                                location: "Grocery Store",
-                                description: "Assorted fresh fruits including apples, oranges, and bananas",
-                                expires: "Available for 3 more days",
-                                distance: "3.2 km away"
-                            };
-                        } else if (foodId === "4") {
-                            foodItem = {
-                                name: "Canned Goods",
-                                location: "Food Bank",
-                                description: "Various canned goods including beans, soup, and vegetables",
-                                expires: "Available for 7 more days",
-                                distance: "1.5 km away"
-                            };
-                        } else if (foodId === "5") {
-                            foodItem = {
-                                name: "Dairy Products",
-                                location: "Local Dairy",
-                                description: "Milk, yogurt, and cheese with good expiration dates",
-                                expires: "Available for 2 more days",
-                                distance: "2.1 km away"
-                            };
-                        } else if (foodId === "6") {
-                            foodItem = {
-                                name: "Bakery Items",
-                                location: "Community Bakery",
-                                description: "Fresh bread, pastries, and cakes from local bakery",
-                                expires: "Available today only",
-                                distance: "0.9 km away"
-                            };
-                        } else if (foodId === "7") {
-                            foodItem = {
-                                name: "Prepared Meals",
-                                location: "Soup Kitchen",
-                                description: "Packaged meals ready to heat and eat, variety of options",
-                                expires: "Available for 3 more days",
-                                distance: "1.7 km away"
-                            };
-                        }
-                        %>
-                        <h2 class="text-2xl font-bold text-[#1c140d] mb-2"><%= foodItem.name %></h2>
-                        <div class="mb-4">
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                            <span class="text-[#9c7349] ml-2"><%= foodItem.location %></span>
+                    <div class="w-full md:w-2/3">
+                        <div id="food-details-loading" class="animate-pulse">
+                            <div class="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
+                            <div class="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+                            <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
                         </div>
-                        <p class="text-[#1c140d] mb-4"><%= foodItem.description %></p>
-                        <div class="flex gap-4 text-[#9c7349] mb-6">
-                            <p>⏰ <%= foodItem.expires %></p>
-                            <p>📍 <%= foodItem.distance %></p>
+                        <div id="food-details-content" class="hidden">
+                            <!-- Donation details will be loaded dynamically -->
                         </div>
                     </div>
                 </div>
@@ -155,8 +87,10 @@
             <!-- Request Form -->
             <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
                 <h2 class="text-xl font-bold text-[#1c140d] mb-4">Request Details</h2>
-                <form action="/recipient/submit-request" method="POST" class="space-y-6">
-                    <input type="hidden" name="foodId" value="<%= foodId %>">
+                <form id="requestForm" class="space-y-6">
+                    <input type="hidden" id="foodId" name="foodId" value="<%= foodId %>">
+                    <input type="hidden" id="donorId" name="donorId">
+                    <input type="hidden" id="donorName" name="donorName">
                     
                     <div>
                         <label for="quantity" class="block text-[#1c140d] font-medium mb-2">How much do you need?</label>
@@ -201,5 +135,162 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const foodId = document.getElementById('foodId').value;
+            loadFoodDetails(foodId);
+            
+            // Set up form submission
+            document.getElementById('requestForm').addEventListener('submit', submitFoodRequest);
+        });
+        
+        // Load food details from localStorage
+        function loadFoodDetails(foodId) {
+            const keys = Object.keys(localStorage);
+            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+            
+            let foodItem = null;
+            let donorDetails = null;
+            
+            // Search through all donor storage for the specific food item
+            for (const key of donationKeys) {
+                try {
+                    const donations = JSON.parse(localStorage.getItem(key) || '[]');
+                    const foundItem = donations.find(d => d.id === foodId);
+                    
+                    if (foundItem) {
+                        foodItem = foundItem;
+                        donorDetails = {
+                            id: foodItem.userId || key.replace('userDonations_', ''),
+                            name: foodItem.userName || 'Anonymous Donor'
+                        };
+                        break;
+                    }
+                } catch (error) {
+                    console.error('Error loading food details:', error);
+                }
+            }
+            
+            // Hide loading, show content
+            const loadingElement = document.getElementById('food-details-loading');
+            const contentElement = document.getElementById('food-details-content');
+            
+            if (foodItem) {
+                // Calculate time remaining until expiry
+                const expiryDate = new Date(foodItem.expiryDate);
+                const now = new Date();
+                const hoursLeft = Math.round((expiryDate - now) / (1000 * 60 * 60));
+                
+                // Format the time remaining text
+                let timeText = '';
+                if (hoursLeft < 1) {
+                    timeText = 'Less than 1 hour left';
+                } else if (hoursLeft === 1) {
+                    timeText = '1 hour left';
+                } else if (hoursLeft < 24) {
+                    timeText = `${hoursLeft} hours left`;
+                } else {
+                    const daysLeft = Math.floor(hoursLeft / 24);
+                    timeText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
+                }
+                
+                // Set hidden donor fields
+                document.getElementById('donorId').value = donorDetails.id;
+                document.getElementById('donorName').value = donorDetails.name;
+                
+                // Format dates
+                const expiryDateFormatted = expiryDate.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const postedDate = new Date(foodItem.timestamp);
+                const postedDateFormatted = postedDate.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // Build HTML content
+                contentElement.innerHTML = `
+                    <h2 class="text-2xl font-bold text-[#1c140d] mb-2">${foodItem.foodName}</h2>
+                    <div class="mb-4">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
+                        <span class="text-[#9c7349] ml-2">Posted by ${donorDetails.name}</span>
+                    </div>
+                    <p class="text-[#1c140d] mb-4">Quantity: ${foodItem.quantity}</p>
+                    <div class="flex flex-wrap gap-4 text-[#9c7349] mb-6">
+                        <p>⏰ ${timeText}</p>
+                        <p>📅 Best before: ${expiryDateFormatted}</p>
+                        <p>📍 ${foodItem.location}</p>
+                        <p>📝 Posted: ${postedDateFormatted}</p>
+                    </div>
+                `;
+                
+                // Show content, hide loading
+                loadingElement.classList.add('hidden');
+                contentElement.classList.remove('hidden');
+            } else {
+                // If food item not found, show error
+                contentElement.innerHTML = `
+                    <h2 class="text-2xl font-bold text-red-600 mb-2">Food Item Not Found</h2>
+                    <p class="text-[#9c7349] mb-4">This food item may no longer be available.</p>
+                    <a href="/recipient/browse" class="text-[#f2800d] hover:underline">Browse other available food</a>
+                `;
+                loadingElement.classList.add('hidden');
+                contentElement.classList.remove('hidden');
+            }
+        }
+        
+        // Handle form submission
+        function submitFoodRequest(event) {
+            event.preventDefault();
+            
+            const formData = {
+                foodId: document.getElementById('foodId').value,
+                donorId: document.getElementById('donorId').value,
+                donorName: document.getElementById('donorName').value,
+                quantity: document.getElementById('quantity').value,
+                pickupTime: document.getElementById('pickupTime').value,
+                notes: document.getElementById('notes').value,
+                recipientId: '<%= user._id %>',
+                recipientName: '<%= user.name %>',
+                status: 'pending',
+                timestamp: new Date().toISOString(),
+                id: 'request_' + Date.now()
+            };
+            
+            // Save request to localStorage
+            saveRequest(formData);
+            
+            // Redirect to my-requests page
+            window.location.href = '/recipient/my-requests?submitted=true';
+        }
+        
+        // Save request to localStorage
+        function saveRequest(requestData) {
+            // Create a storage key for the recipient
+            const recipientStorageKey = `userRequests_${requestData.recipientId}`;
+            
+            // Get existing requests or create empty array
+            let userRequests = JSON.parse(localStorage.getItem(recipientStorageKey) || '[]');
+            
+            // Add new request
+            userRequests.push(requestData);
+            
+            // Save back to localStorage
+            localStorage.setItem(recipientStorageKey, JSON.stringify(userRequests));
+            
+            // Also save to a common request pool for donors to access
+            const allRequestsKey = 'allFoodRequests';
+            let allRequests = JSON.parse(localStorage.getItem(allRequestsKey) || '[]');
+            allRequests.push(requestData);
+            localStorage.setItem(allRequestsKey, JSON.stringify(allRequests));
+            
+            console.log('Request saved:', requestData);
+        }
+    </script>
 </body>
 </html> 

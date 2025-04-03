@@ -83,127 +83,38 @@
             <!-- Requests Tabs -->
             <div class="border-b border-[#e8dbce] mb-6">
                 <div class="flex gap-8">
-                    <button class="text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold">
-                        Active (2)
+                    <button id="active-tab" class="text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold">
+                        Active (<span id="active-count">0</span>)
                     </button>
-                    <button class="text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]">
-                        Past Requests (5)
+                    <button id="past-tab" class="text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]">
+                        Past Requests (<span id="past-count">0</span>)
                     </button>
                 </div>
             </div>
 
-            <!-- Active Requests -->
-            <div class="space-y-6 mb-8">
-                <!-- Request Item 1 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-4">
-                            <div class="w-20 h-20 bg-[#fcfaf8] rounded-lg flex items-center justify-center shrink-0">
-                                <span class="text-3xl">🥕</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[#1c140d] text-lg">Fresh Vegetables</h3>
-                                <p class="text-[#9c7349] mb-2">Requested from Local Farm (2.5 km away)</p>
-                                <div class="flex gap-4 text-sm text-[#9c7349]">
-                                    <p>📦 Quantity: All available</p>
-                                    <p>⏰ Pickup: Today</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Pending</span>
-                            <span class="text-[#9c7349] text-sm">Requested 2 hours ago</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-[#e8dbce] flex justify-between items-center">
-                        <div class="text-[#9c7349]">
-                            <p>The donor has not responded yet. They will contact you soon.</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
-                                Cancel
-                            </button>
-                            <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                                Contact
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Request Item 2 -->
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-4">
-                            <div class="w-20 h-20 bg-[#fcfaf8] rounded-lg flex items-center justify-center shrink-0">
-                                <span class="text-3xl">🍎</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[#1c140d] text-lg">Fresh Fruits</h3>
-                                <p class="text-[#9c7349] mb-2">Requested from Local Market (3.2 km away)</p>
-                                <div class="flex gap-4 text-sm text-[#9c7349]">
-                                    <p>📦 Quantity: About half</p>
-                                    <p>⏰ Pickup: Tomorrow</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Accepted</span>
-                            <span class="text-[#9c7349] text-sm">Requested 1 day ago</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-[#e8dbce] flex justify-between items-center">
-                        <div class="text-[#9c7349]">
-                            <p>Your request has been accepted. Please pick up the food tomorrow at 2:00 PM.</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
-                                Cancel
-                            </button>
-                            <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
-                                Contact
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Requests Container -->
+            <div id="requests-container" class="space-y-6 mb-8">
+                <!-- Request cards will be loaded dynamically here -->
                 
-                <!-- If there was a new request submitted, show it at the top -->
-                <% if (typeof requestSubmitted !== 'undefined' && requestSubmitted) { %>
-                <div class="bg-white p-6 rounded-xl border border-[#f2800d] hover:border-[#f2800d] transition-colors">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-4">
-                            <div class="w-20 h-20 bg-[#fcfaf8] rounded-lg flex items-center justify-center shrink-0">
-                                <span class="text-3xl">🍲</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[#1c140d] text-lg">New Food Request</h3>
-                                <p class="text-[#9c7349] mb-2">Your request was just submitted</p>
-                                <div class="flex gap-4 text-sm text-[#9c7349]">
-                                    <p>📦 Status: Processing</p>
-                                    <p>⏰ Just now</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Processing</span>
-                            <span class="text-[#9c7349] text-sm">Just now</span>
-                        </div>
+                <!-- Loading placeholder -->
+                <div id="loading-placeholder" class="animate-pulse space-y-6">
+                    <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                        <div class="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                        <div class="h-10 bg-gray-200 rounded w-full mb-2"></div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-[#e8dbce] flex justify-between items-center">
-                        <div class="text-[#9c7349]">
-                            <p>We're processing your request. The donor will be notified shortly.</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
-                                Cancel
-                            </button>
-                        </div>
+                    <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                        <div class="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                        <div class="h-10 bg-gray-200 rounded w-full mb-2"></div>
                     </div>
                 </div>
-                <% } %>
             </div>
 
-            <!-- No Requests Placeholder (hidden by default) -->
-            <div class="hidden bg-white p-8 rounded-xl border border-[#e8dbce] text-center">
+            <!-- No Requests Placeholder -->
+            <div id="no-requests" class="hidden bg-white p-8 rounded-xl border border-[#e8dbce] text-center">
                 <div class="w-20 h-20 bg-[#fcfaf8] rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-3xl">📋</span>
                 </div>
@@ -215,5 +126,349 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let activeRequests = [];
+        let pastRequests = [];
+        let currentTab = 'active';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load requests
+            loadRequests();
+            
+            // Set up tab switching
+            document.getElementById('active-tab').addEventListener('click', () => switchTab('active'));
+            document.getElementById('past-tab').addEventListener('click', () => switchTab('past'));
+            
+            // Set up mobile menu toggle if needed
+            const menuToggle = document.getElementById('menuToggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', toggleMenu);
+            }
+        });
+        
+        function toggleMenu() {
+            const sidebar = document.querySelector('aside');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+        
+        function loadRequests() {
+            const userId = '<%= user._id %>';
+            const storageKey = `userRequests_${userId}`;
+            const requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            // Separate active and past requests
+            activeRequests = requests.filter(req => ['pending', 'accepted'].includes(req.status));
+            pastRequests = requests.filter(req => ['completed', 'cancelled', 'rejected'].includes(req.status));
+            
+            // Update counts
+            document.getElementById('active-count').textContent = activeRequests.length;
+            document.getElementById('past-count').textContent = pastRequests.length;
+            
+            // Remove loading placeholder
+            document.getElementById('loading-placeholder').remove();
+            
+            // Display requests based on current tab
+            displayRequests();
+        }
+        
+        function displayRequests() {
+            const container = document.getElementById('requests-container');
+            const noRequests = document.getElementById('no-requests');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Get requests to display based on current tab
+            const requests = currentTab === 'active' ? activeRequests : pastRequests;
+            
+            // Show no requests message if needed
+            if (requests.length === 0) {
+                noRequests.classList.remove('hidden');
+                return;
+            } else {
+                noRequests.classList.add('hidden');
+            }
+            
+            // Sort requests by timestamp (newest first)
+            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Add request cards
+            requests.forEach(request => {
+                const card = createRequestCard(request);
+                container.appendChild(card);
+            });
+            
+            // If a new request was just submitted, highlight it
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('submitted') === 'true' && currentTab === 'active' && requests.length > 0) {
+                // Add highlight class to the first (newest) card
+                const firstCard = container.querySelector('.request-card');
+                if (firstCard) {
+                    firstCard.classList.add('border-[#f2800d]');
+                    
+                    // Remove the highlight after a few seconds
+                    setTimeout(() => {
+                        firstCard.classList.remove('border-[#f2800d]');
+                        firstCard.classList.add('border-[#e8dbce]');
+                    }, 5000);
+                }
+            }
+        }
+        
+        function createRequestCard(request) {
+            const card = document.createElement('div');
+            card.className = 'request-card bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors';
+            card.id = `request-${request.id}`;
+            
+            // Format timestamp
+            const timestamp = new Date(request.timestamp);
+            const formattedTimestamp = timestamp.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Determine time ago text
+            const timeAgo = getTimeAgo(timestamp);
+            
+            // Determine status badge style
+            let statusBadge = '';
+            if (request.status === 'pending') {
+                statusBadge = '<span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Pending</span>';
+            } else if (request.status === 'accepted') {
+                statusBadge = '<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Accepted</span>';
+            } else if (request.status === 'completed') {
+                statusBadge = '<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Completed</span>';
+            } else if (request.status === 'rejected') {
+                statusBadge = '<span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Rejected</span>';
+            } else if (request.status === 'cancelled') {
+                statusBadge = '<span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-bold mb-2">Cancelled</span>';
+            }
+            
+            // Determine emoji for food type
+            const emoji = getFoodEmoji(request.foodId);
+            
+            // Build status message based on request status
+            let statusMessage = '';
+            let actionButtons = '';
+            
+            if (request.status === 'pending') {
+                statusMessage = 'The donor has not responded yet. They will contact you soon.';
+                actionButtons = `
+                    <button onclick="cancelRequest('${request.id}')" class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
+                        Cancel
+                    </button>
+                    <button class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
+                        Contact
+                    </button>
+                `;
+            } else if (request.status === 'accepted') {
+                statusMessage = `Your request has been accepted. Please pick up the food as scheduled (${request.pickupTime}).`;
+                actionButtons = `
+                    <button onclick="cancelRequest('${request.id}')" class="px-4 py-2 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d] transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="markAsCompleted('${request.id}')" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
+                        Mark as Received
+                    </button>
+                `;
+            } else if (request.status === 'completed') {
+                statusMessage = 'This request has been completed. Thank you for using our service!';
+                actionButtons = `
+                    <button onclick="removeRequest('${request.id}')" class="px-4 py-2 text-white bg-red-500 rounded-full font-bold hover:bg-red-600 transition-colors">
+                        Remove
+                    </button>
+                `;
+            } else if (request.status === 'rejected' || request.status === 'cancelled') {
+                statusMessage = 'This request is no longer active.';
+                actionButtons = `
+                    <button onclick="removeRequest('${request.id}')" class="px-4 py-2 text-white bg-red-500 rounded-full font-bold hover:bg-red-600 transition-colors">
+                        Remove
+                    </button>
+                `;
+            }
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="flex gap-4">
+                        <div class="w-20 h-20 bg-[#fcfaf8] rounded-lg flex items-center justify-center shrink-0">
+                            <span class="text-3xl">${emoji}</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-[#1c140d] text-lg">${request.foodId.split('_')[0]}</h3>
+                            <p class="text-[#9c7349] mb-2">Requested from ${request.donorName} (${request.location || 'Location unavailable'})</p>
+                            <div class="flex gap-4 text-sm text-[#9c7349]">
+                                <p>📦 Quantity: ${request.quantity}</p>
+                                <p>⏰ Pickup: ${request.pickupTime}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        ${statusBadge}
+                        <span class="text-[#9c7349] text-sm">Requested ${timeAgo}</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-[#e8dbce] flex justify-between items-center">
+                    <div class="text-[#9c7349]">
+                        <p>${statusMessage}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        ${actionButtons}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab styling
+            if (tab === 'active') {
+                document.getElementById('active-tab').className = 'text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold';
+                document.getElementById('past-tab').className = 'text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]';
+            } else {
+                document.getElementById('active-tab').className = 'text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]';
+                document.getElementById('past-tab').className = 'text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold';
+            }
+            
+            // Display appropriate requests
+            displayRequests();
+        }
+        
+        function cancelRequest(requestId) {
+            if (confirm('Are you sure you want to cancel this request?')) {
+                updateRequestStatus(requestId, 'cancelled');
+                
+                // Refresh UI
+                const requestCard = document.getElementById(`request-${requestId}`);
+                if (requestCard) {
+                    requestCard.remove();
+                }
+                
+                // Move from active to past
+                loadRequests();
+                displayRequests();
+            }
+        }
+        
+        function markAsCompleted(requestId) {
+            if (confirm('Mark this request as completed? This means you have received the food.')) {
+                updateRequestStatus(requestId, 'completed');
+                
+                // Refresh UI
+                const requestCard = document.getElementById(`request-${requestId}`);
+                if (requestCard) {
+                    requestCard.remove();
+                }
+                
+                // Move from active to past
+                loadRequests();
+                displayRequests();
+            }
+        }
+        
+        function removeRequest(requestId) {
+            if (confirm('Remove this request from your history?')) {
+                // Get user requests
+                const userId = '<%= user._id %>';
+                const storageKey = `userRequests_${userId}`;
+                let requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                
+                // Remove request
+                requests = requests.filter(req => req.id !== requestId);
+                
+                // Save back to storage
+                localStorage.setItem(storageKey, JSON.stringify(requests));
+                
+                // Refresh UI
+                const requestCard = document.getElementById(`request-${requestId}`);
+                if (requestCard) {
+                    requestCard.remove();
+                }
+                
+                // Reload requests
+                loadRequests();
+                displayRequests();
+            }
+        }
+        
+        function updateRequestStatus(requestId, newStatus) {
+            // Update in user's requests
+            const userId = '<%= user._id %>';
+            const storageKey = `userRequests_${userId}`;
+            let requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            const requestIndex = requests.findIndex(req => req.id === requestId);
+            if (requestIndex !== -1) {
+                requests[requestIndex].status = newStatus;
+                localStorage.setItem(storageKey, JSON.stringify(requests));
+            }
+            
+            // Also update in the common pool
+            const allRequestsKey = 'allFoodRequests';
+            let allRequests = JSON.parse(localStorage.getItem(allRequestsKey) || '[]');
+            
+            const allRequestIndex = allRequests.findIndex(req => req.id === requestId);
+            if (allRequestIndex !== -1) {
+                allRequests[allRequestIndex].status = newStatus;
+                localStorage.setItem(allRequestsKey, JSON.stringify(allRequests));
+            }
+        }
+        
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) {
+                return Math.floor(interval) + ' years ago';
+            }
+            
+            interval = seconds / 2592000;
+            if (interval > 1) {
+                return Math.floor(interval) + ' months ago';
+            }
+            
+            interval = seconds / 86400;
+            if (interval > 1) {
+                return Math.floor(interval) + ' days ago';
+            }
+            
+            interval = seconds / 3600;
+            if (interval > 1) {
+                return Math.floor(interval) + ' hours ago';
+            }
+            
+            interval = seconds / 60;
+            if (interval > 1) {
+                return Math.floor(interval) + ' minutes ago';
+            }
+            
+            return Math.floor(seconds) + ' seconds ago';
+        }
+        
+        function getFoodEmoji(foodId) {
+            // Extract food type from ID if possible
+            const foodType = foodId.toLowerCase();
+            
+            if (foodType.includes('vegetable') || foodType.includes('veg')) {
+                return '🥕';
+            } else if (foodType.includes('fruit')) {
+                return '🍎';
+            } else if (foodType.includes('bread') || foodType.includes('bakery')) {
+                return '🍞';
+            } else if (foodType.includes('dairy') || foodType.includes('milk')) {
+                return '🥛';
+            } else if (foodType.includes('meal') || foodType.includes('prepared')) {
+                return '🍲';
+            } else if (foodType.includes('canned') || foodType.includes('can')) {
+                return '🥫';
+            } else {
+                return '🍱';
+            }
+        }
+    </script>
 </body>
 </html> 
