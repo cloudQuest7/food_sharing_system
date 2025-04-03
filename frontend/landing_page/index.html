@@ -1,191 +1,113 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare - Share Food, Share Love</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Epilogue%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
-    />
-
-    <title>Galileo Design</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap">
   </head>
   <body>
-    <div class="relative flex size-full min-h-screen flex-col bg-[#fcfaf8] group/design-root overflow-x-hidden" style='font-family: Epilogue, "Noto Sans", sans-serif;'>
-      <div class="layout-container flex h-full grow flex-col">
-        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f4ede7] px-10 py-3">
-          <div class="flex items-center gap-4 text-[#1c140d]">
-            <div class="size-4">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path></svg>
-            </div>
-            <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">FoodShare</h2>
+    <div class="container">
+      <header>
+        <div class="logo-container">
+          <div class="logo-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+            </svg>
           </div>
-          <div class="flex flex-1 justify-end gap-8">
-            <div class="flex items-center gap-9">
-              <a class="text-[#1c140d] text-sm font-medium leading-normal" href="#">How it works</a>
-              <a class="text-[#1c140d] text-sm font-medium leading-normal" href="#">Get food</a>
-              <a class="text-[#1c140d] text-sm font-medium leading-normal" href="#">Give food</a>
-              <a class="text-[#1c140d] text-sm font-medium leading-normal" href="#">Volunteer</a>
-            </div>
-            <div class="flex gap-2">
-              <button
-                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f2800d] text-[#1c140d] text-sm font-bold leading-normal tracking-[0.015em]"
-              >
-                <span class="truncate">Sign in</span>
-              </button>
-              <button
-                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f4ede7] text-[#1c140d] text-sm font-bold leading-normal tracking-[0.015em]"
-              >
-                <span class="truncate">Sign up</span>
-              </button>
-            </div>
-          </div>
-        </header>
-        <div class="px-40 flex flex-1 justify-center py-5">
-          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div class="@container">
-              <div class="@[480px]:p-4">
-                <div
-                  class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
-                  style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/sdxl10/9f53615f-6d7f-4bd4-b904-d4bd1a8c7a61.png");'
-                >
-                  <div class="flex flex-col gap-2 text-left">
-                    <h1
-                      class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]"
-                    >
-                      Share more, waste less
-                    </h1>
-                    <h2 class="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
-                      We make it easy to share your extra food with your community. Whether you're an individual, a business, or a nonprofit, we have a solution for you.
-                    </h2>
-                  </div>
-                  <button
-                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#f2800d] text-[#1c140d] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
-                  >
-                    <span class="truncate">Get started</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
-              <div class="flex flex-1 gap-3 rounded-lg border border-[#e8dbce] bg-[#fcfaf8] p-4 flex-col">
-                <div class="text-[#1c140d]" data-icon="Receipt" data-size="24px" data-weight="regular">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                    <path
-                      d="M72,104a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,104Zm8,40h96a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16ZM232,56V208a8,8,0,0,1-11.58,7.15L192,200.94l-28.42,14.21a8,8,0,0,1-7.16,0L128,200.94,99.58,215.15a8,8,0,0,1-7.16,0L64,200.94,35.58,215.15A8,8,0,0,1,24,208V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Zm-16,0H40V195.06l20.42-10.22a8,8,0,0,1,7.16,0L96,199.06l28.42-14.22a8,8,0,0,1,7.16,0L160,199.06l28.42-14.22a8,8,0,0,1,7.16,0L216,195.06Z"
-                    ></path>
-                  </svg>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <h2 class="text-[#1c140d] text-base font-bold leading-tight">Post Food</h2>
-                  <p class="text-[#9c7349] text-sm font-normal leading-normal">
-                    In just a few taps, let us know what you have to share. We'll help you find a local organization that can put it to good use.
-                  </p>
-                </div>
-              </div>
-              <div class="flex flex-1 gap-3 rounded-lg border border-[#e8dbce] bg-[#fcfaf8] p-4 flex-col">
-                <div class="text-[#1c140d]" data-icon="HandGrabbing" data-size="24px" data-weight="regular">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                    <path
-                      d="M188,80a27.79,27.79,0,0,0-13.36,3.4,28,28,0,0,0-46.64-11A28,28,0,0,0,80,92v20H68a28,28,0,0,0-28,28v12a88,88,0,0,0,176,0V108A28,28,0,0,0,188,80Zm12,72a72,72,0,0,1-144,0V140a12,12,0,0,1,12-12H80v24a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V108a12,12,0,0,1,24,0Z"
-                    ></path>
-                  </svg>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <h2 class="text-[#1c140d] text-base font-bold leading-tight">Claim Food</h2>
-                  <p class="text-[#9c7349] text-sm font-normal leading-normal">Find food near you that's available for pickup. You can claim as much or as little as you need.</p>
-                </div>
-              </div>
-              <div class="flex flex-1 gap-3 rounded-lg border border-[#e8dbce] bg-[#fcfaf8] p-4 flex-col">
-                <div class="text-[#1c140d]" data-icon="Truck" data-size="24px" data-weight="regular">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                    <path
-                      d="M247.42,117l-14-35A15.93,15.93,0,0,0,218.58,72H184V64a8,8,0,0,0-8-8H24A16,16,0,0,0,8,72V184a16,16,0,0,0,16,16H41a32,32,0,0,0,62,0h50a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V120A7.94,7.94,0,0,0,247.42,117ZM184,88h34.58l9.6,24H184ZM24,72H168v64H24ZM72,208a16,16,0,1,1,16-16A16,16,0,0,1,72,208Zm81-24H103a32,32,0,0,0-62,0H24V152H168v12.31A32.11,32.11,0,0,0,153,184Zm31,24a16,16,0,1,1,16-16A16,16,0,0,1,184,208Zm48-24H215a32.06,32.06,0,0,0-31-24V128h48Z"
-                    ></path>
-                  </svg>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <h2 class="text-[#1c140d] text-base font-bold leading-tight">Deliver Food</h2>
-                  <p class="text-[#9c7349] text-sm font-normal leading-normal">Help get food from donors to recipients. You can deliver whenever and wherever works for you.</p>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col gap-10 px-4 py-10 @container">
-              <div class="flex flex-col gap-4">
-                <h1
-                  class="text-[#1c140d] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]"
-                >
-                  Who can use FoodShare?
-                </h1>
-                <p class="text-[#1c140d] text-base font-normal leading-normal max-w-[720px]">
-                  Our platform is designed to help individuals, businesses, and nonprofits share food with their communities. Here's how it works for each group:
-                </p>
-              </div>
-              <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3">
-                <div class="flex flex-col gap-3 pb-3">
-                  <div
-                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/78456225-17c2-494c-98fd-08d83dd770c3.png");'
-                  ></div>
-                  <div>
-                    <p class="text-[#1c140d] text-base font-medium leading-normal">For individuals</p>
-                    <p class="text-[#9c7349] text-sm font-normal leading-normal">Got extra food? Share it with neighbors in need.</p>
-                  </div>
-                </div>
-                <div class="flex flex-col gap-3 pb-3">
-                  <div
-                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/5cb47f59-4bef-4dbf-b27e-f4d7cab3233a.png");'
-                  ></div>
-                  <div>
-                    <p class="text-[#1c140d] text-base font-medium leading-normal">For businesses</p>
-                    <p class="text-[#9c7349] text-sm font-normal leading-normal">
-                      Restaurants, grocery stores, and other businesses can use FoodShare to donate surplus food to local organizations.
-                    </p>
-                  </div>
-                </div>
-                <div class="flex flex-col gap-3 pb-3">
-                  <div
-                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/d9ef6674-b4c1-4f15-8d96-cab98c4b59e6.png");'
-                  ></div>
-                  <div>
-                    <p class="text-[#1c140d] text-base font-medium leading-normal">For nonprofits</p>
-                    <p class="text-[#9c7349] text-sm font-normal leading-normal">
-                      Local organizations can use FoodShare to receive donations and connect with volunteers who can help distribute food.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-           
-            
-            <div class="@container">
-              <div class="flex flex-col justify-end gap-6 px-4 py-10 @[480px]:gap-8 @[480px]:px-10 @[480px]:py-20">
-                <div class="flex flex-col gap-2 text-center">
-                  <h1
-                    class="text-[#1c140d] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px] mx-auto"
-                  >
-                    Ready to start sharing?
-                  </h1>
-                </div>
-                <div class="flex flex-1 justify-center">
-                  <div class="flex justify-center">
-                    <button
-                      class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#f2800d] text-[#1c140d] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] grow"
-                    >
-                      <span class="truncate">Get started</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h2>FoodShare</h2>
         </div>
-      </div>
+        <nav>
+          <div class="nav-links">
+            <a href="/">How it works</a>
+            <a href="#">Get food</a>
+            <a href="#">Give food</a>
+            <a href="#">Volunteer</a>
+          </div>
+          <div class="auth-buttons">
+            <button class="btn-primary">
+              <a href="/login">Sign in</a>
+            </button>
+            <button class="btn-secondary">
+              <a href="/register">Sign up</a>
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-content">
+            <h1>Share more, waste less</h1>
+            <p>We make it easy to share your extra food with your community. Whether you're an individual, a business, or a nonprofit, we have a solution for you.</p>
+            <button class="btn-primary">Get started</button>
+          </div>
+        </section>
+
+        <section class="features">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M72,104a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,104Zm8,40h96a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16ZM232,56V208a8,8,0,0,1-11.58,7.15L192,200.94l-28.42,14.21a8,8,0,0,1-7.16,0L128,200.94,99.58,215.15a8,8,0,0,1-7.16,0L64,200.94,35.58,215.15A8,8,0,0,1,24,208V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Zm-16,0H40V195.06l20.42-10.22a8,8,0,0,1,7.16,0L96,199.06l28.42-14.22a8,8,0,0,1,7.16,0L160,199.06l28.42-14.22a8,8,0,0,1,7.16,0L216,195.06Z"></path>
+              </svg>
+            </div>
+            <h2>Post Food</h2>
+            <p>In just a few taps, let us know what you have to share. We'll help you find a local organization that can put it to good use.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M188,80a27.79,27.79,0,0,0-13.36,3.4,28,28,0,0,0-46.64-11A28,28,0,0,0,80,92v20H68a28,28,0,0,0-28,28v12a88,88,0,0,0,176,0V108A28,28,0,0,0,188,80Zm12,72a72,72,0,0,1-144,0V140a12,12,0,0,1,12-12H80v24a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V108a12,12,0,0,1,24,0Z"></path>
+              </svg>
+            </div>
+            <h2>Claim Food</h2>
+            <p>Find food near you that's available for pickup. You can claim as much or as little as you need.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M247.42,117l-14-35A15.93,15.93,0,0,0,218.58,72H184V64a8,8,0,0,0-8-8H24A16,16,0,0,0,8,72V184a16,16,0,0,0,16,16H41a32,32,0,0,0,62,0h50a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V120A7.94,7.94,0,0,0,247.42,117ZM184,88h34.58l9.6,24H184ZM24,72H168v64H24ZM72,208a16,16,0,1,1,16-16A16,16,0,0,1,72,208Zm81-24H103a32,32,0,0,0-62,0H24V152H168v12.31A32.11,32.11,0,0,0,153,184Zm31,24a16,16,0,1,1,16-16A16,16,0,0,1,184,208Zm48-24H215a32.06,32.06,0,0,0-31-24V128h48Z"></path>
+              </svg>
+            </div>
+            <h2>Deliver Food</h2>
+            <p>Help get food from donors to recipients. You can deliver whenever and wherever works for you.</p>
+          </div>
+        </section>
+
+        <section class="users">
+          <h1>Who can use FoodShare?</h1>
+          <p>Our platform is designed to help individuals, businesses, and nonprofits share food with their communities. Here's how it works for each group:</p>
+          
+          <div class="user-cards">
+            <div class="user-card">
+              <div class="user-image individual"></div>
+              <h3>For individuals</h3>
+              <p>Got extra food? Share it with neighbors in need.</p>
+            </div>
+
+            <div class="user-card">
+              <div class="user-image business"></div>
+              <h3>For businesses</h3>
+              <p>Restaurants, grocery stores, and other businesses can use FoodShare to donate surplus food to local organizations.</p>
+            </div>
+
+            <div class="user-card">
+              <div class="user-image nonprofit"></div>
+              <h3>For nonprofits</h3>
+              <p>Local organizations can use FoodShare to receive donations and connect with volunteers who can help distribute food.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta">
+          <h1>Ready to start sharing?</h1>
+          <button class="btn-primary">Get started</button>
+        </section>
+      </main>
     </div>
   </body>
 </html>

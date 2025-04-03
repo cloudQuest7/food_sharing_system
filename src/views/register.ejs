@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>ShareBites - Sign Up</title>
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2>ShareBites</h2>
+            </div>
+        </header>
+
+        <main>
+            <div class="signup-container">
+                <div class="signup-content">
+                    <div class="signup-header">
+                        <h1>Join the ShareBites community</h1>
+                        <p>We'll help you recover food and feed people in need.</p>
+                    </div>
+
+                    <form id="signupForm" class="signup-form" action="/register" method="POST">
+                        <div class="form-group">
+                            <label>
+                                <p>Name</p>
+                                <input type="text" name="name" placeholder="Enter your name" required />
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <p>Email</p>
+                                <input type="email" name="email" placeholder="Enter your email" required />
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <p>Phone</p>
+                                <input type="tel" name="phone" placeholder="(123) 456-7890" required />
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <p>Password</p>
+                                <input type="password" name="password" placeholder="•••••••••••••••••••••••••" required />
+                            </label>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="submit-button">
+                                <span>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

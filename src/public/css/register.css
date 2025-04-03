@@ -1,0 +1,140 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Epilogue, 'Noto Sans', sans-serif;
+    background-color: #fcfaf8;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f4ede7;
+    padding: 0.75rem 2.5rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #1c140d;
+}
+
+.logo {
+    width: 1rem;
+    height: 1rem;
+}
+
+h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+/* Signup container styles */
+.signup-container {
+    padding: 1.25rem 10rem;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-content {
+    width: 512px;
+    max-width: 512px;
+    padding: 1.25rem 0;
+}
+
+.signup-header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.signup-header h1 {
+    color: #1c140d;
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: -0.033em;
+    margin-bottom: 0.75rem;
+}
+
+.signup-header p {
+    color: #9c7349;
+    font-size: 1rem;
+}
+
+/* Form styles */
+.form-group {
+    max-width: 480px;
+    padding: 0.75rem 1rem;
+}
+
+.form-group label {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group p {
+    color: #1c140d;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    height: 3.5rem;
+    padding: 0.875rem;
+    border: 1px solid #e8dbce;
+    border-radius: 0.75rem;
+    background-color: #fcfaf8;
+    color: #1c140d;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #e8dbce;
+}
+
+.form-group input::placeholder {
+    color: #9c7349;
+}
+
+/* Submit button styles */
+.form-footer {
+    padding: 0.75rem 1rem;
+}
+
+.submit-button {
+    width: 100%;
+    height: 3rem;
+    background-color: #f2800d;
+    color: #1c140d;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 0.015em;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .signup-container {
+        padding: 1rem;
+    }
+}
