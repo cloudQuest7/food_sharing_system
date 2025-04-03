@@ -1,17 +1,27 @@
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const signToken = id => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN
+    });
+};
 
 exports.register = async (req, res) => {
     try {
         const { name, email, phone, password } = req.body;
+        
+        // Log the request body
+        console.log('Registration attempt:', { name, email, phone });
 
         // Check if user exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
+            console.log('User already exists:', email);
             return res.status(400).render('register', {
                 title: 'Register - ShareBites',
-                error: 'Email already in use'
+                error: 'Email already exists'
             });
         }
 
@@ -23,7 +33,9 @@ exports.register = async (req, res) => {
             password
         });
 
-        // Redirect to login page with success message
+        console.log('User created successfully:', user._id);
+
+        // Redirect to login page
         res.redirect('/login?registered=true');
     } catch (error) {
         console.error('Registration error:', error);
@@ -37,29 +49,49 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log('Login attempt:', email);
 
-        // Check if user exists
+        // Find user
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            console.log('User not found');
+            return res.status(401).render('login', {
+                title: 'Login - ShareBites',
+                error: 'Invalid email or password'
+            });
         }
 
-        // Validate password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+        // Check password
+        const isPasswordValid = await user.correctPassword(password);
+        if (!isPasswordValid) {
+            console.log('Invalid password');
+            return res.status(401).render('login', {
+                title: 'Login - ShareBites',
+                error: 'Invalid email or password'
+            });
         }
 
-        // Create JWT token
+        // Create token
         const token = jwt.sign(
-            { userId: user.id },
+            { userId: user._id },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '24h' }
         );
 
-        res.json({ token });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        // Set cookie
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
+        console.log('Login successful, redirecting to section page');
+        return res.redirect('/section');
+    } catch (error) {
+        console.error('Login error:', error);
+        return res.status(500).render('login', {
+            title: 'Login - ShareBites',
+            error: 'An error occurred during login'
+        });
     }
 };

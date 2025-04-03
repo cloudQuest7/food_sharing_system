@@ -1,12 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+const connectDB = require('./config/db');
 const cors = require('cors');
 const helmet = require('helmet');
-const path = require('path');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // View engine setup
 app.set('view engine', 'ejs');
@@ -30,25 +35,53 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch((err) => console.error('MongoDB connection error:', err));
 
 // Import routes
-const userRoutes = require('./routes/auth');
-
-// Use routes
-app.use('/api/users', userRoutes);
+const authController = require('./controllers/authController');
 
 // Auth routes
 app.get('/register', (req, res) => {
     res.render('register', {
-        title: 'Register - FoodShare'
+        title: 'Register - ShareBites',
+        error: null
     });
 });
+
+app.post('/register', authController.register);
 
 app.get('/login', (req, res) => {
     res.render('login', {
-        title: 'Login - FoodShare'
+        title: 'Login - ShareBites',
+        error: null,
+        registered: req.query.registered === 'true'
     });
 });
 
-app.use('/api/auth', require('./routes/auth'));
+app.post('/login', authController.login);
+
+// Section route
+app.get('/section', (req, res) => {
+    try {
+        const token = req.cookies.jwt;
+        if (!token) {
+            console.log('No token found');
+            return res.redirect('/login');
+        }
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                console.log('Invalid token');
+                return res.redirect('/login');
+            }
+            
+            console.log('Rendering section page');
+            res.render('section', {
+                title: 'Choose Your Role - ShareBites'
+            });
+        });
+    } catch (error) {
+        console.error('Section route error:', error);
+        res.redirect('/login');
+    }
+});
 
 // Landing page route
 app.get('/', (req, res) => {
@@ -62,23 +95,22 @@ app.get('/', (req, res) => {
     }
 });
 
-// 404 handler
-app.use((req, res) => {
+// Add this before your other error handlers
+app.use((req, res, next) => {
+    console.log('404 - Not Found:', req.originalUrl);
     res.status(404).render('404', {
-        title: '404 - Page Not Found'
+        title: '404 - Not Found'
     });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('error', {
+    console.error('Error:', err);
+    res.status(err.status || 500).render('error', {
         title: 'Error',
-        message: 'Something went wrong!'
+        message: err.message || 'Something went wrong!'
     });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

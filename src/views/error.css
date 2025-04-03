@@ -1,0 +1,35 @@
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    font-family: Epilogue, 'Noto Sans', sans-serif;
+    background-color: #fcfaf8;
+}
+
+h1 {
+    font-size: 4rem;
+    color: #f2800d;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #9c7349;
+    margin-bottom: 2rem;
+}
+
+.home-button {
+    background: #f2800d;
+    color: #1c140d;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    transition: opacity 0.2s;
+}
+
+.home-button:hover {
+    opacity: 0.9;
+}

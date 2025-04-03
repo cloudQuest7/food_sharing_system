@@ -1,0 +1,134 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Epilogue, "Noto Sans", sans-serif;
+    background-color: #fcfaf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Popup container */
+.popup-container {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    max-width: 42rem;
+    width: 100%;
+    border: 1px solid #e8dbce;
+}
+
+/* Content styles */
+h1 {
+    color: #1c140d;
+    font-size: 2.25rem;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.033em;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #9c7349;
+    font-size: 1rem;
+    line-height: normal;
+    margin-bottom: 1.5rem;
+}
+
+/* Role options */
+.role-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .role-options {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+    }
+}
+
+.role-card {
+    border: 1px solid #e8dbce;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+@media (min-width: 768px) {
+    .role-card {
+        width: 50%;
+    }
+}
+
+.role-card:hover {
+    border-color: #f2800d;
+}
+
+.role-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+}
+
+.role-card p {
+    color: #1c140d;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.role-card input[type="radio"] {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: #f2800d;
+}
+
+/* Button styles */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.next-button {
+    min-width: 84px;
+    height: 3rem;
+    padding: 0 1.25rem;
+    background-color: #f2800d;
+    color: #1c140d;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 0.015em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.next-button span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

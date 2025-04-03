@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
-    phone: {
-        type: String,
-        required: [true, 'Phone number is required']
-    },
     password: {
         type: String,
         required: [true, 'Password is required'],
@@ -24,19 +20,24 @@ const userSchema = new mongoose.Schema({
     userType: {
         type: String,
         enum: ['donor', 'recipient'],
-        default: 'donor'
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+        default: null
     }
+}, {
+    timestamps: true
 });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 12);
+    
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
 });
+
+// Method to check password
+userSchema.methods.correctPassword = async function(candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);
