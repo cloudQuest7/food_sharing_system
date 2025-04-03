@@ -125,8 +125,13 @@
     </script>
 </head>
 <body class="flex bg-[#fcfaf8]">
+    <!-- Menu Toggle Button -->
+    <button id="menuToggle" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl border border-[#e8dbce] text-[#9c7349] hover:text-[#f2800d]">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <!-- Sidebar -->
-    <aside class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed left-0 top-0 flex flex-col">
+    <aside id="sidebar" class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed left-0 top-0 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
         <!-- Logo and Navigation section -->
         <div class="flex-1">
             <div class="flex items-center gap-4 p-6 border-b border-[#e8dbce]">
@@ -189,9 +194,15 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="ml-64 flex-1 p-8">
-        <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em] mb-2">Food Requests</h1>
-        <p class="text-[#9c7349] text-base font-normal leading-normal mb-6">Manage incoming requests for your donated food items</p>
+    <main class="w-full lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-8">
+            <h1 class="text-2xl lg:text-3xl font-semibold text-[#1c140d] tracking-wide leading-tight mb-1">
+                Food Requests
+            </h1>
+            <p class="text-sm lg:text-base text-[#9c7349] font-normal">
+                Manage incoming requests for your donated food items
+            </p>
+        </div>
         
         <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
             <div class="flex items-center mb-6">
