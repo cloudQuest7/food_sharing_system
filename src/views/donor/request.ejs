@@ -19,8 +19,25 @@
     <script>
         let activeTab = 'all';
         const requestCards = new Map(); // Store request data
+        let userStorageKey = '';
+
+        function initializeUserStorage() {
+            // Create a unique key based on user ID
+            const userId = '<%= user._id %>' || 'default-user';
+            userStorageKey = `userDonations_${userId}`;
+            
+            // Initialize storage if it doesn't exist
+            if (!localStorage.getItem(userStorageKey)) {
+                localStorage.setItem(userStorageKey, JSON.stringify([]));
+            }
+            
+            console.log(`Request page: User storage initialized with key: ${userStorageKey}`);
+        }
 
         function initializeRequests() {
+            // Initialize user storage
+            initializeUserStorage();
+            
             // Count pending requests
             const pendingCount = document.querySelectorAll('[id^="status-"]').length;
             updatePendingCount(pendingCount);
@@ -99,6 +116,28 @@
                 statusElement.className = 'text-xs bg-green-100 text-green-600 rounded-full px-3 py-1';
                 acceptButton.disabled = true;
                 rejectButton.disabled = false;
+                
+                // Get request details to add to donations
+                const recipientName = card.querySelector('h2').textContent.split('<')[0].trim();
+                const foodDetails = card.querySelector('p:nth-of-type(1)').textContent.replace('󰄫', '').trim();
+                const location = card.querySelector('p:nth-of-type(2)').textContent.replace('󰄧', '').trim();
+                const timeInfo = card.querySelector('p:nth-of-type(3)').textContent.replace('󰅐', '').trim();
+                
+                // Add to donations list in localStorage
+                saveAcceptedRequestToDonations({
+                    id: `donation_${Date.now()}`,
+                    foodName: foodDetails.split('(')[0].trim(),
+                    quantity: foodDetails.includes('(') ? foodDetails.split('(')[1].replace(')', '') : '1 portion',
+                    location: location,
+                    timestamp: new Date().toISOString(),
+                    expiryDate: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Next day as fallback
+                    status: 'accepted',
+                    recipient: recipientName,
+                    pickupTime: timeInfo
+                });
+                
+                // Show success message
+                showMessage(`Request accepted and added to your donations!`);
             } else if (status === 'rejected') {
                 statusElement.textContent = 'Rejected';
                 statusElement.className = 'text-xs bg-red-100 text-red-600 rounded-full px-3 py-1';
@@ -118,6 +157,38 @@
 
             // Refresh current tab view
             switchTab(activeTab);
+        }
+
+        // Function to save accepted request to donations
+        function saveAcceptedRequestToDonations(donationData) {
+            // Get existing donations or initialize empty array
+            let donations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            
+            // Add user info to donation
+            donationData.userId = '<%= user._id %>';
+            donationData.userName = '<%= user.name %>';
+            
+            // Add new donation
+            donations.push(donationData);
+            
+            // Save back to localStorage
+            localStorage.setItem(userStorageKey, JSON.stringify(donations));
+        }
+
+        // Function to show message
+        function showMessage(message, type = 'success') {
+            const messageEl = document.createElement('div');
+            messageEl.className = `fixed bottom-4 right-4 px-4 py-2 rounded-xl font-bold ${
+                type === 'success' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+            } z-50`;
+            messageEl.textContent = message;
+            document.body.appendChild(messageEl);
+            
+            setTimeout(() => {
+                messageEl.style.opacity = '0';
+                messageEl.style.transition = 'opacity 0.3s';
+                setTimeout(() => messageEl.remove(), 300);
+            }, 3000);
         }
 
         // Initialize on page load
@@ -152,19 +223,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/donor/donate" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <a href="/donor/post-food" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                             <i class="fas fa-plus-circle w-6"></i>
                             <span class="ml-3">Post Food</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <a href="/donor/donation" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                             <i class="fas fa-box-open w-6"></i>
-                            <span class="ml-3">Manage Donations</span>
+                            <span class="ml-3">My Donations</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/donate/request" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
+                        <a href="/donor/requests" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
                             <i class="fas fa-bell w-6"></i>
                             <span class="ml-3">View Requests</span>
                             <span class="sidebar-pending-count ml-auto bg-[#f2800d] text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">3</span>
@@ -183,9 +254,9 @@
         <!-- Profile Section at Bottom -->
         <div class="p-4 border-t border-[#e8dbce]">
             <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
-                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
                 <div>
-                    <p class="text-sm font-bold text-[#1c140d]">John Doe</p>
+                    <p class="text-sm font-bold text-[#1c140d]"><%= user.name %></p>
                     <p class="text-xs text-[#9c7349]">Food Donor</p>
                 </div>
                 <i class="fas fa-chevron-right ml-auto text-xs"></i>
@@ -200,7 +271,7 @@
                 Food Requests
             </h1>
             <p class="text-sm lg:text-base text-[#9c7349] font-normal">
-                Manage incoming requests for your donated food items
+                Hello <%= user.name %>, manage incoming requests for your donated food items
             </p>
         </div>
         

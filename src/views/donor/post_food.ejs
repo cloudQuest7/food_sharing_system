@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeShareIt - Post Food</title>
+    <title>ShareBites - Post Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
@@ -64,32 +64,32 @@
         <nav class="p-4 flex-1">
             <ul class="space-y-2">
                 <li>
-                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/dashboard" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-home w-6"></i>
                         <span class="ml-3">Home</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
+                    <a href="/donor/post-food" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
                         <i class="fas fa-plus-circle w-6"></i>
                         <span class="ml-3">Post Food</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/donation" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-box-open w-6"></i>
-                        <span class="ml-3">Manage Donations</span>
+                        <span class="ml-3">My Donations</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/requests" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-bell w-6"></i>
                         <span class="ml-3">View Requests</span>
                         <span id="sidebarRequestCount" class="hidden ml-auto bg-[#f2800d] text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"></span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/profile" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-user w-6"></i>
                         <span class="ml-3">Profile</span>
                     </a>
@@ -100,10 +100,10 @@
         <!-- Profile Section -->
         <div class="p-4 border-t border-[#e8dbce]">
             <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
-                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
                 <div>
-                    <p class="text-sm font-bold text-[#1c140d]">John Doe</p>
-                    <p class="text-xs text-[#9c7349]">WeShareIt Donor</p>
+                    <p class="text-sm font-bold text-[#1c140d]"><%= user.name %></p>
+                    <p class="text-xs text-[#9c7349]">Food Donor</p>
                 </div>
                 <i class="fas fa-chevron-right ml-auto text-xs"></i>
             </div>
@@ -115,7 +115,7 @@
         <!-- Header Section -->
         <div class="text-center max-w-2xl mx-auto mb-8">
             <h1 class="text-2xl lg:text-3xl font-semibold text-[#1c140d] tracking-wide leading-tight mb-2">
-                Post Food
+                Hello <%= user.name %>, Post Food
             </h1>
             <p class="text-sm lg:text-base text-[#9c7349] font-normal">
                 Share your excess food with those in need
@@ -171,7 +171,8 @@
                     <div class="relative">
                         <input type="text" id="location" name="location" required
                                class="form-input w-full pl-12 pr-12 p-3.5 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-all duration-300 hover:border-[#f2800d]/50"
-                               placeholder="Where can the food be collected?">
+                               placeholder="Where can the food be collected?"
+                               value="<%= user.location || '' %>">
                         <i class="fas fa-map-marker-alt input-icon absolute left-4 top-1/2 -translate-y-1/2"></i>
                         <button type="button" onclick="detectLocation()" 
                                 class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-[#9c7349] hover:text-[#f2800d] transition-colors">
@@ -209,7 +210,7 @@
 
                 <!-- Submit Button -->
                 <div class="pt-4">
-                    <button type="submit" 
+                    <button type="submit" id="submitBtn"
                             class="w-full p-4 bg-gradient-to-r from-[#f2800d] to-[#ff9838] text-white rounded-xl font-bold hover:from-[#e67600] hover:to-[#f2800d] transition-all duration-300 transform hover:scale-[0.99] active:scale-[0.97] shadow-lg">
                         Post Food
                     </button>
@@ -219,119 +220,180 @@
     </main>
 
     <!-- Success Modal -->
-    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl p-6 max-w-sm w-full">
-            <div class="text-center mb-4">
-                <i class="fas fa-check-circle text-4xl text-green-500 mb-2"></i>
-                <h3 class="text-xl font-bold text-[#1c140d]">Success!</h3>
-                <p class="text-[#9c7349]">Your food listing has been posted successfully.</p>
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl animate-fadeIn">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-500 mb-4">
+                    <i class="fas fa-check text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#1c140d] mb-2">Food Posted Successfully!</h3>
+                <p class="text-[#9c7349]">Your food donation has been posted and added to your donations list.</p>
             </div>
-            <button onclick="closeSuccessModal()" 
-                    class="w-full p-3 bg-[#f2800d] text-white rounded-xl font-bold hover:bg-[#e67600] transition-colors">
-                Done
-            </button>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="closeSuccessModal()" class="flex-1 py-3 bg-[#f2800d] text-white rounded-xl font-bold hover:bg-[#e67600] transition-colors">
+                    View My Donations
+                </button>
+                <button onclick="postAnother()" class="flex-1 py-3 border border-[#e8dbce] text-[#1c140d] rounded-xl font-bold hover:border-[#f2800d] transition-colors">
+                    Post Another
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Form submission handling
-        document.getElementById('postFoodForm').addEventListener('submit', async function(e) {
+        // Show the modal on successful form submission
+        document.getElementById('postFoodForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate expiry date
-            const expiryDate = new Date(document.getElementById('expiryDate').value);
-            const today = new Date();
-            if (expiryDate < today) {
-                alert('Expiry date cannot be in the past');
+            // Validate form
+            const foodName = document.getElementById('foodName').value.trim();
+            const quantity = document.getElementById('quantity').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const location = document.getElementById('location').value.trim();
+            
+            if (!foodName || !quantity || !expiryDate || !location) {
+                alert('Please fill in all required fields');
                 return;
             }
-
-            // Simulate form submission
-            try {
-                // Show loading state
-                const submitButton = this.querySelector('button[type="submit"]');
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Posting...';
-
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
-                // Show success modal
-                document.getElementById('successModal').classList.remove('hidden');
-
-                // Reset form
-                this.reset();
-                document.getElementById('imagePreviewContainer').classList.add('hidden');
-                document.getElementById('uploadPrompt').classList.remove('hidden');
-
-            } catch (error) {
-                console.error('Error posting food:', error);
-                alert('Failed to post food. Please try again.');
-            } finally {
-                // Reset button state
-                submitButton.disabled = false;
-                submitButton.innerHTML = 'Post Food';
-            }
-        });
-
-        // Image upload handling
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('Image size should be less than 5MB');
-                    return;
+            
+            // Get form data to send to server and store in donations
+            const formData = {
+                foodName: foodName,
+                quantity: quantity,
+                expiryDate: expiryDate,
+                location: location,
+                userId: '<%= user._id %>',
+                userName: '<%= user.name %>',
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to local storage for demo purposes
+            // In a real implementation, this would be an API call to save in the database
+            saveToLocalDonations(formData);
+            
+            // In a real implementation, you would use this:
+            /*
+            fetch('/donor/submit-donation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success modal
+                    document.getElementById('successModal').classList.remove('hidden');
+                } else {
+                    alert('Error: ' + data.message);
                 }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
-                    document.getElementById('uploadPrompt').classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
+            })
+            .catch(error => {
+                console.error('Error submitting donation:', error);
+                alert('Failed to submit donation. Please try again.');
+            });
+            */
+            
+            // Show success modal
+            document.getElementById('successModal').classList.remove('hidden');
+        });
+        
+        function saveToLocalDonations(formData) {
+            // Get existing donations from localStorage or initialize empty array
+            let donations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            
+            // Add new donation
+            donations.push({
+                id: 'donation_' + Date.now(),
+                ...formData
+            });
+            
+            // Save back to localStorage
+            localStorage.setItem(userStorageKey, JSON.stringify(donations));
+            
+            // For a real implementation, you would use fetch to send to server:
+            /*
+            fetch('/api/donations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch(error => console.error('Error:', error));
+            */
+        }
+        
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            window.location.href = '/donor/donation';
+        }
+        
+        function postAnother() {
+            document.getElementById('successModal').classList.add('hidden');
+            document.getElementById('postFoodForm').reset();
+        }
+        
+        function detectLocation() {
+            if (navigator.geolocation) {
+                const locationInput = document.getElementById('location');
+                locationInput.disabled = true;
+                locationInput.placeholder = 'Detecting your location...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // In a real app, you would use a geocoding service to get the address
+                        // For this demo, we'll just use coordinates
+                        locationInput.value = `Lat: ${position.coords.latitude.toFixed(4)}, Long: ${position.coords.longitude.toFixed(4)}`;
+                        locationInput.disabled = isEditMode ? false : true;
+                    },
+                    function(error) {
+                        alert('Error detecting location: ' + error.message);
+                        locationInput.disabled = false;
+                        locationInput.placeholder = 'Where can the food be collected?';
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser');
             }
         }
-
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = e.target.result;
+                
+                document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                document.getElementById('uploadPrompt').classList.add('hidden');
+            }
+            
+            reader.readAsDataURL(file);
+        }
+        
         function removeImage() {
             document.getElementById('foodImage').value = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('uploadPrompt').classList.remove('hidden');
         }
 
-        // Location detection
-        function detectLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async position => {
-                        try {
-                            const response = await fetch(
-                                `https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
-                            );
-                            const data = await response.json();
-                            document.getElementById('location').value = data.display_name;
-                        } catch (error) {
-                            console.error('Error getting location:', error);
-                            alert('Failed to detect location. Please enter manually.');
-                        }
-                    },
-                    error => {
-                        console.error('Geolocation error:', error);
-                        alert('Failed to detect location. Please enter manually.');
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by your browser');
-            }
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.add('hidden');
-            window.location.href = '/manage-donations';
-        }
-
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize user storage
+            initializeUserStorage();
+            
             // Set minimum date for expiry date picker
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('expiryDate').min = today;
@@ -339,6 +401,21 @@
             // Mobile menu handling
             document.getElementById('menuToggle').addEventListener('click', toggleMenu);
         });
+
+        let userStorageKey = '';
+
+        function initializeUserStorage() {
+            // Create a unique key based on user ID
+            const userId = '<%= user._id %>' || 'default-user';
+            userStorageKey = `userDonations_${userId}`;
+            
+            // Initialize storage if it doesn't exist
+            if (!localStorage.getItem(userStorageKey)) {
+                localStorage.setItem(userStorageKey, JSON.stringify([]));
+            }
+            
+            console.log(`Post food page: User storage initialized with key: ${userStorageKey}`);
+        }
 
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');

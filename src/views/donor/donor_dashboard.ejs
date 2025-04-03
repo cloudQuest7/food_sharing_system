@@ -28,8 +28,8 @@
                     <h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-[-0.015em]">ShareBites</h2>
                 </div>
                 <nav class="space-y-4">
-                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Dashboard</a>
-                    <a href="#" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Post Food</a>
+                    <a href="/donor/dashboard" class="block px-4 py-2 bg-[#f2800d] text-white rounded-lg font-medium">Dashboard</a>
+                    <a href="/donor/post-food" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Post Food</a>
                     <a href="/donor/donation" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">My Donations</a>
                     <a href="/donor/requests" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Requests</a>
                     <a href="/donor/profile" class="block px-4 py-2 text-[#1c140d] hover:bg-[#fcfaf8] rounded-lg font-medium">Profile</a>
@@ -39,11 +39,11 @@
             <!-- Profile Section -->
             <div class="p-6 border-t border-[#e8dbce]">
                 <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name=Sarah&background=f2800d&color=fff" 
-                         alt="Sarah's profile" 
+                    <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" 
+                         alt="<%= user.name %>'s profile" 
                          class="w-10 h-10 rounded-full border-2 border-[#f2800d]"/>
                     <div>
-                        <p class="text-[#1c140d] font-bold">Sarah</p>
+                        <p class="text-[#1c140d] font-bold"><%= user.name %></p>
                         <p class="text-[#9c7349] text-sm">Food Donor</p>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             <!-- Welcome Section -->
             <div class="mb-8">
                 <div class="flex items-center gap-3 mb-2">
-                    <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back, Sarah! ✨</h1>
+                    <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back, <%= user.name %>! ✨</h1>
                     <span class="bg-[#f2800d] text-white px-3 py-1 rounded-full text-sm font-bold">🥇 Top Sharer</span>
                 </div>
                 <p class="text-[#9c7349] text-lg font-normal leading-normal mt-2">You've shared 156 meals—keep changing lives!</p>
@@ -104,9 +104,9 @@
 
             <!-- Quick Actions -->
             <div class="flex gap-4 mb-8">
-                <button class="bg-[#f2800d] text-white px-6 py-3 rounded-full font-bold hover:bg-[#e67600] transition-colors flex items-center gap-2">
+                <a href="/donor/post-food" class="bg-[#f2800d] text-white px-6 py-3 rounded-full font-bold hover:bg-[#e67600] transition-colors flex items-center gap-2">
                     <span>➕</span> Post New Food
-                </button>
+                </a>
                 <button class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
                     <span>📦</span> View Active Listings
                 </button>

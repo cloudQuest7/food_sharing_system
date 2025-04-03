@@ -41,15 +41,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/donate" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/post-food" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-plus-circle w-6"></i>
                         <span class="ml-3">Post Food</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/donations" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                    <a href="/donor/donation" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
                         <i class="fas fa-box-open w-6"></i>
-                        <span class="ml-3">Manage Donations</span>
+                        <span class="ml-3">My Donations</span>
                     </a>
                 </li>
                 <li>
@@ -71,9 +71,9 @@
         <!-- Profile Section at Bottom -->
         <div class="p-4 border-t border-[#e8dbce]">
             <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
-                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
                 <div>
-                    <p class="text-sm font-bold text-[#1c140d]">dummy</p>
+                    <p class="text-sm font-bold text-[#1c140d]"><%= user.name %></p>
                     <p class="text-xs text-[#9c7349]">Food Donor</p>
                 </div>
                 <i class="fas fa-chevron-right ml-auto text-xs"></i>
@@ -85,7 +85,7 @@
     <main class="w-full lg:ml-64 p-4 lg:p-8 transition-all duration-300">
         <div class="mb-8">
             <h1 class="text-2xl lg:text-3xl font-semibold text-[#1c140d] tracking-wide leading-tight mb-1">
-                Profile Settings
+                Profile Settings for <%= user.name %>
             </h1>
             <p class="text-sm lg:text-base text-[#9c7349] font-normal">
                 Manage your account settings and profile information
@@ -102,9 +102,32 @@
                     </button>
                 </div>
 
+                <!-- Account Overview Card -->
+                <div class="bg-[#fff8f3] rounded-xl p-4 mb-6 border border-[#e8dbce]">
+                    <h3 class="text-lg font-semibold text-[#1c140d] mb-3">Account Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-[#9c7349]">Account Type</p>
+                            <p class="font-bold text-[#1c140d]"><%= user.userType ? user.userType.charAt(0).toUpperCase() + user.userType.slice(1) : 'Donor' %></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-[#9c7349]">Member Since</p>
+                            <p class="font-bold text-[#1c140d]"><%= user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A' %></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-[#9c7349]">Status</p>
+                            <p class="font-bold text-green-600">Active</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-[#9c7349]">User ID</p>
+                            <p class="font-bold text-[#1c140d]"><%= user._id || 'N/A' %></p>
+                        </div>
+                    </div>
+                </div>
+
                 <form id="profileForm" class="space-y-4">
                     <div class="flex items-center space-x-4 mb-6">
-                        <img id="profileImage" src="https://placehold.co/96x96" alt="Profile Picture" 
+                        <img id="profileImage" src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" alt="Profile Picture" 
                              class="w-24 h-24 rounded-full border-4 border-[#f2800d] object-cover">
                         <div>
                             <input type="file" id="photoInput" accept="image/*" class="hidden" 
@@ -120,22 +143,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-[#9c7349] mb-2">Full Name</label>
-                            <input type="text" value="Dummy" disabled
+                            <input type="text" value="<%= user.name %>" disabled
                                    class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-[#9c7349] mb-2">Email Address</label>
-                            <input type="email" value="dummy.doe@example.com" disabled
+                            <input type="email" value="<%= user.email %>" disabled
                                    class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-[#9c7349] mb-2">Phone Number</label>
-                            <input type="tel" value="+91 1234567890" disabled
+                            <input type="tel" value="<%= user.phone || '' %>" disabled
                                    class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-[#9c7349] mb-2">Location</label>
-                            <input type="text" value="Mumbai, India" disabled
+                            <input type="text" value="<%= user.location || '' %>" disabled
                                    class="w-full p-3 border border-[#e8dbce] rounded-xl bg-[#fcfaf8] focus:border-[#f2800d] outline-none transition-colors disabled:opacity-75">
                         </div>
                     </div>
@@ -143,7 +166,7 @@
             </div>
 
             <!-- Change Password -->
-            <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-6">
                 <h2 class="text-xl font-bold text-[#1c140d] mb-6">Change Password</h2>
                 <form id="passwordForm" class="space-y-4">
                     <div>
@@ -166,6 +189,59 @@
                     </button>
                 </form>
             </div>
+
+            <!-- Activity Statistics -->
+            <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <h2 class="text-xl font-bold text-[#1c140d] mb-6">Activity Statistics</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-[#fcfaf8] p-4 rounded-xl border border-[#e8dbce]">
+                        <h3 class="text-[#9c7349] text-sm mb-1">Total Donated</h3>
+                        <p class="text-2xl font-bold text-[#f2800d]"><%= user.donationsCount || '0' %></p>
+                    </div>
+                    <div class="bg-[#fcfaf8] p-4 rounded-xl border border-[#e8dbce]">
+                        <h3 class="text-[#9c7349] text-sm mb-1">Active Listings</h3>
+                        <p class="text-2xl font-bold text-[#f2800d]"><%= user.activeListings || '0' %></p>
+                    </div>
+                    <div class="bg-[#fcfaf8] p-4 rounded-xl border border-[#e8dbce]">
+                        <h3 class="text-[#9c7349] text-sm mb-1">People Helped</h3>
+                        <p class="text-2xl font-bold text-[#f2800d]"><%= user.peopleHelped || '0' %></p>
+                    </div>
+                </div>
+
+                <h3 class="text-md font-semibold text-[#1c140d] mb-3">Notification Preferences</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-[#e8dbce] pb-3">
+                        <div>
+                            <p class="font-medium text-[#1c140d]">Email Notifications</p>
+                            <p class="text-sm text-[#9c7349]">Receive updates via email</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" <%= user.emailNotifications ? 'checked' : '' %>>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#f2800d]/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#f2800d]"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-[#e8dbce] pb-3">
+                        <div>
+                            <p class="font-medium text-[#1c140d]">Donation Requests</p>
+                            <p class="text-sm text-[#9c7349]">Get notified about new donation requests</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" <%= user.donationRequestNotifications ? 'checked' : '' %>>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#f2800d]/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#f2800d]"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-[#1c140d]">Community Updates</p>
+                            <p class="text-sm text-[#9c7349]">Stay informed about platform news</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" <%= user.communityUpdates ? 'checked' : '' %>>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#f2800d]/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#f2800d]"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -187,19 +263,52 @@
             } else {
                 editBtn.textContent = 'Edit Profile';
                 editBtn.className = 'px-4 py-2 text-[#f2800d] font-bold hover:bg-[#fff8f3] rounded-xl transition-colors';
-                // Here you would typically save the changes to the backend
-                showSavedMessage();
+                
+                // Collect form data
+                const formData = {
+                    name: document.querySelector('#profileForm input[type="text"]').value,
+                    email: document.querySelector('#profileForm input[type="email"]').value,
+                    phone: document.querySelector('#profileForm input[type="tel"]').value,
+                    location: document.querySelectorAll('#profileForm input[type="text"]')[1].value,
+                    userId: '<%= user._id %>'
+                };
+                
+                // Send data to the server
+                saveUserProfile(formData);
             }
         }
 
-        function showSavedMessage() {
-            const message = document.createElement('div');
-            message.className = 'fixed bottom-4 right-4 bg-green-100 text-green-600 px-4 py-2 rounded-xl font-bold';
-            message.textContent = 'Changes saved successfully!';
-            document.body.appendChild(message);
+        async function saveUserProfile(data) {
+            try {
+                // Simulate saving to server (in a real app, this would be an API call)
+                console.log('Saving profile data:', data);
+                // Uncomment in a real implementation:
+                // const response = await fetch('/api/user/profile', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(data)
+                // });
+                
+                // Show success message
+                showSavedMessage('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showSavedMessage('Error updating profile', 'error');
+            }
+        }
+
+        function showSavedMessage(message, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed bottom-4 right-4 px-4 py-2 rounded-xl font-bold ${
+                type === 'success' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+            }`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
             
             setTimeout(() => {
-                message.remove();
+                messageDiv.remove();
             }, 3000);
         }
 

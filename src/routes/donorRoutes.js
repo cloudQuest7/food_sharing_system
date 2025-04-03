@@ -75,4 +75,58 @@ router.get('/profile', isDonor, async (req, res) => {
     }
 });
 
+// Donation page route
+router.get('/donation', isDonor, async (req, res) => {
+    try {
+        console.log('Rendering donation page for user:', req.user.name);
+        res.render('donor/donation', {
+            title: 'My Donations - ShareBites',
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Donation page error:', error);
+        res.status(500).render('error', {
+            message: 'Error loading donations'
+        });
+    }
+});
+
+// Submit donation route
+router.post('/submit-donation', isDonor, async (req, res) => {
+    try {
+        console.log('Processing donation submission from user:', req.user.name);
+        console.log('Donation data:', req.body);
+        
+        // In a real app, you would save the donation to the database here
+        // For demo purposes, we're just sending a success response
+        
+        res.status(200).json({
+            success: true,
+            message: 'Donation submitted successfully'
+        });
+    } catch (error) {
+        console.error('Donation submission error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error submitting donation'
+        });
+    }
+});
+
+// Post Food page route
+router.get('/post-food', isDonor, async (req, res) => {
+    try {
+        console.log('Rendering post food page for user:', req.user.name);
+        res.render('donor/post_food', {
+            title: 'Post Food - ShareBites',
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Post food page error:', error);
+        res.status(500).render('error', {
+            message: 'Error loading post food page'
+        });
+    }
+});
+
 module.exports = router;
