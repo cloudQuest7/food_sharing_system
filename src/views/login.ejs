@@ -72,5 +72,32 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            
+            if (userId) {
+                // Store user ID in localStorage
+                localStorage.setItem('currentUserId', userId);
+                console.log('User ID saved to localStorage:', userId);
+                
+                // If the URL contains a redirect parameter, redirect there
+                const redirect = urlParams.get('redirect');
+                if (redirect) {
+                    window.location.href = redirect;
+                }
+            }
+            
+            // Add form submission handler to extract user ID from response
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                // Form will submit normally, but we'll add this for frontend user ID extraction if needed
+                const email = document.querySelector('input[name="email"]').value;
+                // Store email temporarily to help with identifying the user
+                sessionStorage.setItem('userEmail', email);
+            });
+        });
+    </script>
 </body>
 </html>
