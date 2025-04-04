@@ -47,6 +47,14 @@
                         <p class="text-[#9c7349] text-sm">Food Donor</p>
                     </div>
                 </div>
+                
+                <!-- Logout Button -->
+                <a href="/logout" class="flex items-center gap-2 mt-4 px-4 py-2 text-[#9c7349] hover:bg-[#fcfaf8] rounded-lg font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
             </div>
         </div>
 
@@ -56,9 +64,9 @@
             <div class="mb-8">
                 <div class="flex items-center gap-3 mb-2">
                     <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back, <%= user.name %>! ✨</h1>
-                    <span class="bg-[#f2800d] text-white px-3 py-1 rounded-full text-sm font-bold">🥇 Top Sharer</span>
+                    <span class="bg-[#f2800d] text-white px-3 py-1 rounded-full text-sm font-bold" id="donor-badge">🥇 Top Sharer</span>
                 </div>
-                <p class="text-[#9c7349] text-lg font-normal leading-normal mt-2">You've shared 156 meals—keep changing lives!</p>
+                <p class="text-[#9c7349] text-lg font-normal leading-normal mt-2" id="meals-shared-text">Loading your impact...</p>
             </div>
 
             <!-- Impact Stats Section -->
@@ -68,25 +76,25 @@
                         <span class="text-2xl">🍎</span>
                         <h2 class="text-[#1c140d] text-lg font-bold">Total Shared</h2>
                     </div>
-                    <p class="text-[#f2800d] text-3xl font-black mb-2">156 meals</p>
+                    <p class="text-[#f2800d] text-3xl font-black mb-2" id="total-meals">0 meals</p>
                     <div class="w-full bg-[#fcfaf8] rounded-full h-2">
-                        <div class="bg-[#f2800d] h-2 rounded-full" style="width: 78%"></div>
+                        <div class="bg-[#f2800d] h-2 rounded-full" id="meals-progress" style="width: 0%"></div>
                     </div>
-                    <p class="text-[#9c7349] text-sm mt-2">22 more to reach 200! 🎉</p>
+                    <p class="text-[#9c7349] text-sm mt-2" id="meals-goal">Start sharing to reach your goal! 🎉</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-2xl">📦</span>
                         <h2 class="text-[#1c140d] text-lg font-bold">Active Listings</h2>
                     </div>
-                    <p class="text-[#f2800d] text-3xl font-black">3</p>
+                    <p class="text-[#f2800d] text-3xl font-black" id="active-listings">0</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-2xl">❤️</span>
                         <h2 class="text-[#1c140d] text-lg font-bold">People Helped</h2>
                     </div>
-                    <p class="text-[#f2800d] text-3xl font-black">427</p>
+                    <p class="text-[#f2800d] text-3xl font-black" id="people-helped">0</p>
                 </div>
             </div>
 
@@ -127,22 +135,9 @@
                             <th class="text-left py-3 text-[#9c7349] font-medium">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="recent-donations">
                         <tr class="border-b border-[#e8dbce]">
-                            <td class="py-3">Fresh Vegetables</td>
-                            <td class="py-3">5 kg</td>
-                            <td class="py-3"><span class="flex items-center gap-1"><span>✅</span> Completed</span></td>
-                            <td class="py-3"></td>
-                        </tr>
-                        <tr class="border-b border-[#e8dbce]">
-                            <td class="py-3">Bread Loaves</td>
-                            <td class="py-3">10 units</td>
-                            <td class="py-3"><span class="flex items-center gap-1"><span>⏳</span> Pending</span></td>
-                            <td class="py-3">
-                                <button class="text-red-500 hover:text-red-700 transition-colors flex items-center gap-1">
-                                    <span>🗑️</span> Cancel
-                                </button>
-                            </td>
+                            <td colspan="4" class="py-3 text-center text-[#9c7349]">Loading your recent donations...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -201,72 +196,265 @@
                     <select class="w-1/3 px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
                         <option>kg</option>
                         <option>units</option>
-                        <option>boxes</option>
+                        <option>liters</option>
                     </select>
                 </div>
             </div>
             
             <div>
-                <label class="block text-[#1c140d] font-medium mb-2">Best Before Date</label>
-                <input type="date" class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none"/>
-            </div>
-            
-            <div>
                 <label class="block text-[#1c140d] font-medium mb-2">Description</label>
                 <textarea class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none" 
-                          rows="3" placeholder="Add any details about the food..."></textarea>
+                          placeholder="Add details about the food..."></textarea>
             </div>
             
-            <div class="flex justify-end gap-4">
-                <button type="button" onclick="closeModal()" 
-                        class="px-6 py-3 border border-[#e8dbce] text-[#1c140d] rounded-full font-bold hover:border-[#f2800d]">
-                    Cancel
-                </button>
-                <button type="submit" 
-                        class="px-6 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600]">
-                    Post Food
-                </button>
-            </div>
+            <button type="submit" class="w-full py-3 bg-[#f2800d] text-white rounded-xl font-bold hover:bg-[#e67600] transition-colors">
+                Post Food
+            </button>
         </form>
     </div>
 </div>
+
 <script>
-    // Get modal and button elements
-    const modal = document.getElementById('postFoodModal');
-    const postNewFoodBtn = document.querySelector('button:has(span)');
+    // Function to initialize the user storage key
+    function initUserStorage() {
+        const userId = '<%= user.id %>';
+        return `userDonations_${userId}`;
+    }
 
-    // Open modal function
-    function openModal() {
-        modal.classList.remove('hidden');
+    // Load all donations from localStorage
+    function loadUserDonations() {
+        const userStorageKey = initUserStorage();
+        const universalStorageKey = 'allFoodDonations';
+        
+        // Try to get user-specific donations
+        let userDonations = [];
+        try {
+            const savedDonations = localStorage.getItem(userStorageKey);
+            if (savedDonations) {
+                userDonations = JSON.parse(savedDonations) || [];
+            }
+        } catch (error) {
+            console.error('Error loading user donations:', error);
+        }
+
+        // Get shared storage donations that might be from this user
+        let sharedDonations = [];
+        try {
+            const allDonations = localStorage.getItem(universalStorageKey);
+            if (allDonations) {
+                const parsedDonations = JSON.parse(allDonations) || [];
+                // Filter to get only this user's donations
+                sharedDonations = parsedDonations.filter(donation => 
+                    donation.donorId === '<%= user.id %>' || 
+                    donation.donorName === '<%= user.name %>'
+                );
+            }
+        } catch (error) {
+            console.error('Error loading shared donations:', error);
+        }
+
+        // Combine both sources, prioritizing newer entries
+        const allDonations = [...userDonations, ...sharedDonations];
+        
+        // Deduplicate by ID if needed
+        const uniqueDonations = allDonations.reduce((acc, current) => {
+            const x = acc.find(item => item.id === current.id);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+
+        return uniqueDonations;
+    }
+
+    // Update dashboard with donor statistics
+    function updateDashboardStats() {
+        const donations = loadUserDonations();
+        console.log('Loaded donations:', donations);
+        
+        // Calculate metrics
+        const totalDonations = donations.length;
+        const activeDonations = donations.filter(d => d.status === 'pending').length;
+        
+        // Estimate people helped (2.5 people per donation on average)
+        const peopleHelped = Math.round(totalDonations * 2.5);
+        
+        // Update the UI
+        document.getElementById('total-meals').textContent = `${totalDonations} meals`;
+        document.getElementById('active-listings').textContent = activeDonations;
+        document.getElementById('people-helped').textContent = peopleHelped;
+        
+        // Update progress bar (goal is 50 donations)
+        const goalAmount = 50;
+        const progressPercent = Math.min(Math.round((totalDonations / goalAmount) * 100), 100);
+        document.getElementById('meals-progress').style.width = `${progressPercent}%`;
+        
+        // Update goal text
+        if (totalDonations >= goalAmount) {
+            document.getElementById('meals-goal').textContent = `Congratulations! You've reached your goal of ${goalAmount} meals! 🎉`;
+        } else {
+            const remaining = goalAmount - totalDonations;
+            document.getElementById('meals-goal').textContent = `${remaining} more to reach ${goalAmount}! 🎉`;
+        }
+        
+        // Update donor badge
+        if (totalDonations >= 100) {
+            document.getElementById('donor-badge').textContent = '🥇 Master Sharer';
+        } else if (totalDonations >= 50) {
+            document.getElementById('donor-badge').textContent = '🥈 Super Sharer';
+        } else if (totalDonations >= 20) {
+            document.getElementById('donor-badge').textContent = '🥉 Frequent Sharer';
+        } else {
+            document.getElementById('donor-badge').textContent = '👋 New Sharer';
+        }
+        
+        // Update the welcome message
+        document.getElementById('meals-shared-text').textContent = 
+            `You've shared ${totalDonations} meals${totalDonations > 0 ? '—keep changing lives!' : '. Start sharing today!'}`;
     }
     
-    // Close modal function
+    // Populate the recent donations table
+    function populateRecentDonations() {
+        const donations = loadUserDonations();
+        const recentDonationsElement = document.getElementById('recent-donations');
+        
+        // Clear the table first
+        recentDonationsElement.innerHTML = '';
+        
+        if (donations.length === 0) {
+            recentDonationsElement.innerHTML = `
+                <tr class="border-b border-[#e8dbce]">
+                    <td colspan="4" class="py-6 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-4xl mb-2">🍽️</span>
+                            <p class="text-[#9c7349] font-medium">No donations yet</p>
+                            <p class="text-[#9c7349] text-sm">Start sharing food with those in need!</p>
+                            <a href="/donor/post-food" class="mt-4 px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                                Post Your First Donation
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        // Sort by date, newest first
+        const sortedDonations = [...donations].sort((a, b) => {
+            return new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0);
+        });
+        
+        // Display only the 5 most recent donations
+        const recentDonations = sortedDonations.slice(0, 5);
+        
+        recentDonations.forEach(donation => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-[#e8dbce]';
+            
+            const statusEmoji = {
+                'pending': '⏳',
+                'accepted': '✅',
+                'completed': '🎉',
+                'cancelled': '❌'
+            };
+            
+            const statusLabel = {
+                'pending': 'Pending',
+                'accepted': 'Accepted',
+                'completed': 'Completed',
+                'cancelled': 'Cancelled'
+            };
+            
+            const statusClass = {
+                'pending': 'text-yellow-600',
+                'accepted': 'text-blue-600',
+                'completed': 'text-green-600',
+                'cancelled': 'text-red-600'
+            };
+            
+            row.innerHTML = `
+                <td class="py-3">${donation.foodType || donation.name || 'Food Item'}</td>
+                <td class="py-3">${donation.quantity || '1'} ${donation.unit || 'kg'}</td>
+                <td class="py-3">
+                    <span class="flex items-center gap-1 ${statusClass[donation.status] || ''}">
+                        <span>${statusEmoji[donation.status] || '⏳'}</span> 
+                        ${statusLabel[donation.status] || 'Pending'}
+                    </span>
+                </td>
+                <td class="py-3">
+                    ${donation.status === 'pending' ? `
+                        <button class="text-red-500 hover:text-red-700 transition-colors flex items-center gap-1"
+                                onclick="cancelDonation('${donation.id}')">
+                            <span>🗑️</span> Cancel
+                        </button>
+                    ` : ''}
+                </td>
+            `;
+            
+            recentDonationsElement.appendChild(row);
+        });
+    }
+    
+    // Function to cancel a donation
+    function cancelDonation(donationId) {
+        if (confirm('Are you sure you want to cancel this donation?')) {
+            const userStorageKey = initUserStorage();
+            const universalStorageKey = 'allFoodDonations';
+            
+            // Update in user storage
+            try {
+                const savedDonations = localStorage.getItem(userStorageKey);
+                if (savedDonations) {
+                    let donations = JSON.parse(savedDonations);
+                    const donationIndex = donations.findIndex(d => d.id === donationId);
+                    
+                    if (donationIndex !== -1) {
+                        donations[donationIndex].status = 'cancelled';
+                        localStorage.setItem(userStorageKey, JSON.stringify(donations));
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating user donation:', error);
+            }
+            
+            // Update in universal storage
+            try {
+                const allDonations = localStorage.getItem(universalStorageKey);
+                if (allDonations) {
+                    let donations = JSON.parse(allDonations);
+                    const donationIndex = donations.findIndex(d => d.id === donationId);
+                    
+                    if (donationIndex !== -1) {
+                        donations[donationIndex].status = 'cancelled';
+                        localStorage.setItem(universalStorageKey, JSON.stringify(donations));
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating shared donation:', error);
+            }
+            
+            // Refresh the dashboard
+            updateDashboardStats();
+            populateRecentDonations();
+        }
+    }
+    
+    // Initialize dashboard on load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Loading dashboard data...');
+        updateDashboardStats();
+        populateRecentDonations();
+    });
+    
     function closeModal() {
-        modal.classList.add('hidden');
+        document.getElementById('postFoodModal').classList.add('hidden');
     }
     
-    // Add click event to Post New Food button
-    postNewFoodBtn.addEventListener('click', () => {
-        openModal();
-    });
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // Close modal when pressing Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-    
-        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-       
-
+    function openPostFoodModal() {
+        document.getElementById('postFoodModal').classList.remove('hidden');
+    }
 </script>
 </body>
 </html>

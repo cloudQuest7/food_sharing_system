@@ -17,4 +17,22 @@ router.get('/login', (req, res) => {
     });
 });
 
+router.post('/login', authController.login);
+
+// Logout route
+router.get('/logout', (req, res) => {
+    // Clear the user session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.redirect('/');
+        }
+        // Clear cookies if any
+        res.clearCookie('connect.sid');
+        
+        // Redirect to the login page
+        res.redirect('/login');
+    });
+});
+
 module.exports = router;

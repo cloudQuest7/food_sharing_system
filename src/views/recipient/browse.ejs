@@ -68,35 +68,54 @@
 
             <!-- Filters Section -->
             <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <!-- Search Input -->
-                    <div class="col-span-2">
+                    <div class="md:col-span-4">
+                        <label for="search-input" class="block text-sm font-medium text-[#9c7349] mb-1">Search</label>
                         <input type="text" 
+                               id="search-input"
                                placeholder="Search food items..." 
                                class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none"/>
                     </div>
                     
-                    <!-- Category Filter -->
-                    <div>
-                        <select class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
-                            <option value="">All Categories</option>
-                            <option value="vegetables">Vegetables</option>
-                            <option value="fruits">Fruits</option>
-                            <option value="bakery">Bakery</option>
-                            <option value="dairy">Dairy</option>
-                            <option value="canned">Canned Goods</option>
+                    <!-- Food Type Filter -->
+                    <div class="md:col-span-3">
+                        <label for="food-type" class="block text-sm font-medium text-[#9c7349] mb-1">Food Type</label>
+                        <select id="food-type" class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
+                            <option value="">All Types</option>
+                            <option value="fresh">Fresh Produce</option>
+                            <option value="bakery">Bakery Items</option>
+                            <option value="cooked">Cooked Meals</option>
+                            <option value="dairy">Dairy Products</option>
+                            <option value="canned">Canned/Packaged</option>
+                            <option value="beverages">Beverages</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
                     
-                    <!-- Distance Filter -->
-                    <div>
-                        <select class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
-                            <option value="">Any Distance</option>
-                            <option value="1">Within 1 km</option>
-                            <option value="3">Within 3 km</option>
-                            <option value="5">Within 5 km</option>
+                    <!-- Expiry Filter -->
+                    <div class="md:col-span-3">
+                        <label for="expiry-filter" class="block text-sm font-medium text-[#9c7349] mb-1">Expiry Timeframe</label>
+                        <select id="expiry-filter" class="w-full px-4 py-3 rounded-xl border border-[#e8dbce] focus:border-[#f2800d] outline-none">
+                            <option value="">Any Timeframe</option>
+                            <option value="urgent">Urgent (< 3 hours)</option>
+                            <option value="today">Today (< 12 hours)</option>
+                            <option value="tomorrow">Within 24 hours</option>
+                            <option value="week">This week</option>
                         </select>
                     </div>
+                    
+                    <!-- Filter Button -->
+                    <div class="md:col-span-2 flex items-end">
+                        <button id="apply-filters" class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-xl font-medium hover:bg-[#e67600] transition-colors">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Active Filters -->
+                <div id="active-filters" class="mt-4 flex flex-wrap gap-2 pt-4 border-t border-[#e8dbce] hidden">
+                    <!-- Active filters will be displayed here -->
                 </div>
             </div>
 
@@ -152,6 +171,14 @@
     </div>
 
     <script>
+        // Global variables to store all donations and current filters
+        let allAvailableDonations = [];
+        let activeFilters = {
+            search: '',
+            foodType: '',
+            expiry: ''
+        };
+        
         // Get all donor food posts from localStorage to display them
         document.addEventListener('DOMContentLoaded', function() {
             // Clear loading placeholders and load food items immediately
@@ -170,7 +197,44 @@
             if (menuToggle) {
                 menuToggle.addEventListener('click', toggleMenu);
             }
+            
+            // Add filter event listeners
+            setupFilterEventListeners();
         });
+        
+        function setupFilterEventListeners() {
+            // Search input
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    activeFilters.search = this.value.trim().toLowerCase();
+                });
+            }
+            
+            // Food type filter
+            const foodTypeSelect = document.getElementById('food-type');
+            if (foodTypeSelect) {
+                foodTypeSelect.addEventListener('change', function() {
+                    activeFilters.foodType = this.value;
+                });
+            }
+            
+            // Expiry filter
+            const expirySelect = document.getElementById('expiry-filter');
+            if (expirySelect) {
+                expirySelect.addEventListener('change', function() {
+                    activeFilters.expiry = this.value;
+                });
+            }
+            
+            // Apply filters button
+            const applyFiltersBtn = document.getElementById('apply-filters');
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    applyFilters();
+                });
+            }
+        }
         
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
@@ -204,7 +268,7 @@
             }
             
             // Get donations from the universal key 
-            let allDonations = [];
+            allAvailableDonations = [];
             try {
                 const universalRawData = localStorage.getItem(universalDonationKey);
                 if (universalRawData) {
@@ -218,6 +282,7 @@
                             if (!hasRequiredFields) return false;
                             
                             const status = donation.status || 'pending';
+                            // Only show donations that are pending (not requested, completed, etc.)
                             const isValid = status === 'pending';
                             
                             let expiryDate;
@@ -231,7 +296,7 @@
                             return isValid && isNotExpired;
                         });
                         
-                        allDonations = [...validUniversalDonations];
+                        allAvailableDonations = [...validUniversalDonations];
                         
                         if (debug) {
                             console.log(`Found ${validUniversalDonations.length} valid donations in universal storage`);
@@ -244,7 +309,7 @@
             
             // For backward compatibility, also check older donor-specific keys
             // This block is only needed temporarily until all donors use the universal storage
-            if (allDonations.length === 0) {
+            if (allAvailableDonations.length === 0) {
                 try {
                     // Get older-style donation keys
                     const keys = Object.keys(localStorage);
@@ -269,6 +334,7 @@
                                 if (!hasRequiredFields) return false;
                                 
                                 const status = donation.status || 'pending';
+                                // Only show donations that are pending (not requested, completed, etc.)
                                 const isValid = status === 'pending';
                                 
                                 let expiryDate;
@@ -282,7 +348,7 @@
                                 return isValid && isNotExpired;
                             });
                             
-                            allDonations = [...allDonations, ...validDonations];
+                            allAvailableDonations = [...allAvailableDonations, ...validDonations];
                             
                             if (debug && validDonations.length > 0) {
                                 console.log(`Found ${validDonations.length} valid donations in legacy key ${key}`);
@@ -296,23 +362,208 @@
                 }
             }
             
-            if (debug) {
-                console.log('Final donations to display:', allDonations);
+            // Now check if any of these donations have been requested and filter them out
+            // Get all food requests from localStorage
+            const allRequestsKey = 'allFoodRequests';
+            try {
+                const requestsData = localStorage.getItem(allRequestsKey);
+                if (requestsData) {
+                    const allRequests = JSON.parse(requestsData);
+                    if (Array.isArray(allRequests) && allRequests.length > 0) {
+                        // Create a set of donation IDs that have been requested
+                        const requestedDonationIds = new Set();
+                        allRequests.forEach(request => {
+                            // Extract donation ID from the request's foodId if it contains an underscore
+                            if (request.foodId && request.foodId.includes('_')) {
+                                const donationId = request.foodId.split('_')[1];
+                                requestedDonationIds.add(donationId);
+                            }
+                        });
+                        
+                        if (debug) {
+                            console.log('Requested donation IDs:', Array.from(requestedDonationIds));
+                        }
+                        
+                        // Filter out donations that have been requested
+                        allAvailableDonations = allAvailableDonations.filter(donation => 
+                            !requestedDonationIds.has(donation.id)
+                        );
+                    }
+                }
+            } catch (error) {
+                console.error('Error processing requests:', error);
             }
             
-            // Display message if no donations available
-            if (allDonations.length === 0) {
+            if (debug) {
+                console.log('Final donations to display after filtering requests:', allAvailableDonations);
+            }
+            
+            // Apply any active filters to our donations
+            applyFilters();
+            
+            if (debug) console.log(`Displayed ${allAvailableDonations.length} donation cards`);
+        }
+        
+        function applyFilters() {
+            const donationsContainer = document.getElementById('food-listings');
+            const noFoodMessage = document.getElementById('no-food-message');
+            const activeFiltersContainer = document.getElementById('active-filters');
+            
+            // Apply all filters to get filtered donations
+            let filteredDonations = [...allAvailableDonations];
+            
+            // Filter by search text
+            if (activeFilters.search) {
+                filteredDonations = filteredDonations.filter(donation => 
+                    (donation.foodName && donation.foodName.toLowerCase().includes(activeFilters.search)) ||
+                    (donation.description && donation.description.toLowerCase().includes(activeFilters.search)) ||
+                    (donation.location && donation.location.toLowerCase().includes(activeFilters.search))
+                );
+            }
+            
+            // Filter by food type
+            if (activeFilters.foodType) {
+                filteredDonations = filteredDonations.filter(donation => {
+                    // Smart food type detection based on food name and description
+                    const foodName = (donation.foodName || '').toLowerCase();
+                    const description = (donation.description || '').toLowerCase();
+                    const combinedText = `${foodName} ${description}`;
+                    
+                    switch (activeFilters.foodType) {
+                        case 'fresh':
+                            return /fresh|produce|vegetable|fruit|veg/i.test(combinedText);
+                        case 'bakery':
+                            return /bread|pastry|cake|bakery|baked|muffin|cookie/i.test(combinedText);
+                        case 'cooked':
+                            return /cooked|meal|prepared|dish|dinner|lunch|breakfast/i.test(combinedText);
+                        case 'dairy':
+                            return /milk|cheese|yogurt|dairy|cream|butter/i.test(combinedText);
+                        case 'canned':
+                            return /canned|packaged|box|container|preserved|can|jar/i.test(combinedText);
+                        case 'beverages':
+                            return /juice|drink|beverage|water|soda|beer|wine/i.test(combinedText);
+                        case 'other':
+                            // If it doesn't match any specific category, it's other
+                            return !(/fresh|produce|vegetable|fruit|veg|bread|pastry|cake|bakery|baked|muffin|cookie|cooked|meal|prepared|dish|dinner|lunch|breakfast|milk|cheese|yogurt|dairy|cream|butter|canned|packaged|box|container|preserved|can|jar|juice|drink|beverage|water|soda|beer|wine/i.test(combinedText));
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Filter by expiry date
+            if (activeFilters.expiry) {
+                const now = new Date();
+                
+                filteredDonations = filteredDonations.filter(donation => {
+                    const expiryDate = new Date(donation.expiryDate);
+                    const hoursLeft = (expiryDate - now) / (1000 * 60 * 60);
+                    
+                    switch (activeFilters.expiry) {
+                        case 'urgent':
+                            return hoursLeft <= 3;
+                        case 'today':
+                            return hoursLeft <= 12;
+                        case 'tomorrow':
+                            return hoursLeft <= 24;
+                        case 'week':
+                            return hoursLeft <= 168; // 7 days * 24 hours
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Update active filters UI
+            activeFiltersContainer.innerHTML = '';
+            let hasFilters = false;
+            
+            if (activeFilters.search || activeFilters.foodType || activeFilters.expiry) {
+                hasFilters = true;
+                activeFiltersContainer.classList.remove('hidden');
+                
+                // Add filter for search term
+                if (activeFilters.search) {
+                    const filterTag = document.createElement('div');
+                    filterTag.className = 'px-3 py-1 bg-[#fff8f3] text-[#f2800d] rounded-full text-sm flex items-center gap-1';
+                    filterTag.innerHTML = `
+                        <span>Search: "${activeFilters.search}"</span>
+                        <button class="ml-1" onclick="clearFilter('search')">×</button>
+                    `;
+                    activeFiltersContainer.appendChild(filterTag);
+                }
+                
+                // Add filter for food type
+                if (activeFilters.foodType) {
+                    const foodTypeElement = document.getElementById('food-type');
+                    const foodTypeText = foodTypeElement.options[foodTypeElement.selectedIndex].text;
+                    
+                    const filterTag = document.createElement('div');
+                    filterTag.className = 'px-3 py-1 bg-[#fff8f3] text-[#f2800d] rounded-full text-sm flex items-center gap-1';
+                    filterTag.innerHTML = `
+                        <span>Type: ${foodTypeText}</span>
+                        <button class="ml-1" onclick="clearFilter('foodType')">×</button>
+                    `;
+                    activeFiltersContainer.appendChild(filterTag);
+                }
+                
+                // Add filter for expiry
+                if (activeFilters.expiry) {
+                    const expiryElement = document.getElementById('expiry-filter');
+                    const expiryText = expiryElement.options[expiryElement.selectedIndex].text;
+                    
+                    const filterTag = document.createElement('div');
+                    filterTag.className = 'px-3 py-1 bg-[#fff8f3] text-[#f2800d] rounded-full text-sm flex items-center gap-1';
+                    filterTag.innerHTML = `
+                        <span>Expiry: ${expiryText}</span>
+                        <button class="ml-1" onclick="clearFilter('expiry')">×</button>
+                    `;
+                    activeFiltersContainer.appendChild(filterTag);
+                }
+                
+                // Add clear all button
+                const clearAllButton = document.createElement('button');
+                clearAllButton.className = 'px-3 py-1 bg-[#fcfaf8] text-[#9c7349] rounded-full text-sm hover:bg-[#e8dbce]';
+                clearAllButton.textContent = 'Clear All Filters';
+                clearAllButton.onclick = clearAllFilters;
+                activeFiltersContainer.appendChild(clearAllButton);
+            } else {
+                activeFiltersContainer.classList.add('hidden');
+            }
+            
+            // Display message if no donations available after filtering
+            if (filteredDonations.length === 0) {
                 if (noFoodMessage) {
                     noFoodMessage.classList.remove('hidden');
+                    
+                    // Change message if we have filters active
+                    if (hasFilters) {
+                        const messageTitleEl = noFoodMessage.querySelector('h3');
+                        const messageTextEl = noFoodMessage.querySelector('p');
+                        
+                        if (messageTitleEl) {
+                            messageTitleEl.textContent = 'No Matching Items';
+                        }
+                        
+                        if (messageTextEl) {
+                            messageTextEl.textContent = 'Try adjusting your filters to see more food donations.';
+                        }
+                    } else {
+                        const messageTitleEl = noFoodMessage.querySelector('h3');
+                        const messageTextEl = noFoodMessage.querySelector('p');
+                        
+                        if (messageTitleEl) {
+                            messageTitleEl.textContent = 'No Food Available';
+                        }
+                        
+                        if (messageTextEl) {
+                            messageTextEl.textContent = 'There are no food donations available right now. Please check back later.';
+                        }
+                    }
                 }
                 
-                // Clear container but keep loading placeholders if first load
-                if (donationsContainer.children.length > 0 && 
-                    !donationsContainer.children[0].classList.contains('animate-pulse')) {
-                    donationsContainer.innerHTML = '';
-                }
-                
-                if (debug) console.log('No valid donations found to display');
+                // Clear container
+                donationsContainer.innerHTML = '';
                 return;
             }
             
@@ -325,12 +576,50 @@
             donationsContainer.innerHTML = '';
             
             // Create and append food cards
-            allDonations.forEach(donation => {
+            filteredDonations.forEach(donation => {
                 const card = createFoodCard(donation);
                 donationsContainer.appendChild(card);
             });
+        }
+        
+        function clearFilter(filterType) {
+            // Reset the specific filter
+            activeFilters[filterType] = '';
             
-            if (debug) console.log(`Displayed ${allDonations.length} donation cards`);
+            // Also reset the corresponding form element
+            if (filterType === 'search') {
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) searchInput.value = '';
+            } else if (filterType === 'foodType') {
+                const foodTypeSelect = document.getElementById('food-type');
+                if (foodTypeSelect) foodTypeSelect.value = '';
+            } else if (filterType === 'expiry') {
+                const expirySelect = document.getElementById('expiry-filter');
+                if (expirySelect) expirySelect.value = '';
+            }
+            
+            // Apply the updated filters
+            applyFilters();
+        }
+        
+        function clearAllFilters() {
+            // Reset all filters
+            activeFilters.search = '';
+            activeFilters.foodType = '';
+            activeFilters.expiry = '';
+            
+            // Reset all form elements
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.value = '';
+            
+            const foodTypeSelect = document.getElementById('food-type');
+            if (foodTypeSelect) foodTypeSelect.value = '';
+            
+            const expirySelect = document.getElementById('expiry-filter');
+            if (expirySelect) expirySelect.value = '';
+            
+            // Apply the updated filters
+            applyFilters();
         }
         
         function debugDonations() {
@@ -357,11 +646,54 @@
             const tomorrow = new Date(now);
             tomorrow.setDate(tomorrow.getDate() + 1);
             
+            // Create different food types for testing
+            const foodTypes = [
+                {
+                    foodName: 'Fresh Vegetables Assortment',
+                    quantity: '2 kg mixed vegetables',
+                    description: 'Carrots, potatoes, tomatoes, and leafy greens from my garden'
+                },
+                {
+                    foodName: 'Homemade Bread',
+                    quantity: '3 loaves',
+                    description: 'Freshly baked whole wheat bread'
+                },
+                {
+                    foodName: 'Cooked Pasta Meal',
+                    quantity: 'Family size portion',
+                    description: 'Spaghetti with tomato sauce prepared today'
+                },
+                {
+                    foodName: 'Milk and Yogurt',
+                    quantity: '1 gallon milk, 5 yogurt cups',
+                    description: 'Dairy products with 3 days left before expiry'
+                },
+                {
+                    foodName: 'Canned Soup Collection',
+                    quantity: '8 cans',
+                    description: 'Various canned soups and beans'
+                },
+                {
+                    foodName: 'Fruit Juice Bottles',
+                    quantity: '4 bottles',
+                    description: 'Apple and orange juice, unopened'
+                }
+            ];
+            
+            // Select a random food type
+            const randomFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+            
+            // Random expiry between 2 hours and 1 week
+            const expiryHours = Math.floor(Math.random() * 168) + 2; // Between 2 hours and 7 days
+            const expiryDate = new Date(now);
+            expiryDate.setHours(expiryDate.getHours() + expiryHours);
+            
             const testDonation = {
                 id: 'donation_' + Date.now(),
-                foodName: 'Test Pizza',
-                quantity: '2 large pizzas',
-                expiryDate: tomorrow.toISOString(),
+                foodName: randomFood.foodName,
+                quantity: randomFood.quantity,
+                description: randomFood.description,
+                expiryDate: expiryDate.toISOString(),
                 location: 'Test Location',
                 userId: 'test-donor-123',
                 userName: 'Test Donor',
@@ -391,6 +723,7 @@
             // Create a food card element
             const card = document.createElement('div');
             card.className = 'bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors';
+            card.setAttribute('data-donation-id', donation.id);
             
             // Determine urgency status based on hours left
             let statusClass = 'bg-green-100 text-green-800';
@@ -417,6 +750,12 @@
                 timeText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
             }
             
+            // Get the food type category (for displaying as tag)
+            const foodTypeTag = getFoodTypeTag(donation);
+            
+            // Check if this is a test donation (from test-donor-123)
+            const isTestDonation = donation.userId === 'test-donor-123';
+            
             // Create the card content
             card.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
@@ -424,19 +763,188 @@
                         <h3 class="font-bold text-[#1c140d] text-xl">${donation.foodName}</h3>
                         <p class="text-[#9c7349]">${donation.userName || 'Anonymous Donor'}</p>
                     </div>
-                    <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${statusText}</span>
+                    <div class="flex items-center">
+                        ${isTestDonation ? `
+                            <button onclick="deleteDonation('${donation.id}')" class="mr-2 text-gray-400 hover:text-red-500 transition-colors" title="Delete test donation">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        ` : ''}
+                        <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${statusText}</span>
+                    </div>
+                </div>
+                <div class="flex gap-2 mb-3">
+                    ${foodTypeTag ? `<span class="px-2 py-1 rounded-full text-xs bg-[#fcfaf8] text-[#9c7349]">${foodTypeTag}</span>` : ''}
                 </div>
                 <p class="text-[#9c7349] mb-4">${donation.quantity}</p>
+                ${donation.description ? `<p class="text-[#666] mb-4 text-sm">${donation.description}</p>` : ''}
                 <div class="flex items-center gap-2 mb-4">
                     <span class="text-[#f2800d]">⏰ ${timeText}</span>
                     <span class="text-[#9c7349]">• ${donation.location}</span>
                 </div>
-                <a href="/recipient/request/${donation.id}" class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors block text-center">
+                <button onclick="requestFood('${donation.id}')" class="w-full px-4 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors block text-center">
                     Request Food
-                </a>
+                </button>
             `;
             
             return card;
+        }
+        
+        function requestFood(donationId) {
+            // Get the donation details from the available donations
+            const donation = allAvailableDonations.find(d => d.id === donationId);
+            
+            if (!donation) {
+                console.error("Donation not found:", donationId);
+                return;
+            }
+            
+            // Confirm with the user
+            if (!confirm(`Are you sure you want to request ${donation.foodName} from ${donation.userName || 'Anonymous Donor'}?`)) {
+                return;
+            }
+            
+            // Create a request object
+            const userId = '<%= user._id %>';
+            const userName = '<%= user.name %>';
+            const request = {
+                id: 'request_' + Date.now(),
+                foodId: donation.foodName + '_' + donationId,
+                donorId: donation.userId,
+                donorName: donation.userName || 'Anonymous Donor',
+                recipientId: userId,
+                recipientName: userName,
+                status: 'pending',
+                quantity: donation.quantity,
+                location: donation.location,
+                pickupTime: 'To be arranged',
+                message: `I would like to request this ${donation.foodName} as soon as possible.`,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save the request to the user's requests
+            saveRequestToLocalStorage(request);
+            
+            // Update the donation status to 'requested'
+            updateDonationStatus(donationId, 'requested');
+            
+            // Remove the card from the UI
+            const card = document.querySelector(`[data-donation-id="${donationId}"]`);
+            if (card) {
+                card.remove();
+            }
+            
+            // Check if we need to show the empty state
+            if (document.getElementById('food-listings').children.length === 0) {
+                document.getElementById('no-food-message').classList.remove('hidden');
+            }
+            
+            // Redirect to the my-requests page
+            window.location.href = '/recipient/my-requests?submitted=true';
+        }
+        
+        function saveRequestToLocalStorage(request) {
+            // Save to user's requests
+            const userStorageKey = `userRequests_${request.recipientId}`;
+            let userRequests = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            userRequests.push(request);
+            localStorage.setItem(userStorageKey, JSON.stringify(userRequests));
+            
+            // Save to global requests pool
+            const allRequestsKey = 'allFoodRequests';
+            let allRequests = JSON.parse(localStorage.getItem(allRequestsKey) || '[]');
+            allRequests.push(request);
+            localStorage.setItem(allRequestsKey, JSON.stringify(allRequests));
+            
+            console.log('Saved new request:', request);
+        }
+        
+        function updateDonationStatus(donationId, newStatus) {
+            // Update in universal donations
+            const universalDonationKey = 'allFoodDonations';
+            let donations = JSON.parse(localStorage.getItem(universalDonationKey) || '[]');
+            
+            const donationIndex = donations.findIndex(d => d.id === donationId);
+            if (donationIndex !== -1) {
+                donations[donationIndex].status = newStatus;
+                localStorage.setItem(universalDonationKey, JSON.stringify(donations));
+                console.log(`Updated donation ${donationId} status to ${newStatus}`);
+            }
+            
+            // Also check in older user-specific storage
+            const keys = Object.keys(localStorage);
+            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+            
+            donationKeys.forEach(key => {
+                let userDonations = JSON.parse(localStorage.getItem(key) || '[]');
+                const index = userDonations.findIndex(d => d.id === donationId);
+                
+                if (index !== -1) {
+                    userDonations[index].status = newStatus;
+                    localStorage.setItem(key, JSON.stringify(userDonations));
+                    console.log(`Updated donation ${donationId} status in ${key}`);
+                }
+            });
+        }
+        
+        function deleteDonation(donationId) {
+            if (confirm('Are you sure you want to delete this test donation?')) {
+                const universalDonationKey = 'allFoodDonations';
+                
+                try {
+                    // Get current donations
+                    const donations = JSON.parse(localStorage.getItem(universalDonationKey) || '[]');
+                    
+                    // Filter out the donation to delete
+                    const updatedDonations = donations.filter(donation => donation.id !== donationId);
+                    
+                    // Save back to localStorage
+                    localStorage.setItem(universalDonationKey, JSON.stringify(updatedDonations));
+                    
+                    // Remove the card from the UI without needing a full refresh
+                    const card = document.querySelector(`[data-donation-id="${donationId}"]`);
+                    if (card) {
+                        card.remove();
+                    }
+                    
+                    // Check if we need to show the empty state
+                    const donationsContainer = document.getElementById('food-listings');
+                    if (donationsContainer.children.length === 0) {
+                        const noFoodMessage = document.getElementById('no-food-message');
+                        if (noFoodMessage) {
+                            noFoodMessage.classList.remove('hidden');
+                        }
+                    }
+                    
+                    console.log(`Deleted donation with ID: ${donationId}`);
+                } catch (error) {
+                    console.error('Error deleting donation:', error);
+                }
+            }
+        }
+        
+        function getFoodTypeTag(donation) {
+            // Get food type based on name and description
+            const foodName = (donation.foodName || '').toLowerCase();
+            const description = (donation.description || '').toLowerCase();
+            const combinedText = `${foodName} ${description}`;
+            
+            if (/fresh|produce|vegetable|fruit|veg/i.test(combinedText)) {
+                return 'Fresh Produce';
+            } else if (/bread|pastry|cake|bakery|baked|muffin|cookie/i.test(combinedText)) {
+                return 'Bakery';
+            } else if (/cooked|meal|prepared|dish|dinner|lunch|breakfast/i.test(combinedText)) {
+                return 'Cooked Meal';
+            } else if (/milk|cheese|yogurt|dairy|cream|butter/i.test(combinedText)) {
+                return 'Dairy';
+            } else if (/canned|packaged|box|container|preserved|can|jar/i.test(combinedText)) {
+                return 'Canned/Packaged';
+            } else if (/juice|drink|beverage|water|soda|beer|wine/i.test(combinedText)) {
+                return 'Beverage';
+            }
+            
+            return null;
         }
 
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
