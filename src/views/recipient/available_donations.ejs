@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Donations - ShareBites</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-[#fcfaf8]">
+    <!-- Sidebar -->
+    <aside class="fixed top-0 left-0 w-64 h-full bg-white border-r border-[#e8dbce] z-50">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="#f2800d"/>
+                </svg>
+            </div>
+            <span class="logo-text">WeShareIt</span>
+        </div>
+        
+        <nav class="p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="/recipient/dashboard" class="nav-link">
+                        <i class="fas fa-home sidebar-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/recipient/available-donations" class="nav-link active">
+                        <i class="fas fa-box-open sidebar-icon"></i>
+                        <span>Available Food</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/recipient/my-requests" class="nav-link">
+                        <i class="fas fa-history sidebar-icon"></i>
+                        <span>My Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/recipient/profile" class="nav-link">
+                        <i class="fas fa-user sidebar-icon"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 p-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-[#1c140d] mb-2">Available Food Donations</h1>
+                    <p class="text-[#666]">Browse and request available food donations in your area</p>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white rounded-xl border border-[#e8dbce] p-4 mb-6">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-[#666] mb-2">Distance</label>
+                        <select id="distance" class="w-full rounded-lg border-[#e8dbce] focus:border-[#f2800d] focus:ring focus:ring-[#f2800d] focus:ring-opacity-50">
+                            <option value="5">Within 5 km</option>
+                            <option value="10" selected>Within 10 km</option>
+                            <option value="20">Within 20 km</option>
+                            <option value="50">Within 50 km</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-[#666] mb-2">Food Type</label>
+                        <select id="foodType" class="w-full rounded-lg border-[#e8dbce] focus:border-[#f2800d] focus:ring focus:ring-[#f2800d] focus:ring-opacity-50">
+                            <option value="">All Types</option>
+                            <option value="cooked">Cooked Food</option>
+                            <option value="packaged">Packaged Food</option>
+                            <option value="fresh">Fresh Produce</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="applyFilters()" class="px-6 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donations Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% donations.forEach(donation => { %>
+                    <div class="bg-white rounded-xl border border-[#e8dbce] p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <img src="https://ui-avatars.com/api/?name=<%= donation.donor.name %>&background=e6f3ff&color=0066cc" 
+                                alt="Donor" class="w-10 h-10 rounded-full">
+                            <div>
+                                <p class="font-medium text-[#1c140d]"><%= donation.donor.name %></p>
+                                <p class="text-sm text-[#666]">Posted <%= new Date(donation.createdAt).toLocaleDateString() %></p>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-[#1c140d] mb-4"><%= donation.foodType %></h3>
+                        <div class="space-y-2 text-[#666] mb-4">
+                            <p><strong>Quantity:</strong> <%= donation.quantity %></p>
+                            <p><strong>Expires:</strong> <%= new Date(donation.expiryDate).toLocaleDateString() %></p>
+                            <p><strong>Pickup:</strong> <%= donation.pickupLocation %></p>
+                            <% if (donation.description) { %>
+                                <p><strong>Description:</strong> <%= donation.description %></p>
+                            <% } %>
+                            <p><strong>Distance:</strong> <%= Math.round(donation.distance * 10) / 10 %> km away</p>
+                        </div>
+                        <button onclick="requestDonation('<%= donation._id %>')" 
+                            class="w-full px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                            Request Food
+                        </button>
+                    </div>
+                <% }) %>
+            </div>
+
+            <% if (donations.length === 0) { %>
+                <div class="text-center py-12 bg-white rounded-xl border border-[#e8dbce]">
+                    <img src="/images/no-donations.svg" alt="No donations" class="w-32 h-32 mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-[#1c140d] mb-2">No donations available</h3>
+                    <p class="text-[#666]">There are no food donations available in your area right now</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script>
+        function requestDonation(donationId) {
+            if (confirm('Are you sure you want to request this food donation?')) {
+                fetch(`/api/donations/${donationId}/request`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error requesting donation');
+                    }
+                });
+            }
+        }
+
+        function applyFilters() {
+            const distance = document.getElementById('distance').value;
+            const foodType = document.getElementById('foodType').value;
+            
+            const params = new URLSearchParams();
+            if (distance) params.append('distance', distance);
+            if (foodType) params.append('foodType', foodType);
+            
+            window.location.href = `/recipient/available-donations?${params.toString()}`;
+        }
+    </script>
+</body>
+</html> 
