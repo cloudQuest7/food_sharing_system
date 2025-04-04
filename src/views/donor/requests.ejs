@@ -9,6 +9,52 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+            background-color: #fcfaf8;
+        }
+        .sidebar-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            color: #9c7349;
+            gap: 0.75rem;
+        }
+        .nav-link:hover {
+            background-color: #fff8f3;
+        }
+        .nav-link.active {
+            background-color: #f2800d;
+            color: white;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e8dbce;
+        }
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.75rem;
+        }
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1c140d;
+        }
+    </style>
 </head>
 <body class="bg-[#fcfaf8]">
     <!-- Sidebar -->
@@ -37,13 +83,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/donation" class="nav-link">
+                    <a href="/donor/donation" class="nav-link active">
                         <i class="fas fa-box-open sidebar-icon"></i>
                         <span>My Donations</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/requests" class="nav-link active">
+                    <a href="/donor/requests" class="nav-link">
                         <i class="fas fa-bell sidebar-icon"></i>
                         <span>View Requests</span>
                     </a>
