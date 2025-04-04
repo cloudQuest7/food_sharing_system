@@ -59,51 +59,70 @@
 </head>
 <body class="bg-[#fcfaf8]">
     <!-- Sidebar -->
-    <aside class="fixed top-0 left-0 w-64 h-full bg-white border-r border-[#e8dbce] z-50">
-        <div class="logo-container">
-            <div class="logo-icon">
+    <aside id="sidebar" class="w-64 h-screen bg-white border-r border-[#e8dbce] fixed left-0 top-0 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
+        <!-- Logo Section -->
+        <div class="flex items-center gap-4 p-6 border-b border-[#e8dbce]">
+            <div class="size-6">
                 <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="#f2800d"/>
                 </svg>
             </div>
-            <span class="logo-text">WeShareIt</span>
+            <h2 class="text-[#1c140d] text-xl font-bold">WeShareIt</h2>
         </div>
-        
-        <nav class="p-4">
+
+        <!-- Navigation -->
+        <nav class="p-4 flex-1">
             <ul class="space-y-2">
                 <li>
-                    <a href="/donor/dashboard" class="nav-link">
-                        <i class="fas fa-home sidebar-icon"></i>
-                        <span>Home</span>
+                    <a href="/donor/dashboard" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-home w-6"></i>
+                        <span class="ml-3">Home</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/post-food" class="nav-link">
-                        <i class="fas fa-plus-circle sidebar-icon"></i>
-                        <span>Post Food</span>
+                    <a href="/donor/post-food" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-plus-circle w-6"></i>
+                        <span class="ml-3">Post Food</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/donation" class="nav-link active">
-                        <i class="fas fa-box-open sidebar-icon"></i>
-                        <span>My Donations</span>
+                    <a href="/donor/donation" class="flex items-center p-3 bg-[#fff8f3] text-[#f2800d] rounded-xl">
+                        <i class="fas fa-box-open w-6"></i>
+                        <span class="ml-3">My Donations</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/requests" class="nav-link">
-                        <i class="fas fa-bell sidebar-icon"></i>
-                        <span>View Requests</span>
+                    <a href="/donor/requests" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-bell w-6"></i>
+                        <span class="ml-3">View Requests</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/profile" class="nav-link">
-                        <i class="fas fa-user sidebar-icon"></i>
-                        <span>Profile</span>
+                    <a href="/donor/profile" class="flex items-center p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors">
+                        <i class="fas fa-user w-6"></i>
+                        <span class="ml-3">Profile</span>
                     </a>
                 </li>
             </ul>
         </nav>
+
+        <!-- Profile Section -->
+        <div class="p-4 border-t border-[#e8dbce]">
+            <div class="flex items-center space-x-3 p-3 text-[#9c7349] hover:bg-[#fcfaf8] rounded-xl transition-colors cursor-pointer">
+                <img src="https://placehold.co/32x32" alt="Profile" class="w-8 h-8 rounded-full border-2 border-[#f2800d]">
+                <div>
+                    <p class="text-sm font-bold text-[#1c140d]"><%= user.name %></p>
+                    <p class="text-xs text-[#9c7349]">WeShareIt Donor</p>
+                </div>
+                <i class="fas fa-chevron-right ml-auto text-xs"></i>
+            </div>
+        </div>
     </aside>
+
+    <!-- Add Mobile Menu Toggle -->
+    <button id="menuToggle" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl border border-[#e8dbce] text-[#9c7349] hover:text-[#f2800d]">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <!-- Main Content -->
     <main class="ml-64 p-8">
