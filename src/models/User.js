@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['donor', 'recipient'],
         default: null
+    },
+    points: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true

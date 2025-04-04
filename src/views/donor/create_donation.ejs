@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Donation - ShareBites</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#fcfaf8]">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl font-bold text-[#1c140d] mb-8">Create New Donation</h1>
+            
+            <form action="/donor/create-donation" method="POST" class="bg-white p-6 rounded-xl shadow-sm">
+                <div class="space-y-6">
+                    <div>
+                        <label for="foodType" class="block text-sm font-medium text-[#1c140d] mb-2">Food Type</label>
+                        <input 
+                            type="text" 
+                            id="foodType" 
+                            name="foodType" 
+                            required
+                            class="w-full px-4 py-2 border border-[#e8dbce] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f2800d] focus:border-transparent"
+                            placeholder="e.g., Fresh Vegetables, Cooked Meals, etc."
+                        >
+                    </div>
+
+                    <div>
+                        <label for="quantity" class="block text-sm font-medium text-[#1c140d] mb-2">Quantity</label>
+                        <input 
+                            type="text" 
+                            id="quantity" 
+                            name="quantity" 
+                            required
+                            class="w-full px-4 py-2 border border-[#e8dbce] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f2800d] focus:border-transparent"
+                            placeholder="e.g., 5 kg, 3 boxes, etc."
+                        >
+                    </div>
+
+                    <div>
+                        <label for="expiryDate" class="block text-sm font-medium text-[#1c140d] mb-2">Best Before Date</label>
+                        <input 
+                            type="datetime-local" 
+                            id="expiryDate" 
+                            name="expiryDate" 
+                            required
+                            class="w-full px-4 py-2 border border-[#e8dbce] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f2800d] focus:border-transparent"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="pickupLocation" class="block text-sm font-medium text-[#1c140d] mb-2">Pickup Location</label>
+                        <input 
+                            type="text" 
+                            id="pickupLocation" 
+                            name="pickupLocation" 
+                            required
+                            class="w-full px-4 py-2 border border-[#e8dbce] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f2800d] focus:border-transparent"
+                            placeholder="Enter the pickup address"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-[#1c140d] mb-2">Description (Optional)</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            rows="4"
+                            class="w-full px-4 py-2 border border-[#e8dbce] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f2800d] focus:border-transparent"
+                            placeholder="Add any additional details about the food..."
+                        ></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <a href="/donor/donation" class="px-6 py-2 text-[#9c7349] hover:text-[#f2800d] transition-colors">
+                            Cancel
+                        </a>
+                        <button 
+                            type="submit"
+                            class="px-6 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors"
+                        >
+                            Create Donation
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

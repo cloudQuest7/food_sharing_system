@@ -301,31 +301,32 @@
         });
         
         function saveToLocalDonations(formData) {
-            // Get existing donations from localStorage or initialize empty array
-            let donations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            // Generate a unique ID for the donation
+            const donationId = 'donation_' + Date.now();
             
-            // Add new donation
-            donations.push({
-                id: 'donation_' + Date.now(),
+            // Create the donation object with all required fields
+            const newDonation = {
+                id: donationId,
+                status: 'pending', // Ensure status field is set
+                timestamp: new Date().toISOString(), // Ensure timestamp is in ISO format
                 ...formData
-            });
+            };
             
-            // Save back to localStorage
-            localStorage.setItem(userStorageKey, JSON.stringify(donations));
+            // Save to user-specific storage
+            let userDonations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+            userDonations.push(newDonation);
+            localStorage.setItem(userStorageKey, JSON.stringify(userDonations));
             
-            // For a real implementation, you would use fetch to send to server:
-            /*
-            fetch('/api/donations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => console.log('Success:', data))
-            .catch(error => console.error('Error:', error));
-            */
+            // Also save to universal storage for recipients to find
+            let allDonations = JSON.parse(localStorage.getItem('allFoodDonations') || '[]');
+            allDonations.push(newDonation);
+            localStorage.setItem('allFoodDonations', JSON.stringify(allDonations));
+            
+            console.log('Saved donation to localStorage:', newDonation);
+            console.log('User-specific storage key:', userStorageKey);
+            console.log('Universal storage key: allFoodDonations');
+            console.log('All donations in user storage:', userDonations);
+            console.log('All donations in universal storage:', allDonations);
         }
         
         function closeSuccessModal() {
@@ -400,6 +401,10 @@
 
             // Mobile menu handling
             document.getElementById('menuToggle').addEventListener('click', toggleMenu);
+            
+            // Debug user storage key
+            console.log('UserID on page load:', '<%= user._id %>');
+            console.log('User storage key on page load:', `userDonations_<%= user._id %>`);
         });
 
         let userStorageKey = '';
@@ -407,14 +412,23 @@
         function initializeUserStorage() {
             // Create a unique key based on user ID
             const userId = '<%= user._id %>' || 'default-user';
+            
+            // Set up both the user-specific storage and the universal storage
             userStorageKey = `userDonations_${userId}`;
+            const universalStorageKey = 'allFoodDonations';
             
             // Initialize storage if it doesn't exist
             if (!localStorage.getItem(userStorageKey)) {
                 localStorage.setItem(userStorageKey, JSON.stringify([]));
             }
             
+            // Initialize universal storage if it doesn't exist
+            if (!localStorage.getItem(universalStorageKey)) {
+                localStorage.setItem(universalStorageKey, JSON.stringify([]));
+            }
+            
             console.log(`Post food page: User storage initialized with key: ${userStorageKey}`);
+            console.log(`Post food page: Universal storage initialized with key: ${universalStorageKey}`);
         }
 
         function toggleMenu() {

@@ -1,156 +1,103 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Donation = require('../models/Donation');
 
-// Mock middleware for demonstration purposes
-function isAuthenticated(req, res, next) {
-    // In a real app, this would check session/JWT
-    if (req.session && req.session.userId) {
-        return next();
-    }
-    // For demo purposes, proceed anyway
-    next();
-}
-
-// GET: Recipient Dashboard
-router.get('/dashboard', isAuthenticated, (req, res) => {
+// Middleware to check if user is authenticated and is a recipient
+const isRecipient = async (req, res, next) => {
     try {
-        // Sample user data for demonstration
-        const user = {
-            _id: req.session?.userId || 'recipient123',
-            name: req.session?.userName || 'Jane Smith',
-            email: 'jane@example.com',
-            role: 'recipient',
-            location: '123 Main St, Anytown'
-        };
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.redirect('/login');
+        }
 
-        res.render('recipient/recipient_dashboard', { 
-            user,
-            pageTitle: 'Dashboard',
-            requestCount: 0
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user || user.userType !== 'recipient') {
+            return res.redirect('/section');
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('Auth error:', error);
+        res.redirect('/login');
+    }
+};
+
+// Available donations page
+router.get('/available-donations', isRecipient, async (req, res) => {
+    try {
+        // Get donations that are pending and in the recipient's location
+        const availableDonations = await Donation.find({
+            status: 'pending',
+            pickupLocation: req.user.location
+        }).sort({ createdAt: -1 });
+
+        res.render('recipient/available_donations', {
+            title: 'Available Donations - ShareBites',
+            user: req.user,
+            availableDonations
         });
     } catch (error) {
-        console.error('Error rendering recipient dashboard:', error);
-        res.status(500).render('error', { message: 'Failed to load dashboard' });
-    }
-});
-
-// GET: Browse Available Food
-router.get('/browse', isAuthenticated, (req, res) => {
-    try {
-        // Get all available donations from localStorage (in a real app, from DB)
-        // This would come from the donors' posted food
-        const user = {
-            _id: req.session?.userId || 'recipient123',
-            name: req.session?.userName || 'Jane Smith',
-            role: 'recipient'
-        };
-
-        // Here we would fetch available food from the database
-        // For now, we'll use the sample data in the EJS template
-        
-        res.render('recipient/browse', { 
-            user,
-            pageTitle: 'Browse Food',
-            availableDonations: [] // In the actual implementation this would have real data
+        console.error('Error fetching available donations:', error);
+        res.status(500).render('error', {
+            message: 'Error loading available donations'
         });
-    } catch (error) {
-        console.error('Error loading available food:', error);
-        res.status(500).render('error', { message: 'Failed to load available food' });
     }
 });
 
-// GET: My Requests (View all requests made by this recipient)
-router.get('/my-requests', isAuthenticated, (req, res) => {
+// Request a donation
+router.post('/api/donations/:id/request', isRecipient, async (req, res) => {
     try {
-        const user = {
-            _id: req.session?.userId || 'recipient123',
-            name: req.session?.userName || 'Jane Smith',
-            role: 'recipient'
-        };
+        const donationId = req.params.id;
+        const recipientId = req.user._id;
 
-        // For now we'll use the sample data in the EJS template
-        // In a real implementation, we'd fetch from DB
-        
-        res.render('recipient/my-requests', { 
-            user,
-            pageTitle: 'My Requests',
-            requestSubmitted: req.query.submitted === 'true'
-        });
+        const donation = await Donation.findById(donationId);
+        if (!donation) {
+            return res.status(404).json({ message: 'Donation not found' });
+        }
+
+        if (donation.status !== 'pending') {
+            return res.status(400).json({ message: 'Donation is no longer available' });
+        }
+
+        // Update donation status and add recipient
+        donation.status = 'accepted';
+        donation.recipient = recipientId;
+        await donation.save();
+
+        // Award points to donor
+        const donor = await User.findById(donation.donor);
+        donor.points += 10; // 10 points for accepted donation
+        await donor.save();
+
+        res.json({ message: 'Donation requested successfully' });
     } catch (error) {
-        console.error('Error loading recipient requests:', error);
-        res.status(500).render('error', { message: 'Failed to load your requests' });
+        console.error('Error requesting donation:', error);
+        res.status(500).json({ message: 'Error requesting donation' });
     }
 });
 
-// GET: Make a request for a specific food item
-router.get('/request/:foodId', isAuthenticated, (req, res) => {
+// My requests page
+router.get('/my-requests', isRecipient, async (req, res) => {
     try {
-        const { foodId } = req.params;
-        const user = {
-            _id: req.session?.userId || 'recipient123',
-            name: req.session?.userName || 'Jane Smith',
-            role: 'recipient'
-        };
+        const myRequests = await Donation.find({
+            recipient: req.user._id
+        }).sort({ createdAt: -1 });
 
-        // In a real app, we would fetch the food item details
-        // based on the foodId parameter
-        
-        res.render('recipient/request', { 
-            user,
-            foodId,
-            pageTitle: 'Request Food'
+        res.render('recipient/my_requests', {
+            title: 'My Requests - ShareBites',
+            user: req.user,
+            requests: myRequests
         });
     } catch (error) {
-        console.error('Error loading request form:', error);
-        res.status(500).render('error', { message: 'Failed to load request form' });
-    }
-});
-
-// POST: Submit a food request
-router.post('/submit-request', isAuthenticated, (req, res) => {
-    try {
-        const { foodId, quantity, pickupTime, notes } = req.body;
-        
-        // In a real app, we would save this request to the database
-        // and notify the donor
-        
-        console.log('Food request submitted:', {
-            foodId,
-            quantity,
-            pickupTime,
-            notes,
-            recipientId: req.session?.userId || 'recipient123',
-            recipientName: req.session?.userName || 'Jane Smith'
+        console.error('Error fetching requests:', error);
+        res.status(500).render('error', {
+            message: 'Error loading requests'
         });
-        
-        // Redirect to my-requests page with a success parameter
-        res.redirect('/recipient/my-requests?submitted=true');
-    } catch (error) {
-        console.error('Error submitting food request:', error);
-        res.status(500).render('error', { message: 'Failed to submit your request' });
-    }
-});
-
-// GET: View recipient profile
-router.get('/profile', isAuthenticated, (req, res) => {
-    try {
-        const user = {
-            _id: req.session?.userId || 'recipient123',
-            name: req.session?.userName || 'Jane Smith',
-            email: 'jane@example.com',
-            phone: '555-123-4567',
-            role: 'recipient',
-            location: '123 Main St, Anytown',
-            joinDate: new Date('2023-06-15')
-        };
-        
-        res.render('recipient/profile', { 
-            user,
-            pageTitle: 'My Profile'
-        });
-    } catch (error) {
-        console.error('Error loading profile:', error);
-        res.status(500).render('error', { message: 'Failed to load profile' });
     }
 });
 

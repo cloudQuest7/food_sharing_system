@@ -1,0 +1,282 @@
+/* General Styles */
+body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1c140d;
+}
+
+/* Points Container */
+.points-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.points-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #f2800d, #ff9f40);
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    color: white;
+}
+
+.points-icon {
+    font-size: 1.5rem;
+}
+
+.points-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.points-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.points-info {
+    color: #666;
+}
+
+.points-rules {
+    font-size: 0.875rem;
+    list-style: disc;
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: #666;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1c140d;
+}
+
+/* Donations Section */
+.donations-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Donation Cards */
+.donations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.donation-card {
+    background: white;
+    border: 1px solid #e8dbce;
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.donation-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.donation-status.pending {
+    background-color: #fff3e6;
+    color: #f2800d;
+}
+
+.donation-status.accepted {
+    background-color: #e6f3ff;
+    color: #0066cc;
+}
+
+.donation-status.completed {
+    background-color: #e6ffe6;
+    color: #00cc00;
+}
+
+.donation-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-right: 6rem;
+}
+
+.donation-card p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e8dbce;
+}
+
+.date {
+    color: #999;
+    font-size: 0.875rem;
+}
+
+/* Buttons */
+.button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.button.primary {
+    background-color: #f2800d;
+    color: white;
+}
+
+.button.primary:hover {
+    background-color: #e67600;
+}
+
+.button.secondary {
+    background-color: #e6f3ff;
+    color: #0066cc;
+}
+
+.button.secondary:hover {
+    background-color: #cce6ff;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-state img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+/* Navigation */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #1c140d;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: #f2800d;
+}
+
+.nav-button {
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-button.primary {
+    background-color: #f2800d;
+    color: white;
+}
+
+.nav-button.primary:hover {
+    background-color: #e67600;
+}
+
+.nav-button.secondary {
+    color: #f2800d;
+}
+
+.nav-button.secondary:hover {
+    background-color: #fff1e6;
+} 
