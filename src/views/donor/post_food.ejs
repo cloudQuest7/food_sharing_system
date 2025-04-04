@@ -312,6 +312,11 @@
                 ...formData
             };
             
+            // Initialize user storage key if not already set
+            if (!userStorageKey) {
+                initializeUserStorage();
+            }
+            
             // Save to user-specific storage
             let userDonations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
             userDonations.push(newDonation);
@@ -392,7 +397,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize user storage
+            // Initialize user storage - IMPORTANT: Must be called before any localStorage operations
             initializeUserStorage();
             
             // Set minimum date for expiry date picker
@@ -404,7 +409,7 @@
             
             // Debug user storage key
             console.log('UserID on page load:', '<%= user._id %>');
-            console.log('User storage key on page load:', `userDonations_<%= user._id %>`);
+            console.log('User storage key on page load:', userStorageKey);
         });
 
         let userStorageKey = '';
