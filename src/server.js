@@ -33,8 +33,6 @@ app.use(cookieParser());
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 // Serve views/error.css directly as /css/error.css
 app.get('/css/error.css', (req, res) => {
     res.sendFile(path.join(__dirname, 'views/error.css'));
@@ -61,7 +59,7 @@ app.use('/donor', donorRoutes);
 // Auth routes
 app.get('/register', (req, res) => {
     res.render('register', {
-        title: 'Register - ShareBites',
+        title: 'Register - WeShareIt',
         error: null
     });
 });
@@ -70,7 +68,7 @@ app.post('/register', authController.register);
 
 app.get('/login', (req, res) => {
     res.render('login', {
-        title: 'Login - ShareBites',
+        title: 'Login - WeShareIt',
         error: null,
         registered: req.query.registered === 'true'
     });
@@ -95,7 +93,7 @@ app.get('/section', (req, res) => {
             
             console.log('Rendering section page');
             res.render('section', {
-                title: 'Choose Your Role - ShareBites'
+                title: 'Choose Your Role - WeShareIt'
             });
         });
     } catch (error) {
@@ -123,7 +121,7 @@ app.get('/donor/dashboard', async (req, res) => {
         }
 
         res.render('donor/dashboard', {
-            title: 'Donor Dashboard - ShareBites',
+            title: 'Donor Dashboard - WeShareIt',
             user
         });
     } catch (error) {
@@ -148,7 +146,7 @@ app.get('/recipient/dashboard', async (req, res) => {
         }
 
         res.render('recipient/recipient_dashboard', {
-            title: 'Recipient Dashboard - ShareBites',
+            title: 'Recipient Dashboard - WeShareIt',
             user
         });
     } catch (error) {
@@ -173,7 +171,7 @@ app.get('/recipient/browse', async (req, res) => {
         }
 
         res.render('recipient/browse', {
-            title: 'Browse Food - ShareBites',
+            title: 'Browse Food - WeShareIt',
             user
         });
     } catch (error) {
@@ -198,7 +196,7 @@ app.get('/recipient/saved', async (req, res) => {
         }
 
         res.render('recipient/saved', {
-            title: 'Saved Items - ShareBites',
+            title: 'Saved Items - WeShareIt',
             user
         });
     } catch (error) {
@@ -223,7 +221,7 @@ app.get('/recipient/profile', async (req, res) => {
         }
 
         res.render('recipient/profile', {
-            title: 'Profile - ShareBites',
+            title: 'Profile - WeShareIt',
             user
         });
     } catch (error) {
@@ -386,7 +384,7 @@ app.get('/recipient/my-requests', async (req, res) => {
 app.get('/', (req, res) => {
     try {
         res.render('landing', {
-            title: 'FoodShare - Share More, Waste Less'
+            title: 'WeShareIt - Share More, Waste Less'
         });
     } catch (err) {
         console.error('Rendering error:', err);
