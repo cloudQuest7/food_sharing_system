@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Donation = require('../models/Donation');
 
 // Middleware to check if user is authenticated and is a donor
 const isDonor = async (req, res, next) => {
@@ -46,16 +47,15 @@ router.get('/dashboard', isDonor, async (req, res) => {
 // Request page route
 router.get('/requests', isDonor, async (req, res) => {
     try {
-        console.log('Rendering requests page for user:', req.user.name);
-        res.render('donor/request', {
-            title: 'View Requests - ShareBites',
-            user: req.user
-        });
+        const acceptedDonations = await Donation.find({
+            donor: req.user._id,
+            status: 'accepted'
+        }).populate('recipient');
+        
+        res.render('donor/requests', { acceptedDonations });
     } catch (error) {
-        console.error('Request page error:', error);
-        res.status(500).render('error', {
-            message: 'Error loading requests'
-        });
+        console.error('Error fetching requests:', error);
+        res.status(500).send('Error fetching requests');
     }
 });
 
@@ -79,9 +79,19 @@ router.get('/profile', isDonor, async (req, res) => {
 router.get('/donation', isDonor, async (req, res) => {
     try {
         console.log('Rendering donation page for user:', req.user.name);
+        
+        // Get user's donations
+        const donations = await Donation.find({ donor: req.user._id })
+            .sort({ createdAt: -1 });
+
+        // Get user with points
+        const user = await User.findById(req.user._id);
+
         res.render('donor/donation', {
             title: 'My Donations - ShareBites',
-            user: req.user
+            user: user,
+            donations: donations,
+            userPoints: user.points || 0
         });
     } catch (error) {
         console.error('Donation page error:', error);
@@ -126,6 +136,80 @@ router.get('/post-food', isDonor, async (req, res) => {
         res.status(500).render('error', {
             message: 'Error loading post food page'
         });
+    }
+});
+
+// Create donation route
+router.post('/create-donation', isDonor, async (req, res) => {
+    try {
+        const { foodType, quantity, expiryDate, pickupLocation, description } = req.body;
+        
+        // Create new donation
+        const donation = await Donation.create({
+            donor: req.user._id,
+            foodType,
+            quantity,
+            expiryDate,
+            pickupLocation,
+            description,
+            status: 'pending'
+        });
+
+        console.log('New donation created:', donation);
+        res.redirect('/donor/donation');
+    } catch (error) {
+        console.error('Error creating donation:', error);
+        res.status(500).render('error', {
+            message: 'Error creating donation'
+        });
+    }
+});
+
+// Create donation page route
+router.get('/create-donation', isDonor, async (req, res) => {
+    try {
+        res.render('donor/create_donation', {
+            title: 'Create Donation - ShareBites',
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Error loading create donation page:', error);
+        res.status(500).render('error', {
+            message: 'Error loading create donation page'
+        });
+    }
+});
+
+// Route to mark a donation as completed
+router.post('/api/donations/:id/complete', isDonor, async (req, res) => {
+    try {
+        const donation = await Donation.findById(req.params.id);
+        
+        if (!donation) {
+            return res.status(404).json({ message: 'Donation not found' });
+        }
+        
+        if (donation.donor.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+        
+        if (donation.status !== 'accepted') {
+            return res.status(400).json({ message: 'Donation must be accepted first' });
+        }
+        
+        // Update donation status
+        donation.status = 'completed';
+        await donation.save();
+        
+        // Award points to the donor
+        const donor = await User.findById(req.user._id);
+        donor.points += 100; // Award 100 points for completing a donation
+        await donor.save();
+        
+        res.json({ message: 'Donation marked as completed', points: donor.points });
+    } catch (error) {
+        console.error('Error completing donation:', error);
+        res.status(500).json({ message: 'Error completing donation' });
     }
 });
 

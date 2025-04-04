@@ -10,10 +10,10 @@ const signToken = id => {
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, phone, password } = req.body;
+        const { name, email, phone, password, userType } = req.body;
         
         // Log the request body
-        console.log('Registration attempt:', { name, email, phone });
+        console.log('Registration attempt:', { name, email, phone, userType });
 
         // Check if user exists
         const existingUser = await User.findOne({ email });
@@ -30,7 +30,8 @@ exports.register = async (req, res) => {
             name,
             email,
             phone,
-            password
+            password,
+            userType: userType || 'recipient' // Default to recipient if not specified
         });
 
         console.log('User created successfully:', user._id);
