@@ -7,10 +7,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" />
+    <!-- Leaflet CSS and JS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <style>
         body {
             font-family: Epilogue, "Noto Sans", sans-serif;
             background-color: #fcfaf8;
+        }
+        #map-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        #map-content {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e8dbce;
+        }
+        .food-marker-popup .food-item {
+            padding: 8px;
+            border-bottom: 1px solid #e8dbce;
+        }
+        .food-marker-popup .food-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
@@ -104,7 +147,7 @@
                 <a href="/recipient/browse" class="bg-[#f2800d] text-white px-6 py-3 rounded-full font-bold hover:bg-[#e67600] transition-colors flex items-center gap-2">
                     <span>🔍</span> Browse Food
                 </a>
-                <button class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
+                <button id="view-map-btn" class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
                     <span>🗺️</span> View Map
                 </button>
                 <a href="/recipient/my-requests" class="border border-[#e8dbce] text-[#1c140d] px-6 py-3 rounded-full font-bold hover:border-[#f2800d] transition-colors flex items-center gap-2">
@@ -179,6 +222,21 @@
         </div>
     </div>
 
+    <!-- Map View Modal -->
+    <div id="map-container">
+        <div id="map-content">
+            <div class="map-header">
+                <h2 class="text-[#1c140d] text-xl font-bold">Food Donations Near You</h2>
+                <button id="close-map" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Load available food donations
@@ -187,7 +245,271 @@
             // Load request counts and recent activity
             updateRequestCounts();
             loadRecentActivity();
+            
+            // Setup map functionality
+            setupMapButton();
         });
+        
+        // Map related variables
+        let map;
+        let userLocationMarker;
+        let foodMarkers = [];
+        
+        function setupMapButton() {
+            const mapButton = document.getElementById('view-map-btn');
+            const mapContainer = document.getElementById('map-container');
+            const closeMapButton = document.getElementById('close-map');
+            
+            if (mapButton) {
+                mapButton.addEventListener('click', openMap);
+            }
+            
+            if (closeMapButton) {
+                closeMapButton.addEventListener('click', () => {
+                    mapContainer.style.display = 'none';
+                });
+            }
+        }
+        
+        function openMap() {
+            const mapContainer = document.getElementById('map-container');
+            mapContainer.style.display = 'flex';
+            
+            // Initialize map if it doesn't exist yet
+            if (!map) {
+                initializeMap();
+            }
+        }
+        
+        function initializeMap() {
+            // Create map centered on default position (will be updated with user's location)
+            map = L.map('map').setView([0, 0], 13);
+            
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Get user's current location
+            getUserLocation();
+            
+            // Load food donations on the map
+            loadFoodDonationsOnMap();
+        }
+        
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    // Success callback
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        
+                        // Center map on user's location
+                        map.setView([latitude, longitude], 13);
+                        
+                        // Add marker for user's location
+                        if (userLocationMarker) {
+                            userLocationMarker.setLatLng([latitude, longitude]);
+                        } else {
+                            userLocationMarker = L.marker([latitude, longitude], {
+                                icon: L.divIcon({
+                                    className: 'user-location-marker',
+                                    html: `<div style="background-color: #f2800d; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>`,
+                                    iconSize: [16, 16],
+                                    iconAnchor: [8, 8]
+                                })
+                            }).addTo(map);
+                        }
+                        
+                        // Add accuracy circle
+                        const accuracy = position.coords.accuracy;
+                        L.circle([latitude, longitude], {
+                            radius: accuracy,
+                            color: '#f2800d',
+                            fillColor: '#f2800d',
+                            fillOpacity: 0.1,
+                            weight: 1
+                        }).addTo(map);
+                        
+                        // Add popup indicating this is your location
+                        userLocationMarker.bindPopup('<b>Your Location</b>').openPopup();
+                    },
+                    // Error callback
+                    (error) => {
+                        console.error('Error getting geolocation:', error);
+                        alert('Unable to access your location. Please check your browser permissions.');
+                    },
+                    // Options
+                    { 
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        }
+        
+        function loadFoodDonationsOnMap() {
+            // Clear existing markers
+            foodMarkers.forEach(marker => map.removeLayer(marker));
+            foodMarkers = [];
+            
+            // Use the universal food donations key - this is the primary source now
+            const universalDonationKey = 'allFoodDonations';
+            let allDonations = [];
+            
+            // Try to get from universal storage
+            try {
+                const universalRawData = localStorage.getItem(universalDonationKey);
+                if (universalRawData) {
+                    const universalDonations = JSON.parse(universalRawData || '[]');
+                    if (Array.isArray(universalDonations)) {
+                        // Filter for valid donations
+                        const validUniversalDonations = universalDonations.filter(donation => {
+                            if (!donation) return false;
+                            
+                            const hasRequiredFields = donation.foodName && donation.expiryDate;
+                            if (!hasRequiredFields) return false;
+                            
+                            const status = donation.status || 'pending';
+                            const isValid = status === 'pending';
+                            
+                            let expiryDate;
+                            try {
+                                expiryDate = new Date(donation.expiryDate);
+                            } catch (e) {
+                                return false;
+                            }
+                            
+                            const isNotExpired = expiryDate >= new Date();
+                            return isValid && isNotExpired;
+                        });
+                        
+                        allDonations = [...validUniversalDonations];
+                    }
+                }
+            } catch (error) {
+                console.error(`Error processing universal donations:`, error);
+            }
+            
+            // Group donations by location
+            const donationsByLocation = {};
+            allDonations.forEach(donation => {
+                const location = donation.location || 'Unknown Location';
+                if (!donationsByLocation[location]) {
+                    donationsByLocation[location] = [];
+                }
+                donationsByLocation[location].push(donation);
+            });
+            
+            // Function to generate random coordinates near user's location
+            // In a real app, these would be actual coordinates from the database
+            function getRandomCoordinates(baseLat, baseLng, radiusKm) {
+                const radiusEarth = 6371; // Earth's radius in km
+                const randomDistance = Math.random() * radiusKm;
+                const randomAngle = Math.random() * 2 * Math.PI;
+                
+                const lat2 = Math.asin(
+                    Math.sin(baseLat * Math.PI / 180) * Math.cos(randomDistance / radiusEarth) +
+                    Math.cos(baseLat * Math.PI / 180) * Math.sin(randomDistance / radiusEarth) * Math.cos(randomAngle)
+                ) * 180 / Math.PI;
+                
+                const lng2 = (baseLng * Math.PI / 180 + 
+                    Math.atan2(
+                        Math.sin(randomAngle) * Math.sin(randomDistance / radiusEarth) * Math.cos(baseLat * Math.PI / 180),
+                        Math.cos(randomDistance / radiusEarth) - Math.sin(baseLat * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180)
+                    )) * 180 / Math.PI;
+                
+                return [lat2, lng2];
+            }
+            
+            // Add markers for each location group
+            Object.keys(donationsByLocation).forEach(location => {
+                const donations = donationsByLocation[location];
+                
+                // Create a random position near the user (in real app, we'd use actual coordinates)
+                let markerLatLng;
+                if (userLocationMarker) {
+                    const userLatLng = userLocationMarker.getLatLng();
+                    markerLatLng = getRandomCoordinates(userLatLng.lat, userLatLng.lng, 3); // Random within 3km
+                } else {
+                    // Default if user location not available
+                    markerLatLng = [0, 0];
+                }
+                
+                // Create icon for marker
+                const iconHtml = `<div style="background-color: white; border: 2px solid #f2800d; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    <span style="font-size: 14px; font-weight: bold; color: #f2800d;">${donations.length}</span>
+                </div>`;
+                
+                // Create marker
+                const marker = L.marker(markerLatLng, {
+                    icon: L.divIcon({
+                        html: iconHtml,
+                        className: 'food-marker',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                }).addTo(map);
+                
+                // Create popup content with all donations at this location
+                const popupContent = document.createElement('div');
+                popupContent.className = 'food-marker-popup';
+                
+                // Add location header
+                const locationHeader = document.createElement('h3');
+                locationHeader.className = 'font-bold text-[#1c140d] mb-2';
+                locationHeader.textContent = location;
+                popupContent.appendChild(locationHeader);
+                
+                // Add donations
+                donations.forEach(donation => {
+                    const foodItem = document.createElement('div');
+                    foodItem.className = 'food-item';
+                    
+                    // Calculate time remaining until expiry
+                    const expiryDate = new Date(donation.expiryDate);
+                    const now = new Date();
+                    const hoursLeft = Math.round((expiryDate - now) / (1000 * 60 * 60));
+                    
+                    // Format time text
+                    let timeText = '';
+                    if (hoursLeft < 1) {
+                        timeText = 'Less than 1 hour left';
+                    } else if (hoursLeft === 1) {
+                        timeText = '1 hour left';
+                    } else if (hoursLeft < 24) {
+                        timeText = `${hoursLeft} hours left`;
+                    } else {
+                        const daysLeft = Math.floor(hoursLeft / 24);
+                        timeText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
+                    }
+                    
+                    foodItem.innerHTML = `
+                        <div class="mb-1 font-medium text-[#1c140d]">${donation.foodName}</div>
+                        <div class="text-sm text-[#9c7349]">${donation.quantity}</div>
+                        <div class="text-xs text-[#f2800d] mt-1">⏰ ${timeText}</div>
+                    `;
+                    
+                    popupContent.appendChild(foodItem);
+                });
+                
+                // Add "View All" button
+                const viewAllButton = document.createElement('a');
+                viewAllButton.href = '/recipient/browse';
+                viewAllButton.className = 'block w-full px-3 py-2 bg-[#f2800d] text-white rounded-lg text-center text-sm font-bold mt-2';
+                viewAllButton.textContent = 'Browse All Food';
+                popupContent.appendChild(viewAllButton);
+                
+                // Bind popup to marker
+                marker.bindPopup(popupContent);
+                
+                // Add to markers array
+                foodMarkers.push(marker);
+            });
+        }
         
         function updateRequestCounts() {
             // Get user requests to count active ones
@@ -205,34 +527,151 @@
             }
         }
         
+        function loadRecentActivity() {
+            const activityContainer = document.getElementById('recent-activity-container');
+            const noActivityMessage = document.getElementById('no-activity-message');
+            
+            if (!activityContainer) return;
+            
+            // Get user's requests
+            const userId = '<%= user._id %>';
+            const storageKey = `userRequests_${userId}`;
+            const requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            // Clear container
+            activityContainer.innerHTML = '';
+            
+            // Display message if no activity
+            if (requests.length === 0) {
+                if (noActivityMessage) {
+                    noActivityMessage.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            // Hide no activity message if activities exist
+            if (noActivityMessage) {
+                noActivityMessage.classList.add('hidden');
+            }
+            
+            // Sort by newest first and limit to 5 items
+            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const recentActivity = requests.slice(0, 5);
+            
+            // Create and append activity items
+            recentActivity.forEach(request => {
+                const activityItem = createActivityItem(request);
+                activityContainer.appendChild(activityItem);
+            });
+        }
+
+        function createActivityItem(request) {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors';
+            
+            // Determine status class
+            let statusClass = 'bg-yellow-100 text-yellow-800';
+            let statusText = 'Pending';
+            
+            if (request.status === 'accepted') {
+                statusClass = 'bg-blue-100 text-blue-800';
+                statusText = 'Accepted';
+            } else if (request.status === 'completed') {
+                statusClass = 'bg-green-100 text-green-800';
+                statusText = 'Completed';
+            } else if (request.status === 'rejected' || request.status === 'cancelled') {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = request.status === 'rejected' ? 'Rejected' : 'Cancelled';
+            }
+            
+            // Format timestamp
+            const requestDate = new Date(request.timestamp);
+            const formattedDate = requestDate.toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Set activity item content
+            activityItem.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-[#1c140d]">${request.foodId ? `${request.foodName || 'Food Item'}` : 'Unknown Food'}</h3>
+                        <p class="text-[#9c7349]">Requested from ${request.donorName || 'Unknown Donor'} · ${formattedDate}</p>
+                    </div>
+                    <span class="${statusClass} px-2 py-1 rounded-full text-sm">${statusText}</span>
+                </div>
+            `;
+            
+            return activityItem;
+        }
+
         function loadAvailableDonations() {
             const foodContainer = document.getElementById('available-food-container');
             const noFoodMessage = document.getElementById('no-food-message');
             
             if (!foodContainer) return;
             
-            // Get all localStorage keys to find donation storage
-            const keys = Object.keys(localStorage);
-            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
-            
+            // Use the universal food donations key - this is the primary source now
+            const universalDonationKey = 'allFoodDonations';
             let allDonations = [];
             
-            // Extract donations from all donors
-            donationKeys.forEach(key => {
-                try {
-                    const donations = JSON.parse(localStorage.getItem(key) || '[]');
-                    // Only include pending donations that aren't expired
-                    const validDonations = donations.filter(donation => {
-                        const isValid = donation.status === 'pending';
-                        const expiryDate = new Date(donation.expiryDate);
-                        const isNotExpired = expiryDate >= new Date();
-                        return isValid && isNotExpired;
-                    });
-                    allDonations = [...allDonations, ...validDonations];
-                } catch (error) {
-                    console.error('Error parsing donations from storage:', error);
+            // Try to get from universal storage
+            try {
+                const universalRawData = localStorage.getItem(universalDonationKey);
+                if (universalRawData) {
+                    const universalDonations = JSON.parse(universalRawData || '[]');
+                    if (Array.isArray(universalDonations)) {
+                        // Filter for valid donations
+                        const validUniversalDonations = universalDonations.filter(donation => {
+                            if (!donation) return false;
+                            
+                            const hasRequiredFields = donation.foodName && donation.expiryDate;
+                            if (!hasRequiredFields) return false;
+                            
+                            const status = donation.status || 'pending';
+                            const isValid = status === 'pending';
+                            
+                            let expiryDate;
+                            try {
+                                expiryDate = new Date(donation.expiryDate);
+                            } catch (e) {
+                                return false;
+                            }
+                            
+                            const isNotExpired = expiryDate >= new Date();
+                            return isValid && isNotExpired;
+                        });
+                        
+                        allDonations = [...validUniversalDonations];
+                    }
                 }
-            });
+            } catch (error) {
+                console.error(`Error processing universal donations:`, error);
+            }
+            
+            // For backward compatibility, also check older donor-specific keys
+            if (allDonations.length === 0) {
+                // Get all localStorage keys to find donation storage
+                const keys = Object.keys(localStorage);
+                const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+                
+                // Extract donations from all donors
+                donationKeys.forEach(key => {
+                    try {
+                        const donations = JSON.parse(localStorage.getItem(key) || '[]');
+                        // Only include pending donations that aren't expired
+                        const validDonations = donations.filter(donation => {
+                            const isValid = donation.status === 'pending';
+                            const expiryDate = new Date(donation.expiryDate);
+                            const isNotExpired = expiryDate >= new Date();
+                            return isValid && isNotExpired;
+                        });
+                        allDonations = [...allDonations, ...validDonations];
+                    } catch (error) {
+                        console.error('Error parsing donations from storage:', error);
+                    }
+                });
+            }
             
             // Clear container
             foodContainer.innerHTML = '';
@@ -317,84 +756,6 @@
             `;
             
             return card;
-        }
-
-        function loadRecentActivity() {
-            const activityContainer = document.getElementById('recent-activity-container');
-            const noActivityMessage = document.getElementById('no-activity-message');
-            
-            if (!activityContainer) return;
-            
-            // Get user's requests
-            const userId = '<%= user._id %>';
-            const storageKey = `userRequests_${userId}`;
-            const requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            
-            // Clear container
-            activityContainer.innerHTML = '';
-            
-            // Display message if no activity
-            if (requests.length === 0) {
-                if (noActivityMessage) {
-                    noActivityMessage.classList.remove('hidden');
-                }
-                return;
-            }
-            
-            // Hide no activity message if activities exist
-            if (noActivityMessage) {
-                noActivityMessage.classList.add('hidden');
-            }
-            
-            // Sort by newest first and limit to 5 items
-            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            const recentActivity = requests.slice(0, 5);
-            
-            // Create and append activity items
-            recentActivity.forEach(request => {
-                const activityItem = createActivityItem(request);
-                activityContainer.appendChild(activityItem);
-            });
-        }
-
-        function createActivityItem(request) {
-            const activityItem = document.createElement('div');
-            activityItem.className = 'p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors';
-            
-            // Determine status class
-            let statusClass = 'bg-yellow-100 text-yellow-800';
-            let statusText = 'Pending';
-            
-            if (request.status === 'accepted') {
-                statusClass = 'bg-blue-100 text-blue-800';
-                statusText = 'Accepted';
-            } else if (request.status === 'completed') {
-                statusClass = 'bg-green-100 text-green-800';
-                statusText = 'Completed';
-            } else if (request.status === 'rejected' || request.status === 'cancelled') {
-                statusClass = 'bg-red-100 text-red-800';
-                statusText = request.status === 'rejected' ? 'Rejected' : 'Cancelled';
-            }
-            
-            // Format timestamp
-            const requestDate = new Date(request.timestamp);
-            const formattedDate = requestDate.toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric'
-            });
-            
-            // Set activity item content
-            activityItem.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold text-[#1c140d]">${request.foodId ? `${request.foodName || 'Food Item'}` : 'Unknown Food'}</h3>
-                        <p class="text-[#9c7349]">Requested from ${request.donorName || 'Unknown Donor'} · ${formattedDate}</p>
-                    </div>
-                    <span class="${statusClass} px-2 py-1 rounded-full text-sm">${statusText}</span>
-                </div>
-            `;
-            
-            return activityItem;
         }
 
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
