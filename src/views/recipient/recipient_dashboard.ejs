@@ -79,7 +79,7 @@
                         <span class="text-2xl">📦</span>
                         <h2 class="text-[#1c140d] text-lg font-bold">Active Requests</h2>
                     </div>
-                    <p class="text-[#f2800d] text-3xl font-black">2</p>
+                    <p class="text-[#f2800d] text-3xl font-black" data-stat="active-requests">0</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl border border-[#e8dbce] hover:border-[#f2800d] transition-colors">
                     <div class="flex items-center gap-2 mb-2">
@@ -107,74 +107,287 @@
             <!-- Available Food Section -->
             <div class="bg-white p-6 rounded-xl border border-[#e8dbce] mb-8">
                 <h2 class="text-[#1c140d] text-xl font-bold mb-4">Available Food Near You</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Food Card 1 -->
-                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="font-bold text-[#1c140d]">Fresh Vegetables</h3>
-                                <p class="text-[#9c7349]">2.5 km away</p>
-                            </div>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                        </div>
-                        <p class="text-[#9c7349] mb-4">5 kg of fresh vegetables including carrots, broccoli, and lettuce</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#f2800d]">⏰ 2 hours left</span>
-                            </div>
-                            <a href="/recipient/request?id=1" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
-                                Request
-                            </a>
-                        </div>
+                <div id="available-food-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Food listings will be loaded dynamically here -->
+                    
+                    <!-- Loading placeholder -->
+                    <div class="animate-pulse p-4 border border-[#e8dbce] rounded-lg">
+                        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                        <div class="h-10 bg-gray-200 rounded w-full"></div>
                     </div>
-
-                    <!-- Food Card 2 -->
-                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="font-bold text-[#1c140d]">Bread Loaves</h3>
-                                <p class="text-[#9c7349]">1.8 km away</p>
-                            </div>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Available</span>
-                        </div>
-                        <p class="text-[#9c7349] mb-4">10 fresh bread loaves from local bakery</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#f2800d]">⏰ 4 hours left</span>
-                            </div>
-                            <a href="/recipient/request?id=2" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
-                                Request
-                            </a>
-                        </div>
+                    <div class="animate-pulse p-4 border border-[#e8dbce] rounded-lg">
+                        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
+                        <div class="h-10 bg-gray-200 rounded w-full"></div>
                     </div>
+                </div>
+                
+                <!-- Empty state message (hidden by default) -->
+                <div id="no-food-message" class="hidden bg-[#fcfaf8] p-6 rounded-lg text-center">
+                    <p class="text-[#9c7349] mb-4">There are no food donations available right now.</p>
+                    <a href="/recipient/browse" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block">
+                        Browse All Foods
+                    </a>
                 </div>
             </div>
 
             <!-- Recent Activity -->
             <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
                 <h2 class="text-[#1c140d] text-xl font-bold mb-4">Recent Activity</h2>
-                <div class="space-y-4">
-                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                <div id="recent-activity-container" class="space-y-4">
+                    <!-- Activity items will be loaded dynamically here -->
+                    
+                    <!-- Loading placeholder -->
+                    <div class="animate-pulse p-4 border border-[#e8dbce] rounded-lg">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="font-bold text-[#1c140d]">Fresh Fruits</h3>
-                                <p class="text-[#9c7349]">Requested from Local Market</p>
+                                <div class="h-5 bg-gray-200 rounded w-1/3 mb-2"></div>
+                                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
                             </div>
-                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">Pending</span>
+                            <div class="h-6 bg-gray-200 rounded w-20"></div>
                         </div>
                     </div>
-                    <div class="p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors">
+                    <div class="animate-pulse p-4 border border-[#e8dbce] rounded-lg">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="font-bold text-[#1c140d]">Canned Goods</h3>
-                                <p class="text-[#9c7349]">Received from Grocery Store</p>
+                                <div class="h-5 bg-gray-200 rounded w-1/4 mb-2"></div>
+                                <div class="h-4 bg-gray-200 rounded w-2/5"></div>
                             </div>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Completed</span>
+                            <div class="h-6 bg-gray-200 rounded w-20"></div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Empty state message (hidden by default) -->
+                <div id="no-activity-message" class="hidden bg-[#fcfaf8] p-6 rounded-lg text-center">
+                    <p class="text-[#9c7349]">You don't have any recent activity yet. Start by browsing available food!</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load available food donations
+            loadAvailableDonations();
+            
+            // Load request counts and recent activity
+            updateRequestCounts();
+            loadRecentActivity();
+        });
+        
+        function updateRequestCounts() {
+            // Get user requests to count active ones
+            const userId = '<%= user._id %>';
+            const storageKey = `userRequests_${userId}`;
+            const requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            // Count active requests
+            const activeCount = requests.filter(req => ['pending', 'accepted'].includes(req.status)).length;
+            
+            // Update stats display
+            const activeRequestsElement = document.querySelector('[data-stat="active-requests"]');
+            if (activeRequestsElement) {
+                activeRequestsElement.textContent = activeCount;
+            }
+        }
+        
+        function loadAvailableDonations() {
+            const foodContainer = document.getElementById('available-food-container');
+            const noFoodMessage = document.getElementById('no-food-message');
+            
+            if (!foodContainer) return;
+            
+            // Get all localStorage keys to find donation storage
+            const keys = Object.keys(localStorage);
+            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+            
+            let allDonations = [];
+            
+            // Extract donations from all donors
+            donationKeys.forEach(key => {
+                try {
+                    const donations = JSON.parse(localStorage.getItem(key) || '[]');
+                    // Only include pending donations that aren't expired
+                    const validDonations = donations.filter(donation => {
+                        const isValid = donation.status === 'pending';
+                        const expiryDate = new Date(donation.expiryDate);
+                        const isNotExpired = expiryDate >= new Date();
+                        return isValid && isNotExpired;
+                    });
+                    allDonations = [...allDonations, ...validDonations];
+                } catch (error) {
+                    console.error('Error parsing donations from storage:', error);
+                }
+            });
+            
+            // Clear container
+            foodContainer.innerHTML = '';
+            
+            // Display message if no donations available
+            if (allDonations.length === 0) {
+                if (noFoodMessage) {
+                    noFoodMessage.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            // Hide no food message if donations exist
+            if (noFoodMessage) {
+                noFoodMessage.classList.add('hidden');
+            }
+            
+            // Sort by newest first and limit to 4 items for dashboard
+            allDonations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const dashboardDonations = allDonations.slice(0, 4);
+            
+            // Create and append food cards
+            dashboardDonations.forEach(donation => {
+                const card = createFoodCard(donation);
+                foodContainer.appendChild(card);
+            });
+        }
+        
+        function createFoodCard(donation) {
+            // Calculate time remaining until expiry
+            const expiryDate = new Date(donation.expiryDate);
+            const now = new Date();
+            const hoursLeft = Math.round((expiryDate - now) / (1000 * 60 * 60));
+            
+            // Create card element
+            const card = document.createElement('div');
+            card.className = 'p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors';
+            
+            // Determine urgency status
+            let statusClass = 'bg-green-100 text-green-800';
+            let statusText = 'Available';
+            
+            if (hoursLeft <= 3) {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = 'Urgent';
+            } else if (hoursLeft <= 12) {
+                statusClass = 'bg-yellow-100 text-yellow-800';
+                statusText = 'Limited';
+            }
+            
+            // Format time text
+            let timeText = '';
+            if (hoursLeft < 1) {
+                timeText = 'Less than 1 hour left';
+            } else if (hoursLeft === 1) {
+                timeText = '1 hour left';
+            } else if (hoursLeft < 24) {
+                timeText = `${hoursLeft} hours left`;
+            } else {
+                const daysLeft = Math.floor(hoursLeft / 24);
+                timeText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
+            }
+            
+            // Set card content
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 class="font-bold text-[#1c140d]">${donation.foodName}</h3>
+                        <p class="text-[#9c7349]">${donation.location}</p>
+                    </div>
+                    <span class="${statusClass} px-2 py-1 rounded-full text-sm">${statusText}</span>
+                </div>
+                <p class="text-[#9c7349] mb-4">${donation.quantity}</p>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[#f2800d]">⏰ ${timeText}</span>
+                    </div>
+                    <a href="/recipient/request/${donation.id}" class="px-4 py-2 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block text-center">
+                        Request
+                    </a>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function loadRecentActivity() {
+            const activityContainer = document.getElementById('recent-activity-container');
+            const noActivityMessage = document.getElementById('no-activity-message');
+            
+            if (!activityContainer) return;
+            
+            // Get user's requests
+            const userId = '<%= user._id %>';
+            const storageKey = `userRequests_${userId}`;
+            const requests = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            // Clear container
+            activityContainer.innerHTML = '';
+            
+            // Display message if no activity
+            if (requests.length === 0) {
+                if (noActivityMessage) {
+                    noActivityMessage.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            // Hide no activity message if activities exist
+            if (noActivityMessage) {
+                noActivityMessage.classList.add('hidden');
+            }
+            
+            // Sort by newest first and limit to 5 items
+            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const recentActivity = requests.slice(0, 5);
+            
+            // Create and append activity items
+            recentActivity.forEach(request => {
+                const activityItem = createActivityItem(request);
+                activityContainer.appendChild(activityItem);
+            });
+        }
+
+        function createActivityItem(request) {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'p-4 border border-[#e8dbce] rounded-lg hover:border-[#f2800d] transition-colors';
+            
+            // Determine status class
+            let statusClass = 'bg-yellow-100 text-yellow-800';
+            let statusText = 'Pending';
+            
+            if (request.status === 'accepted') {
+                statusClass = 'bg-blue-100 text-blue-800';
+                statusText = 'Accepted';
+            } else if (request.status === 'completed') {
+                statusClass = 'bg-green-100 text-green-800';
+                statusText = 'Completed';
+            } else if (request.status === 'rejected' || request.status === 'cancelled') {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = request.status === 'rejected' ? 'Rejected' : 'Cancelled';
+            }
+            
+            // Format timestamp
+            const requestDate = new Date(request.timestamp);
+            const formattedDate = requestDate.toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Set activity item content
+            activityItem.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-[#1c140d]">${request.foodId ? `${request.foodName || 'Food Item'}` : 'Unknown Food'}</h3>
+                        <p class="text-[#9c7349]">Requested from ${request.donorName || 'Unknown Donor'} · ${formattedDate}</p>
+                    </div>
+                    <span class="${statusClass} px-2 py-1 rounded-full text-sm">${statusText}</span>
+                </div>
+            `;
+            
+            return activityItem;
+        }
+    </script>
 </body>
 </html> 

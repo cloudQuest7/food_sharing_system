@@ -39,11 +39,11 @@
             <!-- Profile Section -->
             <div class="p-6 border-t border-[#e8dbce]">
                 <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name=John&background=f2800d&color=fff" 
-                         alt="John's profile" 
+                    <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=f2800d&color=fff" 
+                         alt="<%= user.name %>'s profile" 
                          class="w-10 h-10 rounded-full border-2 border-[#f2800d]"/>
                     <div>
-                        <p class="text-[#1c140d] font-bold">John</p>
+                        <p class="text-[#1c140d] font-bold"><%= user.name %></p>
                         <p class="text-[#9c7349] text-sm">Food Recipient</p>
                     </div>
                 </div>
@@ -54,7 +54,15 @@
         <div class="ml-64 flex-1 p-8">
             <!-- Header Section -->
             <div class="mb-8">
-                <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em] mb-4">Browse Available Food</h1>
+                <div class="flex justify-between items-center">
+                    <h1 class="text-[#1c140d] text-4xl font-black leading-tight tracking-[-0.033em] mb-4">Browse Available Food</h1>
+                    <button id="refreshButton" onclick="loadAvailableDonations(true)" class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d] flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
                 <p class="text-[#9c7349] text-lg">Find and request food items from your local community</p>
             </div>
 
@@ -130,7 +138,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
+            <div class="mt-8 flex justify-between items-center">
                 <div class="flex gap-2">
                     <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">Previous</button>
                     <button class="px-4 py-2 bg-[#f2800d] text-white rounded-lg">1</button>
@@ -138,6 +146,7 @@
                     <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">3</button>
                     <button class="px-4 py-2 border border-[#e8dbce] rounded-lg text-[#1c140d] hover:border-[#f2800d]">Next</button>
                 </div>
+                <button onclick="createTestDonation()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 text-sm">Create Test Donation</button>
             </div>
         </div>
     </div>
@@ -145,7 +154,16 @@
     <script>
         // Get all donor food posts from localStorage to display them
         document.addEventListener('DOMContentLoaded', function() {
-            loadAvailableDonations();
+            // Clear loading placeholders and load food items immediately
+            document.getElementById('food-listings').innerHTML = '';
+            
+            // Force a refresh with debug enabled on initial load
+            loadAvailableDonations(true);
+            
+            // Set up a refresh interval to periodically check for new donations
+            setInterval(() => {
+                loadAvailableDonations(false);
+            }, 10000); // Check every 10 seconds
             
             // Add event listeners for menu toggle if on mobile
             const menuToggle = document.getElementById('menuToggle');
@@ -159,38 +177,142 @@
             sidebar.classList.toggle('-translate-x-full');
         }
         
-        function loadAvailableDonations() {
+        function loadAvailableDonations(debug = false) {
             const donationsContainer = document.getElementById('food-listings');
             const noFoodMessage = document.getElementById('no-food-message');
             
-            // Get all localStorage keys to find donation storage
-            const keys = Object.keys(localStorage);
-            const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+            // Use the universal food donations key - this is the primary source now
+            const universalDonationKey = 'allFoodDonations';
             
-            let allDonations = [];
-            
-            // Extract donations from all donors
-            donationKeys.forEach(key => {
-                try {
-                    const donations = JSON.parse(localStorage.getItem(key) || '[]');
-                    // Only include pending donations that aren't expired
-                    const validDonations = donations.filter(donation => {
-                        const isValid = donation.status === 'pending';
-                        const expiryDate = new Date(donation.expiryDate);
-                        const isNotExpired = expiryDate >= new Date();
-                        return isValid && isNotExpired;
-                    });
-                    allDonations = [...allDonations, ...validDonations];
-                } catch (error) {
-                    console.error('Error parsing donations from storage:', error);
+            // For debug purposes, check all localStorage
+            if (debug) {
+                const keys = Object.keys(localStorage);
+                console.log('All localStorage keys:', keys);
+                
+                // Debug the universal storage content specifically
+                const universalRawData = localStorage.getItem(universalDonationKey);
+                console.log(`Universal donations raw data:`, universalRawData);
+                
+                if (universalRawData) {
+                    try {
+                        const parsedData = JSON.parse(universalRawData);
+                        console.log(`Parsed universal donations (${parsedData.length} items):`, parsedData);
+                    } catch (e) {
+                        console.error('Error parsing universal donations:', e);
+                    }
                 }
-            });
+            }
+            
+            // Get donations from the universal key 
+            let allDonations = [];
+            try {
+                const universalRawData = localStorage.getItem(universalDonationKey);
+                if (universalRawData) {
+                    const universalDonations = JSON.parse(universalRawData || '[]');
+                    if (Array.isArray(universalDonations)) {
+                        // Filter for valid donations
+                        const validUniversalDonations = universalDonations.filter(donation => {
+                            if (!donation) return false;
+                            
+                            const hasRequiredFields = donation.foodName && donation.expiryDate;
+                            if (!hasRequiredFields) return false;
+                            
+                            const status = donation.status || 'pending';
+                            const isValid = status === 'pending';
+                            
+                            let expiryDate;
+                            try {
+                                expiryDate = new Date(donation.expiryDate);
+                            } catch (e) {
+                                return false;
+                            }
+                            
+                            const isNotExpired = expiryDate >= new Date();
+                            return isValid && isNotExpired;
+                        });
+                        
+                        allDonations = [...validUniversalDonations];
+                        
+                        if (debug) {
+                            console.log(`Found ${validUniversalDonations.length} valid donations in universal storage`);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(`Error processing universal donations:`, error);
+            }
+            
+            // For backward compatibility, also check older donor-specific keys
+            // This block is only needed temporarily until all donors use the universal storage
+            if (allDonations.length === 0) {
+                try {
+                    // Get older-style donation keys
+                    const keys = Object.keys(localStorage);
+                    const donationKeys = keys.filter(key => key.startsWith('userDonations_'));
+                    
+                    if (debug) console.log('Checking legacy donor keys as fallback:', donationKeys);
+                    
+                    // Process each donor's donations
+                    donationKeys.forEach(key => {
+                        try {
+                            const rawData = localStorage.getItem(key);
+                            if (!rawData) return;
+                            
+                            const donations = JSON.parse(rawData);
+                            if (!Array.isArray(donations)) return;
+                            
+                            // Filter for valid donations
+                            const validDonations = donations.filter(donation => {
+                                if (!donation) return false;
+                                
+                                const hasRequiredFields = donation.foodName && donation.expiryDate;
+                                if (!hasRequiredFields) return false;
+                                
+                                const status = donation.status || 'pending';
+                                const isValid = status === 'pending';
+                                
+                                let expiryDate;
+                                try {
+                                    expiryDate = new Date(donation.expiryDate);
+                                } catch (e) {
+                                    return false;
+                                }
+                                
+                                const isNotExpired = expiryDate >= new Date();
+                                return isValid && isNotExpired;
+                            });
+                            
+                            allDonations = [...allDonations, ...validDonations];
+                            
+                            if (debug && validDonations.length > 0) {
+                                console.log(`Found ${validDonations.length} valid donations in legacy key ${key}`);
+                            }
+                        } catch (error) {
+                            console.error(`Error processing donations from key ${key}:`, error);
+                        }
+                    });
+                } catch (error) {
+                    console.error(`Error processing legacy donations:`, error);
+                }
+            }
+            
+            if (debug) {
+                console.log('Final donations to display:', allDonations);
+            }
             
             // Display message if no donations available
             if (allDonations.length === 0) {
                 if (noFoodMessage) {
                     noFoodMessage.classList.remove('hidden');
                 }
+                
+                // Clear container but keep loading placeholders if first load
+                if (donationsContainer.children.length > 0 && 
+                    !donationsContainer.children[0].classList.contains('animate-pulse')) {
+                    donationsContainer.innerHTML = '';
+                }
+                
+                if (debug) console.log('No valid donations found to display');
                 return;
             }
             
@@ -207,6 +329,57 @@
                 const card = createFoodCard(donation);
                 donationsContainer.appendChild(card);
             });
+            
+            if (debug) console.log(`Displayed ${allDonations.length} donation cards`);
+        }
+        
+        function debugDonations() {
+            console.log('============ DEBUG DONATIONS ============');
+            console.log('Checking all localStorage content:');
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                try {
+                    const value = localStorage.getItem(key);
+                    console.log(`${key}: ${value}`);
+                } catch (e) {
+                    console.error(`Error reading ${key}:`, e);
+                }
+            }
+            
+            console.log('========================================');
+        }
+        
+        // Debug function to create a test donation directly in localStorage
+        function createTestDonation() {
+            const testDonationKey = 'allFoodDonations';
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const testDonation = {
+                id: 'donation_' + Date.now(),
+                foodName: 'Test Pizza',
+                quantity: '2 large pizzas',
+                expiryDate: tomorrow.toISOString(),
+                location: 'Test Location',
+                userId: 'test-donor-123',
+                userName: 'Test Donor',
+                status: 'pending',
+                timestamp: now.toISOString()
+            };
+            
+            // Get existing test donations or create new array
+            let donations = JSON.parse(localStorage.getItem(testDonationKey) || '[]');
+            donations.push(testDonation);
+            
+            // Save to localStorage
+            localStorage.setItem(testDonationKey, JSON.stringify(donations));
+            console.log('Created test donation:', testDonation);
+            console.log('Saved to storage key:', testDonationKey);
+            
+            // Refresh the display
+            loadAvailableDonations(true);
         }
         
         function createFoodCard(donation) {
