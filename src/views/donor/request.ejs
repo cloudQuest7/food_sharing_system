@@ -257,33 +257,33 @@
                 const rejectButton = document.getElementById(`reject-${requestId}`);
                 const card = document.getElementById(`request-${requestId}`);
 
-                if (status === 'accepted') {
-                    statusElement.textContent = 'Accepted';
-                    statusElement.className = 'text-xs bg-green-100 text-green-600 rounded-full px-3 py-1';
-                    acceptButton.disabled = true;
-                    rejectButton.disabled = false;
+            if (status === 'accepted') {
+                statusElement.textContent = 'Accepted';
+                statusElement.className = 'text-xs bg-green-100 text-green-600 rounded-full px-3 py-1';
+                acceptButton.disabled = true;
+                rejectButton.disabled = false;
                     
                     // Show success message
                     showMessage(`Request accepted! The recipient will be notified.`);
-                } else if (status === 'rejected') {
-                    statusElement.textContent = 'Rejected';
-                    statusElement.className = 'text-xs bg-red-100 text-red-600 rounded-full px-3 py-1';
-                    acceptButton.disabled = false;
-                    rejectButton.disabled = true;
-                }
+            } else if (status === 'rejected') {
+                statusElement.textContent = 'Rejected';
+                statusElement.className = 'text-xs bg-red-100 text-red-600 rounded-full px-3 py-1';
+                acceptButton.disabled = false;
+                rejectButton.disabled = true;
+            }
 
-                // Update request card data
+            // Update request card data
                 requestCards.set(`request-${requestId}`, { 
-                    element: card, 
-                    status: status 
-                });
+                element: card, 
+                status: status 
+            });
 
-                // Update pending count
-                const pendingCount = document.querySelectorAll('[id^="status-"][class*="bg-[#fff8f3]"]').length;
-                updatePendingCount(pendingCount);
+            // Update pending count
+            const pendingCount = document.querySelectorAll('[id^="status-"][class*="bg-[#fff8f3]"]').length;
+            updatePendingCount(pendingCount);
 
-                // Refresh current tab view
-                switchTab(activeTab);
+            // Refresh current tab view
+            switchTab(activeTab);
             }
         }
 
@@ -488,8 +488,6 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('-translate-x-full');
         });
-
-        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 </body>
 </html>

@@ -312,6 +312,11 @@
                 ...formData
             };
             
+            // Initialize user storage key if not already set
+            if (!userStorageKey) {
+                initializeUserStorage();
+            }
+            
             // Save to user-specific storage
             let userDonations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
             userDonations.push(newDonation);
@@ -392,7 +397,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize user storage
+            // Initialize user storage - IMPORTANT: Must be called before any localStorage operations
             initializeUserStorage();
             
             // Set minimum date for expiry date picker
@@ -404,7 +409,7 @@
             
             // Debug user storage key
             console.log('UserID on page load:', '<%= user._id %>');
-            console.log('User storage key on page load:', `userDonations_<%= user._id %>`);
+            console.log('User storage key on page load:', userStorageKey);
         });
 
         let userStorageKey = '';
@@ -439,8 +444,6 @@
                 ? '<i class="fas fa-bars"></i>' 
                 : '<i class="fas fa-times"></i>';
         }
-
-        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 </body>
 </html>

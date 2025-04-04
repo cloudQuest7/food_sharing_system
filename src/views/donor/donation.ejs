@@ -132,21 +132,39 @@
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] stat-card">
                     <h3 class="text-sm text-[#666] mb-1">Total Donations</h3>
-                    <p class="text-3xl font-bold text-[#1c140d]"><%= donations.length %></p>
+                    <p class="text-3xl font-bold text-[#1c140d]" id="total-donations">0</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] stat-card">
                     <h3 class="text-sm text-[#666] mb-1">Pending</h3>
-                    <p class="text-3xl font-bold text-[#f2800d]"><%= donations.filter(d => d.status === 'pending').length %></p>
+                    <p class="text-3xl font-bold text-[#f2800d]" id="pending-donations">0</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] stat-card">
                     <h3 class="text-sm text-[#666] mb-1">Accepted</h3>
-                    <p class="text-3xl font-bold text-[#0066cc]"><%= donations.filter(d => d.status === 'accepted').length %></p>
+                    <p class="text-3xl font-bold text-[#0066cc]" id="accepted-donations">0</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
+                <div class="bg-white p-6 rounded-xl border border-[#e8dbce] stat-card">
                     <h3 class="text-sm text-[#666] mb-1">Completed</h3>
-                    <p class="text-3xl font-bold text-[#00cc00]"><%= donations.filter(d => d.status === 'completed').length %></p>
+                    <p class="text-3xl font-bold text-[#00cc00]" id="completed-donations">0</p>
+                </div>
+            </div>
+
+            <!-- Tab navigation for filtering -->
+            <div class="mb-6">
+                <div class="flex rounded-xl bg-[#fcfaf8] p-1">
+                    <button class="tab-button flex-1 p-3 bg-[#f2800d] text-white rounded-xl font-bold transition-all duration-300" onclick="filterDonations('all')">
+                        All Donations
+                    </button>
+                    <button class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300" onclick="filterDonations('pending')">
+                        Pending
+                    </button>
+                    <button class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300" onclick="filterDonations('accepted')">
+                        Accepted
+                    </button>
+                    <button class="tab-button flex-1 p-3 bg-[#fcfaf8] text-[#9c7349] rounded-xl font-bold hover:bg-[#fff8f3] transition-all duration-300" onclick="filterDonations('completed')">
+                        Completed
+                    </button>
                 </div>
             </div>
 
@@ -154,57 +172,25 @@
             <div class="bg-white p-6 rounded-xl border border-[#e8dbce]">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-bold text-[#1c140d]">My Donations</h2>
-                    <a href="/donor/create-donation" class="px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                    <a href="/donor/post-food" class="px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
                         Post New Donation
                     </a>
                 </div>
 
-                <% if (donations.length === 0) { %>
-                    <div class="text-center py-12">
-                        <img src="/images/empty-donations.svg" alt="No donations yet" class="w-32 h-32 mx-auto mb-4">
-                        <h3 class="text-xl font-bold text-[#1c140d] mb-2">No donations yet</h3>
-                        <p class="text-[#666] mb-6">Start sharing food with your community</p>
-                        <a href="/donor/create-donation" class="inline-block px-6 py-3 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
-                            Post Your First Donation
-                        </a>
+                <!-- Empty state message -->
+                <div id="empty-state" class="text-center py-12 hidden">
+                    <div class="w-20 h-20 bg-[#fcfaf8] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">📦</span>
                     </div>
-                <% } else { %>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <% donations.forEach(donation => { %>
-                            <div class="bg-white rounded-xl border border-[#e8dbce] p-6 relative">
-                                <div class="absolute top-4 right-4">
-                                    <span class="px-3 py-1 rounded-full text-sm font-medium
-                                        <%= donation.status === 'pending' ? 'bg-[#fff3e6] text-[#f2800d]' : '' %>
-                                        <%= donation.status === 'accepted' ? 'bg-[#e6f3ff] text-[#0066cc]' : '' %>
-                                        <%= donation.status === 'completed' ? 'bg-[#e6ffe6] text-[#00cc00]' : '' %>
-                                    ">
-                                        <%= donation.status.charAt(0).toUpperCase() + donation.status.slice(1) %>
-                                    </span>
-                                </div>
-                                <h3 class="text-lg font-semibold text-[#1c140d] mb-4 pr-24"><%= donation.foodType %></h3>
-                                <div class="space-y-2 text-[#666]">
-                                    <p><strong>Quantity:</strong> <%= donation.quantity %></p>
-                                    <p><strong>Expires:</strong> <%= new Date(donation.expiryDate).toLocaleDateString() %></p>
-                                    <p><strong>Pickup:</strong> <%= donation.pickupLocation %></p>
-                                    <% if (donation.description) { %>
-                                        <p><strong>Description:</strong> <%= donation.description %></p>
-                                    <% } %>
-                                </div>
-                                <div class="mt-4 pt-4 border-t border-[#e8dbce] flex items-center justify-between">
-                                    <span class="text-sm text-[#9c7349]">
-                                        Posted <%= new Date(donation.createdAt).toLocaleDateString() %>
-                                    </span>
-                                    <% if (donation.status === 'accepted') { %>
-                                        <button onclick="markAsCompleted('<%= donation._id %>')" 
-                                            class="px-3 py-1 bg-[#e6f3ff] text-[#0066cc] rounded-lg hover:bg-[#cce6ff] transition-colors">
-                                            Mark as Completed
-                                        </button>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
-                <% } %>
+                    <h3 class="font-bold text-[#1c140d] text-xl mb-2">No Donations Yet</h3>
+                    <p class="text-[#9c7349] mb-6 max-w-md mx-auto">You haven't posted any food donations yet. Start sharing food with your community!</p>
+                    <a href="/donor/post-food" class="px-6 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors">
+                        Post Your First Donation
+                    </a>
+                </div>
+
+                <!-- Donations list -->
+                <div id="donationsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </main>
@@ -222,18 +208,20 @@
         let currentFilter = 'all';
         let userStorageKey = '';
 
-        // Initialize user storage
+        // Initialize user storage key
         function initUserStorage() {
-            const userId = '<%= user._id %>' || 'default-user';
+            // Get user ID
+            const userId = '<%= user._id %>';
+            
+            // Create storage key
             userStorageKey = `userDonations_${userId}`;
             
-            // Check if this is first login or if storage already exists
+            console.log('Initialized userStorageKey:', userStorageKey);
+            
+            // Initialize if needed
             if (!localStorage.getItem(userStorageKey)) {
-                // Initialize with empty array for first login
                 localStorage.setItem(userStorageKey, JSON.stringify([]));
             }
-            
-            console.log(`User storage initialized with key: ${userStorageKey}`);
         }
 
         // Function to update stats display
@@ -244,65 +232,75 @@
             document.getElementById('completedCount').textContent = donationStats.completed;
         }
 
-        // Load donations from localStorage (in a real app, this would be from an API)
+        // Load donations from localStorage
         function loadDonations() {
             try {
+                // Initialize user storage key if not set
+                if (!userStorageKey) {
+                    initUserStorage();
+                }
+                
+                console.log('Loading donations from key:', userStorageKey);
+                
                 // Get donations from localStorage
                 const donations = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+                console.log('Loaded donations:', donations);
                 
                 // Update stats
-                donationStats.total = donations.length;
-                donationStats.pending = donations.filter(d => d.status === 'pending').length;
-                donationStats.accepted = donations.filter(d => d.status === 'accepted').length;
-                donationStats.completed = donations.filter(d => d.status === 'completed').length;
-                
-                // Update display
-                updateStatsDisplay();
-                
-                // Clear loading state
-                isLoading = false;
-                toggleLoadingState(false);
+                updateStats(donations);
                 
                 // Render donation cards
                 renderDonationCards(donations);
-                
-                // Show/hide empty state
-                toggleEmptyState(donations.length === 0);
             } catch (error) {
                 console.error('Error loading donations:', error);
-                isLoading = false;
-                toggleLoadingState(false);
-                toggleEmptyState(true);
+                showMessage('Error loading donations', 'error');
             }
         }
         
         // Render donation cards
         function renderDonationCards(donations) {
             const donationsList = document.getElementById('donationsList');
-            
-            // Clear existing cards (except empty state)
-            const emptyState = document.getElementById('empty-state');
-            while (donationsList.firstChild && donationsList.firstChild !== emptyState) {
-                donationsList.removeChild(donationsList.firstChild);
-            }
+            donationsList.innerHTML = '';
             
             // Filter donations based on current filter
             let filteredDonations = donations;
-            
-            if (currentFilter === 'pending') {
-                filteredDonations = donations.filter(d => d.status === 'pending');
-            } else if (currentFilter === 'accepted') {
-                filteredDonations = donations.filter(d => d.status === 'accepted');
-            } else if (currentFilter === 'picked') {
-                filteredDonations = donations.filter(d => d.status === 'picked');
-            } else if (currentFilter === 'completed') {
-                filteredDonations = donations.filter(d => d.status === 'completed');
+            if (currentFilter !== 'all') {
+                filteredDonations = donations.filter(donation => donation.status === currentFilter);
             }
             
-            // Create cards for each donation
+            console.log(`Rendering ${filteredDonations.length} donations with filter: ${currentFilter}`);
+            
+            // If no donations after filtering, show relevant empty message 
+            if (filteredDonations.length === 0) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.className = 'col-span-full text-center py-8 bg-[#fcfaf8] rounded-xl border border-[#e8dbce]';
+                
+                if (donations.length === 0) {
+                    // No donations at all
+                    toggleEmptyState(true);
+                    return;
+                } else {
+                    // Has donations but none match the filter
+                    toggleEmptyState(false);
+                    emptyMessage.innerHTML = `
+                        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-[#fff8f3] rounded-full">
+                            <span class="text-2xl">🔍</span>
+                        </div>
+                        <h3 class="font-bold text-[#1c140d] text-lg mb-2">No ${currentFilter} donations</h3>
+                        <p class="text-[#9c7349]">You don't have any donations with status "${currentFilter}"</p>
+                    `;
+                    donationsList.appendChild(emptyMessage);
+                    return;
+                }
+            }
+            
+            // Hide empty state if we have donations
+            toggleEmptyState(false);
+            
+            // Create and append a card for each donation
             filteredDonations.forEach(donation => {
                 const card = createDonationCard(donation);
-                donationsList.insertBefore(card, emptyState);
+                donationsList.appendChild(card);
             });
         }
         
@@ -567,7 +565,26 @@
             }, 1500);
         }
 
-        // Add to the existing DOMContentLoaded event listener
+        // Add the updateStats function
+        function updateStats(donations) {
+            // Calculate stats
+            const total = donations.length;
+            const pending = donations.filter(d => d.status === 'pending').length;
+            const accepted = donations.filter(d => d.status === 'accepted').length;
+            const completed = donations.filter(d => d.status === 'completed').length;
+            
+            // Update DOM elements
+            document.getElementById('total-donations').textContent = total;
+            document.getElementById('pending-donations').textContent = pending;
+            document.getElementById('accepted-donations').textContent = accepted;
+            document.getElementById('completed-donations').textContent = completed;
+            
+            console.log('Updated stats:', { total, pending, accepted, completed });
+            
+            // Show/hide empty state
+            toggleEmptyState(total === 0);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize user storage first
             initUserStorage();
@@ -583,10 +600,6 @@
             // Simulate syncing with server on login
             syncWithServer();
         });
-
-        
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="XdbxzB02-VrgllGOSsnGa";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-
     </script>
 </body>
 </html>
