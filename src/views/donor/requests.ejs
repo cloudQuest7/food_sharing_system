@@ -83,13 +83,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/donation" class="nav-link active">
+                    <a href="/donor/donation" class="nav-link">
                         <i class="fas fa-box-open sidebar-icon"></i>
                         <span>My Donations</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/donor/requests" class="nav-link">
+                    <a href="/donor/requests" class="nav-link active">
                         <i class="fas fa-bell sidebar-icon"></i>
                         <span>View Requests</span>
                     </a>
@@ -102,6 +102,14 @@
                 </li>
             </ul>
         </nav>
+        
+        <!-- Logout Button -->
+        <div class="absolute bottom-0 left-0 w-full p-4 border-t border-[#e8dbce]">
+            <a href="/logout" class="flex items-center text-[#9c7349] hover:text-[#f2800d] transition-colors">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </aside>
 
     <!-- Main Content -->
@@ -113,68 +121,351 @@
                     <p class="text-[#666]">Manage requests for your food donations</p>
                 </div>
             </div>
-
-            <!-- Requests Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <% acceptedDonations.forEach(donation => { %>
-                    <div class="bg-white rounded-xl border border-[#e8dbce] p-6 relative">
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full text-sm font-medium bg-[#e6f3ff] text-[#0066cc]">
-                                Accepted
-                            </span>
-                        </div>
-                        <h3 class="text-lg font-semibold text-[#1c140d] mb-4 pr-24"><%= donation.foodType %></h3>
-                        <div class="space-y-2 text-[#666]">
-                            <p><strong>Quantity:</strong> <%= donation.quantity %></p>
-                            <p><strong>Expires:</strong> <%= new Date(donation.expiryDate).toLocaleDateString() %></p>
-                            <p><strong>Pickup:</strong> <%= donation.pickupLocation %></p>
-                            <% if (donation.description) { %>
-                                <p><strong>Description:</strong> <%= donation.description %></p>
-                            <% } %>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-[#e8dbce]">
-                            <div class="flex items-center gap-3 mb-4">
-                                <img src="https://ui-avatars.com/api/?name=<%= donation.recipient.name %>&background=e6f3ff&color=0066cc" 
-                                    alt="Recipient" class="w-10 h-10 rounded-full">
-                                <div>
-                                    <p class="font-medium text-[#1c140d]"><%= donation.recipient.name %></p>
-                                    <p class="text-sm text-[#666]">Requested <%= new Date(donation.updatedAt).toLocaleDateString() %></p>
-                                </div>
-                            </div>
-                            <button onclick="markAsCompleted('<%= donation._id %>')" 
-                                class="w-full px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
-                                Mark as Completed
-                            </button>
-                        </div>
-                    </div>
-                <% }) %>
+            
+            <!-- Hidden input for user ID -->
+            <input type="hidden" id="server-user-id" value="<%= typeof user !== 'undefined' && user._id ? user._id : '' %>">
+            
+            <!-- Request Tabs -->
+            <div class="border-b border-[#e8dbce] mb-6">
+                <div class="flex gap-8">
+                    <button id="pending-tab" class="text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold">
+                        Pending (<span id="pending-count">0</span>)
+                    </button>
+                    <button id="accepted-tab" class="text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]">
+                        Accepted (<span id="accepted-count">0</span>)
+                    </button>
+                    <button id="past-tab" class="text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]">
+                        Past Requests (<span id="past-count">0</span>)
+                    </button>
+                </div>
             </div>
 
-            <% if (acceptedDonations.length === 0) { %>
-                <div class="text-center py-12 bg-white rounded-xl border border-[#e8dbce]">
-                    <img src="/images/no-requests.svg" alt="No requests" class="w-32 h-32 mx-auto mb-4">
-                    <h3 class="text-xl font-bold text-[#1c140d] mb-2">No requests yet</h3>
-                    <p class="text-[#666]">When someone requests your donations, they'll appear here</p>
+            <!-- Loading Placeholder -->
+            <div id="loading-placeholder" class="animate-pulse grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl border border-[#e8dbce] p-6 h-64"></div>
+                <div class="bg-white rounded-xl border border-[#e8dbce] p-6 h-64"></div>
+                <div class="bg-white rounded-xl border border-[#e8dbce] p-6 h-64"></div>
+            </div>
+
+            <!-- Requests Grid -->
+            <div id="requests-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Request cards will be loaded dynamically here -->
+            </div>
+
+            <!-- No Requests Message -->
+            <div id="no-requests" class="hidden text-center py-12 bg-white rounded-xl border border-[#e8dbce]">
+                <div class="w-24 h-24 rounded-full bg-[#fcfaf8] flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-inbox text-4xl text-[#9c7349]"></i>
                 </div>
-            <% } %>
+                <h3 class="text-xl font-bold text-[#1c140d] mb-2">No requests yet</h3>
+                <p class="text-[#666] max-w-lg mx-auto mb-6">When someone requests your donations, they'll appear here</p>
+                <a href="/donor/post-food" class="px-6 py-3 bg-[#f2800d] text-white rounded-full font-bold hover:bg-[#e67600] transition-colors inline-block">
+                    Post More Food
+                </a>
+            </div>
         </div>
     </main>
 
     <script>
-        function markAsCompleted(donationId) {
-            if (confirm('Are you sure you want to mark this donation as completed?')) {
-                fetch(`/api/donations/${donationId}/complete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+        // Global variables
+        let pendingRequests = [];
+        let acceptedRequests = [];
+        let pastRequests = [];
+        let currentTab = 'pending';
+        let userId = '';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user ID
+            userId = getUserId();
+            
+            // Load all requests
+            loadAllRequests();
+            
+            // Set up tab switching
+            document.getElementById('pending-tab').addEventListener('click', () => switchTab('pending'));
+            document.getElementById('accepted-tab').addEventListener('click', () => switchTab('accepted'));
+            document.getElementById('past-tab').addEventListener('click', () => switchTab('past'));
+            
+            // Set up refresh interval to check for new requests
+            setInterval(() => {
+                loadAllRequests(false); // false = don't show loading state
+            }, 30000); // Check every 30 seconds
+        });
+        
+        // Function to get user ID from various sources
+        function getUserId() {
+            // Try to get from server-side rendered value
+            const serverUserId = document.getElementById('server-user-id')?.value || '';
+            
+            // If we have a server-side user ID, save it to localStorage and return it
+            if (serverUserId) {
+                localStorage.setItem('currentUserId', serverUserId);
+                console.log('User ID saved from server:', serverUserId);
+                return serverUserId;
+            }
+            
+            // Otherwise, try localStorage or sessionStorage
+            const storedId = localStorage.getItem('currentUserId') || sessionStorage.getItem('currentUserId') || '';
+            console.log('User ID retrieved from storage:', storedId);
+            return storedId;
+        }
+        
+        function loadAllRequests(showLoading = true) {
+            // Show loading placeholder if requested
+            const loadingPlaceholder = document.getElementById('loading-placeholder');
+            if (showLoading && loadingPlaceholder) {
+                loadingPlaceholder.classList.remove('hidden');
+            }
+            
+            // Get all food requests
+            const allRequestsKey = 'allFoodRequests';
+            let allRequests = [];
+            
+            try {
+                const requestsData = localStorage.getItem(allRequestsKey);
+                if (requestsData) {
+                    allRequests = JSON.parse(requestsData);
+                    
+                    // Filter for requests related to this donor's donations
+                    allRequests = allRequests.filter(request => request.donorId === userId);
+                    
+                    // Categorize requests
+                    pendingRequests = allRequests.filter(req => req.status === 'pending');
+                    acceptedRequests = allRequests.filter(req => req.status === 'accepted');
+                    pastRequests = allRequests.filter(req => 
+                        ['completed', 'cancelled', 'rejected'].includes(req.status)
+                    );
+                    
+                    // Update counts
+                    document.getElementById('pending-count').textContent = pendingRequests.length;
+                    document.getElementById('accepted-count').textContent = acceptedRequests.length;
+                    document.getElementById('past-count').textContent = pastRequests.length;
+                    
+                    // Hide loading placeholder
+                    if (loadingPlaceholder) {
+                        loadingPlaceholder.classList.add('hidden');
                     }
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        alert('Error marking donation as completed');
+                    
+                    // Display requests based on current tab
+                    displayRequests();
+                }
+            } catch (error) {
+                console.error('Error processing requests:', error);
+                
+                // Hide loading placeholder on error
+                if (loadingPlaceholder) {
+                    loadingPlaceholder.classList.add('hidden');
+                }
+            }
+        }
+        
+        function displayRequests() {
+            const container = document.getElementById('requests-container');
+            const noRequestsMessage = document.getElementById('no-requests');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Get requests to display based on current tab
+            let requests;
+            if (currentTab === 'pending') {
+                requests = pendingRequests;
+            } else if (currentTab === 'accepted') {
+                requests = acceptedRequests;
+            } else {
+                requests = pastRequests;
+            }
+            
+            // Show no requests message if needed
+            if (requests.length === 0) {
+                noRequestsMessage.classList.remove('hidden');
+                return;
+            } else {
+                noRequestsMessage.classList.add('hidden');
+            }
+            
+            // Sort requests by timestamp (newest first)
+            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Create and append request cards
+            requests.forEach(request => {
+                const card = createRequestCard(request);
+                container.appendChild(card);
+            });
+        }
+        
+        function createRequestCard(request) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl border border-[#e8dbce] p-6 relative';
+            card.id = `request-${request.id}`;
+            
+            // Format timestamp
+            const timestamp = new Date(request.timestamp);
+            const formattedDate = timestamp.toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            // Get food name
+            const foodName = request.foodId.split('_')[0];
+            
+            // Create status badge
+            let statusBadge = '';
+            if (request.status === 'pending') {
+                statusBadge = '<span class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">Pending</span>';
+            } else if (request.status === 'accepted') {
+                statusBadge = '<span class="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">Accepted</span>';
+            } else if (request.status === 'completed') {
+                statusBadge = '<span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Completed</span>';
+            } else if (request.status === 'rejected') {
+                statusBadge = '<span class="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Rejected</span>';
+            } else if (request.status === 'cancelled') {
+                statusBadge = '<span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">Cancelled</span>';
+            }
+            
+            // Create action buttons based on status
+            let actionButtons = '';
+            if (request.status === 'pending') {
+                actionButtons = `
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="rejectRequest('${request.id}')" class="flex-1 px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
+                            Reject
+                        </button>
+                        <button onclick="acceptRequest('${request.id}')" class="flex-1 px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                            Accept
+                        </button>
+                    </div>
+                `;
+            } else if (request.status === 'accepted') {
+                actionButtons = `
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="markAsCompleted('${request.id}')" class="w-full px-4 py-2 bg-[#f2800d] text-white rounded-lg hover:bg-[#e67600] transition-colors">
+                            Mark as Completed
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Past requests don't need action buttons
+                actionButtons = '';
+            }
+            
+            // Set card content
+            card.innerHTML = `
+                <div class="absolute top-4 right-4">
+                    ${statusBadge}
+                </div>
+                <h3 class="text-lg font-semibold text-[#1c140d] mb-4 pr-24">${foodName}</h3>
+                <div class="space-y-2 text-[#666]">
+                    <p><strong>Quantity:</strong> ${request.quantity}</p>
+                    <p><strong>Pickup:</strong> ${request.pickupTime || 'To be arranged'}</p>
+                    <p><strong>Location:</strong> ${request.location || 'Not specified'}</p>
+                    ${request.message ? `<p><strong>Message:</strong> ${request.message}</p>` : ''}
+                </div>
+                <div class="mt-4 pt-4 border-t border-[#e8dbce]">
+                    <div class="flex items-center gap-3 mb-2">
+                        <img src="https://ui-avatars.com/api/?name=${request.recipientName}&background=e6f3ff&color=0066cc" 
+                            alt="Recipient" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="font-medium text-[#1c140d]">${request.recipientName}</p>
+                            <p class="text-sm text-[#666]">Requested on ${formattedDate}</p>
+                        </div>
+                    </div>
+                    ${actionButtons}
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab styling
+            const pendingTab = document.getElementById('pending-tab');
+            const acceptedTab = document.getElementById('accepted-tab');
+            const pastTab = document.getElementById('past-tab');
+            
+            pendingTab.className = 'text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]';
+            acceptedTab.className = 'text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]';
+            pastTab.className = 'text-[#9c7349] pb-3 font-bold hover:text-[#f2800d]';
+            
+            if (tab === 'pending') {
+                pendingTab.className = 'text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold';
+            } else if (tab === 'accepted') {
+                acceptedTab.className = 'text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold';
+            } else {
+                pastTab.className = 'text-[#f2800d] border-b-2 border-[#f2800d] pb-3 font-bold';
+            }
+            
+            // Display appropriate requests
+            displayRequests();
+        }
+        
+        function acceptRequest(requestId) {
+            if (confirm('Are you sure you want to accept this request?')) {
+                updateRequestStatus(requestId, 'accepted');
+            }
+        }
+        
+        function rejectRequest(requestId) {
+            if (confirm('Are you sure you want to reject this request?')) {
+                updateRequestStatus(requestId, 'rejected');
+            }
+        }
+        
+        function markAsCompleted(requestId) {
+            if (confirm('Are you sure you want to mark this request as completed?')) {
+                updateRequestStatus(requestId, 'completed');
+            }
+        }
+        
+        function updateRequestStatus(requestId, newStatus) {
+            // Update in the global requests pool
+            const allRequestsKey = 'allFoodRequests';
+            let allRequests = JSON.parse(localStorage.getItem(allRequestsKey) || '[]');
+            
+            const requestIndex = allRequests.findIndex(req => req.id === requestId);
+            if (requestIndex !== -1) {
+                allRequests[requestIndex].status = newStatus;
+                
+                // If accepting, set pickup time
+                if (newStatus === 'accepted') {
+                    const pickupDate = new Date();
+                    pickupDate.setDate(pickupDate.getDate() + 1); // Set pickup for tomorrow
+                    
+                    const formattedPickup = pickupDate.toLocaleDateString(undefined, {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    allRequests[requestIndex].pickupTime = formattedPickup;
+                }
+                
+                localStorage.setItem(allRequestsKey, JSON.stringify(allRequests));
+                
+                // Also update in the recipient's personal storage
+                const recipientId = allRequests[requestIndex].recipientId;
+                const recipientStorageKey = `userRequests_${recipientId}`;
+                let recipientRequests = JSON.parse(localStorage.getItem(recipientStorageKey) || '[]');
+                
+                const recipientRequestIndex = recipientRequests.findIndex(req => req.id === requestId);
+                if (recipientRequestIndex !== -1) {
+                    recipientRequests[recipientRequestIndex].status = newStatus;
+                    
+                    // If accepting, set pickup time
+                    if (newStatus === 'accepted') {
+                        recipientRequests[recipientRequestIndex].pickupTime = allRequests[requestIndex].pickupTime;
                     }
-                });
+                    
+                    localStorage.setItem(recipientStorageKey, JSON.stringify(recipientRequests));
+                }
+                
+                // Refresh UI
+                loadAllRequests(false);
             }
         }
 

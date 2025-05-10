@@ -47,12 +47,12 @@ router.get('/dashboard', isDonor, async (req, res) => {
 // Request page route
 router.get('/requests', isDonor, async (req, res) => {
     try {
-        const acceptedDonations = await Donation.find({
-            donor: req.user._id,
-            status: 'accepted'
-        }).populate('recipient');
+        console.log('Rendering requests page for user:', req.user.name);
         
-        res.render('donor/requests', { acceptedDonations });
+        res.render('donor/requests', { 
+            user: req.user,
+            title: 'Donation Requests - ShareBites'
+        });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).send('Error fetching requests');
